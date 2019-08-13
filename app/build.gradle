@@ -43,4 +43,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.2.0-alpha02" // Kotlin Extensions
     testImplementation "androidx.room:room-testing:2.2.0-alpha02"
 
+    // RETROFIT AND SO
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

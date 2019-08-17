@@ -1,9 +1,13 @@
 package es.edufdezsoy.manga2kindle.network
 
 import es.edufdezsoy.manga2kindle.data.model.Author
+import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.Language
+import es.edufdezsoy.manga2kindle.data.model.Manga
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
+import java.util.zip.ZipFile
 
 interface M2kApiService {
     @GET("/")
@@ -12,14 +16,66 @@ interface M2kApiService {
     //#region /author
 
     @GET("/author")
-    fun getAuthors(@Query("limit") limit: Int): Call<List<Author>>
+    fun searchAuthor(
+        @Query("search") search: String?,
+        @Query("limit") limit: Int?
+    ): Call<List<Author>>
 
-    @GET("/author")
-    fun searchAuthor(@Query("search") search: String): Call<List<Author>>
-
-    @GET("/author")
-    fun searchAuthor(@Query("search") search: String, @Query("limit") limit: Int): Call<List<Author>>
+    @PUT("/author")
+    fun addAuthor(
+        @Query("name") name: String?,
+        @Query("surname") surname: String?,
+        @Query("nickname") nickname: String?
+    ): Call<List<Author>>
 
     //#endregion
 
+    //#region /languages
+
+    @GET("/languages")
+    fun getLanguages(): Call<List<Language>>
+
+    //#endregion
+
+    //#region /status
+
+    @GET("/status")
+    fun getStatus(
+        @Query("chapter_id") chapter_id: Int
+    ): Call<List<Chapter>>
+
+    //#endregion
+
+    //#region /manga
+
+    @GET("/manga")
+    fun searchManga(
+        @Query("search") search: String?,
+        @Query("limit") limit: Int?
+    ): Call<List<Manga>>
+
+    @PUT("/manga")
+    fun addManga(
+        @Query("title") title: String,
+        @Query("author_id") author_id: Int
+    ): Call<List<Manga>>
+
+    //#endregion
+
+    //#region /manga/chapter
+
+    @Multipart
+    @POST("/manga/chapter")
+    fun sendChapter(
+        @Part("manga_id") manga_id: Int,
+        @Part("lang_id") lang_id: Int,
+        @Part("title") title: Int,
+        @Part("chapter") chapter: Float,
+        @Part("volume") volume: Int?,
+        @Part("checksum") checksum: String,
+        @Part("mail") mail: String,
+        @Part("file") file: ZipFile
+    ): Call<List<Chapter>>
+
+    //#endregion
 }

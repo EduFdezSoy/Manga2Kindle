@@ -11,6 +11,10 @@ data class Chapter(
     val volume: Int?,
     val chapter: Float,
     val title: String?,
-    val file_path: String?,
-    val checksum: String
+    var file_path: String?,
+    val checksum: String,
+    var delivered: Boolean,
+    var error: Boolean,
+    var reason: String?,
+    var visible: Boolean
 )

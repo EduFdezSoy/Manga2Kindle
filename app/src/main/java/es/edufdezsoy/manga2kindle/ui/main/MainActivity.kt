@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.network.M2kApiService
+import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.MediaType
@@ -23,8 +23,6 @@ import java.security.DigestInputStream
 import java.security.MessageDigest
 
 
-
-
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +30,13 @@ class MainActivity : BaseActivity() {
 
         tv1.text = "currando..."
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(M2kApplication.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(M2kApiService::class.java)
 
         // load the server hello message
         Thread(Runnable {
             try {
-                val call = apiService.serverHello()
-                val res = call.execute().body()
-                this@MainActivity.runOnUiThread { tv1.text = res!! }
+              val call = ApiService.apiService.serverHello()
+              val res = call.execute().body()
+              this@MainActivity.runOnUiThread { tv1.text = res!! }
             } catch (e: Exception) {
                 Log.e(M2kApplication.TAG, "Exception", e)
             }
@@ -53,7 +45,7 @@ class MainActivity : BaseActivity() {
         // load an author
         Thread(Runnable {
             try {
-                val call = apiService.searchAuthor("a", null)
+                val call = ApiService.apiService.searchAuthor("a")
                 val res = call.execute().body()?.get(9)
                 this@MainActivity.runOnUiThread {
                     tv2.text = res!!.name

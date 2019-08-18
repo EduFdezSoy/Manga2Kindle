@@ -11,12 +11,15 @@ interface AuthorDao {
     @Query("SELECT * FROM author")
     fun getAll(): List<Author>
 
+    @Query("SELECT * FROM author WHERE id = :author_id")
+    fun getAuthor(author_id: Int): Author
+
     // TODO: the params in 'LIKE' maye be in between %, search how to edit the var before performing the query
     @Query("SELECT * FROM author WHERE name LIKE :search OR surname LIKE :search OR nickname LIKE :search")
     fun search(search: String): List<Author>
 
     @Insert
-    fun insertAll(vararg authors: Author)
+    fun insert(vararg authors: Author)
 
     @Delete
     fun delete(author: Author)

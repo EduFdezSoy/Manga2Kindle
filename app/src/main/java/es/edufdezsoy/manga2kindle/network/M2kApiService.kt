@@ -7,6 +7,7 @@ import es.edufdezsoy.manga2kindle.data.model.Manga
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
+import java.io.File
 import java.util.zip.ZipFile
 
 interface M2kApiService {
@@ -69,12 +70,13 @@ interface M2kApiService {
     fun sendChapter(
         @Part("manga_id") manga_id: Int,
         @Part("lang_id") lang_id: Int,
-        @Part("title") title: Int,
+        @Part("title") title: String,
         @Part("chapter") chapter: Float,
         @Part("volume") volume: Int?,
         @Part("checksum") checksum: String,
         @Part("mail") mail: String,
-        @Part("file") file: ZipFile
+        // @Part("file") file: File
+        @Part file: MultipartBody.Part
     ): Call<List<Chapter>>
 
     //#endregion

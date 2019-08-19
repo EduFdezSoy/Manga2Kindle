@@ -7,8 +7,6 @@ import es.edufdezsoy.manga2kindle.data.model.Manga
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.io.File
-import java.util.zip.ZipFile
 
 interface M2kApiService {
     @GET("/")
@@ -17,9 +15,18 @@ interface M2kApiService {
     //#region /author
 
     @GET("/author")
-    fun searchAuthor(
-        @Query("search") search: String?,
+    fun getAllAuthors(
         @Query("limit") limit: Int?
+    ): Call<List<Author>>
+
+    @GET("/author")
+    fun getAuthor(
+        @Query("id") author_id: Int
+    ): Call<List<Author>>
+
+    @GET("/author")
+    fun searchAuthor(
+        @Query("search") search: String
     ): Call<List<Author>>
 
     @PUT("/author")
@@ -34,7 +41,7 @@ interface M2kApiService {
     //#region /languages
 
     @GET("/languages")
-    fun getLanguages(): Call<List<Language>>
+    fun getAllLanguages(): Call<List<Language>>
 
     //#endregion
 
@@ -48,11 +55,14 @@ interface M2kApiService {
     //#endregion
 
     //#region /manga
+    @GET("/manga")
+    fun getAllMangas(
+        @Query("limit") limit: Int?
+    ): Call<List<Manga>>
 
     @GET("/manga")
     fun searchManga(
-        @Query("search") search: String?,
-        @Query("limit") limit: Int?
+        @Query("search") search: String
     ): Call<List<Manga>>
 
     @PUT("/manga")

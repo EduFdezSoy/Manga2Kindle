@@ -12,6 +12,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".ui.observedFolders.ObservedFoldersActivity">
+        </activity>
+        <activity android:name=".ui.newChapters.NewChaptersActivity">
+        </activity>
+        <activity android:name=".ui.uploadedChapters.UploadedChaptersActivity">
+        </activity>
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

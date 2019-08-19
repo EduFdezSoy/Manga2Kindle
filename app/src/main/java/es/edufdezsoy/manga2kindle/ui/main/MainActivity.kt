@@ -1,6 +1,8 @@
 package es.edufdezsoy.manga2kindle.ui.main
 
 import android.os.Bundle
+import android.util.Log
+import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
@@ -16,20 +18,29 @@ class MainActivity : BaseActivity() {
 
         // load the server hello message
         Thread(Runnable {
-            val call = ApiService.apiService.serverHello()
-            val res = call.execute().body()
-            this@MainActivity.runOnUiThread { tv1.text = res!! }
+            try {
+                val call = ApiService.apiService.serverHello()
+                val res = call.execute().body()
+                this@MainActivity.runOnUiThread { tv1.text = res!! }
+            } catch (e: Exception) {
+                Log.e(M2kApplication.TAG, "Exception", e)
+            }
         }).start()
 
         // load an author
         Thread(Runnable {
-            val call = ApiService.apiService.searchAuthor("a")
-            val res = call.execute().body()?.get(9)
-            this@MainActivity.runOnUiThread {
-                tv2.text = res!!.name
-                tv3.text = res.surname
-                tv4.text = res.nickname
+            try {
+                val call = ApiService.apiService.searchAuthor("a")
+                val res = call.execute().body()?.get(9)
+                this@MainActivity.runOnUiThread {
+                    tv2.text = res!!.name
+                    tv3.text = res.surname
+                    tv4.text = res.nickname
+                }
+            } catch (e: Exception) {
+                Log.e(M2kApplication.TAG, "Exception", e)
             }
+
         }).start()
     }
 }

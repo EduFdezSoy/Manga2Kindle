@@ -8,14 +8,14 @@ import es.edufdezsoy.manga2kindle.data.model.Chapter
 @Dao
 interface ChapterDao {
     @Query("SELECT * FROM chapter")
-    fun getAll(): List<Chapter>
+    suspend fun getAll(): List<Chapter>
 
     @Query("SELECT * FROM chapter WHERE id = :chapter_id")
-    fun getChapter(chapter_id: Int): Chapter
+    suspend fun getChapter(chapter_id: Int): Chapter
 
     @Insert
-    fun insert(chapter: Chapter)
+    suspend fun insert(chapter: Chapter)
 
     @Query("UPDATE chapter SET visible = 0 WHERE id = :chapter_id")
-    fun delete(chapter_id: Int)
+    suspend fun delete(chapter_id: Int)
 }

@@ -5,71 +5,70 @@ import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Language
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import okhttp3.MultipartBody
-import retrofit2.Call
 import retrofit2.http.*
 
 interface M2kApiService {
     @GET("/")
-    fun serverHello(): Call<String>
+    suspend fun serverHello(): String
 
     //#region /author
 
     @GET("/author")
-    fun getAllAuthors(
+    suspend fun getAllAuthors(
         @Query("limit") limit: Int?
-    ): Call<List<Author>>
+    ): List<Author>
 
     @GET("/author")
-    fun getAuthor(
+    suspend fun getAuthor(
         @Query("id") author_id: Int
-    ): Call<List<Author>>
+    ): List<Author>
 
     @GET("/author")
-    fun searchAuthor(
+    suspend fun searchAuthor(
         @Query("search") search: String
-    ): Call<List<Author>>
+    ): List<Author>
 
     @PUT("/author")
-    fun addAuthor(
+    suspend fun addAuthor(
         @Query("name") name: String?,
         @Query("surname") surname: String?,
         @Query("nickname") nickname: String?
-    ): Call<List<Author>>
+    ): List<Author>
 
     //#endregion
 
     //#region /languages
 
     @GET("/languages")
-    fun getAllLanguages(): Call<List<Language>>
+    suspend fun getAllLanguages(): List<Language>
 
     //#endregion
 
     //#region /status
 
     @GET("/status")
-    fun getStatus(
+    suspend fun getStatus(
         @Query("chapter_id") chapter_id: Int
-    ): Call<List<Chapter>>
+    ): List<Chapter>
 
     //#endregion
 
     //#region /manga
     @GET("/manga")
-    fun getAllMangas(
+    suspend fun getAllMangas(
         @Query("limit") limit: Int?
-    ): Call<List<Manga>>
+    ): List<Manga>
 
     @GET("/manga")
-    fun searchManga(
+    suspend fun searchManga(
         @Query("search") search: String
-    ): Call<List<Manga>>
+    ): List<Manga>
 
     @PUT("/manga")
-    fun addManga(
+    suspend fun addManga(
         @Query("title") title: String,
         @Query("author_id") author_id: Int
-    ): Call<List<Manga>>
+    ): List<Manga>
 
     //#endregion
 
@@ -77,7 +76,7 @@ interface M2kApiService {
 
     @Multipart
     @POST("/manga/chapter")
-    fun sendChapter(
+    suspend fun sendChapter(
         @Part("manga_id") manga_id: Int,
         @Part("lang_id") lang_id: Int,
         @Part("title") title: String,
@@ -87,7 +86,7 @@ interface M2kApiService {
         @Part("mail") mail: String,
         // @Part("file") file: File
         @Part file: MultipartBody.Part
-    ): Call<List<Chapter>>
+    ): List<Chapter>
 
     //#endregion
 }

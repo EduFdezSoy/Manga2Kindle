@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".ui.uploadedChapters.UploadedChaptersActivity">
         </activity>
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.base.BaseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

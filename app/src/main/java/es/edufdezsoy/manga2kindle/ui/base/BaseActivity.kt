@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,9 +19,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.ui.main.MainController
-import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersActivity
-import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersActivity
-import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersActivity
+import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
+import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
+import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersController
 import kotlinx.android.synthetic.main.activity_base.*
 
 open class BaseActivity : AppCompatActivity() {
@@ -106,22 +105,15 @@ open class BaseActivity : AppCompatActivity() {
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (drawerItem) {
-                        newChapters -> startActivity(
-                            Intent(
-                                this@BaseActivity,
-                                NewChaptersActivity::class.java
+                        newChapters -> router.setRoot(RouterTransaction.with(NewChaptersController()))
+                        uploadedChapters -> router.setRoot(
+                            RouterTransaction.with(
+                                UploadedChaptersController()
                             )
                         )
-                        uploadedChapters -> startActivity(
-                            Intent(
-                                this@BaseActivity,
-                                UploadedChaptersActivity::class.java
-                            )
-                        )
-                        observedFolders -> startActivity(
-                            Intent(
-                                this@BaseActivity,
-                                ObservedFoldersActivity::class.java
+                        observedFolders -> router.setRoot(
+                            RouterTransaction.with(
+                                ObservedFoldersController()
                             )
                         )
                         else -> Toast.makeText(

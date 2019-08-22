@@ -2,7 +2,7 @@ package es.edufdezsoy.manga2kindle.ui.main
 
 import android.view.View
 import es.edufdezsoy.manga2kindle.data.model.Author
-import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.view_main.view.*
 
 class MainView(val view: View, val controller: MainController) {
     init {

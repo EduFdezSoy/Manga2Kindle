@@ -24,7 +24,7 @@ class MainController : Controller(), CoroutineScope {
     //#region lifecycle methods
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
-        val v = inflater.inflate(R.layout.activity_main, container, false)
+        val v = inflater.inflate(R.layout.view_main, container, false)
 
         job = Job()
         view = MainView(view = v, controller = this)

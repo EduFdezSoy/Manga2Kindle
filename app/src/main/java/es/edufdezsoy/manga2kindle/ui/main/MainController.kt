@@ -41,7 +41,7 @@ class MainController : Controller(), CoroutineScope {
     //#region public methods
 
     fun callServerHello() {
-        CoroutineScope(coroutineContext).launch {
+        launch {
             val res = interactor.callServer()
             view.drawServerHello(res!!)
 
@@ -49,7 +49,7 @@ class MainController : Controller(), CoroutineScope {
     }
 
     fun callAuthorSearch() {
-        CoroutineScope(coroutineContext).launch {
+        launch {
             val res = interactor.callAuthorSearch()
             view.drawAuthorData(res!!)
         }

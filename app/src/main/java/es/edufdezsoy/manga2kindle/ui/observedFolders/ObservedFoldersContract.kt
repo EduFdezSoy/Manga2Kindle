@@ -6,6 +6,7 @@ interface ObservedFoldersContract {
     interface Controller {
         fun loadFolders()
         fun openFolderDetails(folder: Folder)
+        fun openFolderForm()
         fun deleteFolder(folder: Folder)
     }
 

@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.observedFolders
 
-import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.data.model.Folder
@@ -18,7 +17,7 @@ class ObservedFoldersView(val view: View, val controller: ObservedFoldersControl
     }
 
     override fun setFolders(folders: List<Folder>) {
-        view.rvObservedFolders.adapter = FolderAdapter(folders, controller.activity as Context)
+        view.rvObservedFolders.adapter = FolderAdapter(folders)
         view.flBackground.visibility = View.GONE
     }
 }

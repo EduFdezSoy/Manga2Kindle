@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm.FolderFormController
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     ObservedFoldersInteractor.Controller {
     //#region vars and vals
 
-    private val interactor = ObservedFoldersInteractor(this)
+    private lateinit var interactor: ObservedFoldersInteractor
     private lateinit var view: ObservedFoldersView
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -30,8 +31,11 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_observed_folders, container, false)
 
+        interactor = ObservedFoldersInteractor(this, M2kDatabase.invoke(v.context))
+
         job = Job()
         view = ObservedFoldersView(view = v, controller = this)
+
         return v
     }
 
@@ -45,7 +49,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
 
     override fun loadFolders() {
         launch {
-            interactor.loadMockFolders()
+            interactor.loadFolders()
         }
     }
 

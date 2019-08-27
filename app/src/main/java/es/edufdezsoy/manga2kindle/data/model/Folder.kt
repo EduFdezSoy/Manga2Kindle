@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 class Folder(
-    @PrimaryKey val id: Int,
-    val name: String,
-    val path: String
+    @PrimaryKey var id: Int,
+    var name: String,
+    var path: String
 )

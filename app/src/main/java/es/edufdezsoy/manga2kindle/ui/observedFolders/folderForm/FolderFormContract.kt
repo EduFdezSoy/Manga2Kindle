@@ -4,12 +4,14 @@ import es.edufdezsoy.manga2kindle.data.model.Folder
 
 interface FolderFormContract {
     interface Controller {
-        fun addFolder(folder: Folder)
-        fun editFolder(folder: Folder)
+        fun saveFolder(folder: Folder)
         fun deleteFolder(folder: Folder)
+        fun openFolderPicker()
+        fun cancelEdit()
     }
 
     interface View {
         fun setFolder(folder: Folder)
+        fun setPath(path: String)
     }
 }

@@ -1,10 +1,11 @@
 package es.edufdezsoy.manga2kindle.ui.observedFolders
 
+import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ObservedFoldersInteractor(val controller: Controller) {
+class ObservedFoldersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
         fun setFolders(folders: List<Folder>)
     }
@@ -22,5 +23,10 @@ class ObservedFoldersInteractor(val controller: Controller) {
         }.also {
             controller.setFolders(folders)
         }
+    }
+
+    suspend fun loadFolders() {
+        val folders = database.FolderDao().getAll()
+        controller.setFolders(folders)
     }
 }

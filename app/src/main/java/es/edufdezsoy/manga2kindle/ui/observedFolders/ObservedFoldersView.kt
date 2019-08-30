@@ -17,7 +17,15 @@ class ObservedFoldersView(val view: View, val controller: ObservedFoldersControl
     }
 
     override fun setFolders(folders: List<Folder>) {
-        view.rvObservedFolders.adapter = FolderAdapter(folders)
+        val adapter = FolderAdapter(folders)
+        adapter.setOnClickListener(View.OnClickListener { v ->
+            controller.openFolderDetails(
+                adapter.folders.get(
+                    view.rvObservedFolders.getChildAdapterPosition(v)
+                )
+            )
+        })
+        view.rvObservedFolders.adapter = adapter
         view.flBackground.visibility = View.GONE
     }
 }

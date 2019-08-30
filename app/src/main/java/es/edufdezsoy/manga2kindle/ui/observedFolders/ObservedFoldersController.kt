@@ -54,7 +54,11 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     }
 
     override fun openFolderDetails(folder: Folder) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        router.pushController(
+            RouterTransaction.with(FolderFormController(folder))
+                .pushChangeHandler(overriddenPushHandler)
+                .popChangeHandler(overriddenPopHandler)
+        )
     }
 
     override fun openFolderForm() {

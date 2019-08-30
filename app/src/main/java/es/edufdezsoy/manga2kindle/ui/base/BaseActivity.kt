@@ -29,6 +29,7 @@ open class BaseActivity : AppCompatActivity() {
     //#region vars and vals
 
     private lateinit var router: Router
+    private lateinit var drawer: Drawer
 
     //#endregion
     //#region lifecycle functions
@@ -87,7 +88,7 @@ open class BaseActivity : AppCompatActivity() {
             .build()
 
         //create the drawer and remember the `Drawer` result object
-        val result = DrawerBuilder()
+        drawer = DrawerBuilder()
             .withActivity(this)
             .withToolbar(baseToolbar)
             .withAccountHeader(headerResult)

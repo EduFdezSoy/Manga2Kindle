@@ -15,6 +15,10 @@ class FolderFormInteractor(val controller: Controller, val database: M2kDatabase
         database.FolderDao().insert(folder).also { controller.done() }
     }
 
+    suspend fun updateFolder(folder: Folder) {
+        database.FolderDao().update(folder).also { controller.done() }
+    }
+
     suspend fun deleteFoldere(folder: Folder) {
         database.FolderDao().delete(folder).also { controller.done() }
     }

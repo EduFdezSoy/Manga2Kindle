@@ -62,7 +62,10 @@ class FolderFormController : Controller, CoroutineScope,
     //#region public methods
 
     override fun saveFolder(folder: Folder) {
-        launch { interactor.addFolder(folder) }
+        if (folder.id == 0)
+            launch { interactor.addFolder(folder) }
+        else
+            launch { interactor.updateFolder(folder) }
     }
 
     override fun cancelEdit() {

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
@@ -55,6 +56,31 @@ open class BaseActivity : AppCompatActivity() {
     //#endregion
     //#region public functions
 
+    fun showSnackbar(msg: String) {
+        showSnackbar(msg, null, null, null)
+    }
+
+    fun showSnackbar(msg: String, lenght: Int) {
+        showSnackbar(msg, lenght, null, null)
+    }
+
+    fun showSnackbar(msg: String, lenght: Int?, action: String?, listener: View.OnClickListener?) {
+        val l: Int
+        if (lenght == null)
+            l = Snackbar.LENGTH_SHORT
+        else
+            l = lenght
+
+        val snackbar = Snackbar.make(findViewById(android.R.id.content), msg, l)
+
+        if (action != null)
+            if (listener == null)
+                throw KotlinNullPointerException("listener may be defined")
+            else
+                snackbar.setAction(action, listener)
+
+        snackbar.show()
+    }
 
     //#endregion
     //#region private functions

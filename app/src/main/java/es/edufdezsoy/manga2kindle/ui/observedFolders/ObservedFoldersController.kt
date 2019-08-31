@@ -76,10 +76,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
         (activity as BaseActivity).showSnackbar("Folder " + folder.name + " deleted",
             Snackbar.LENGTH_LONG,
             "Undo",
-            View.OnClickListener {
-                launch { interactor.addFolder(folder) }
-                loadFolders()
-            })
+            View.OnClickListener { launch { interactor.addFolder(folder) } })
     }
 
     override fun setFolders(folders: List<Folder>) {

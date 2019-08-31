@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 class ObservedFoldersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
         fun setFolders(folders: List<Folder>)
+        fun loadFolders()
     }
 
     suspend fun loadMockFolders() {
@@ -31,10 +32,10 @@ class ObservedFoldersInteractor(val controller: Controller, val database: M2kDat
     }
 
     suspend fun addFolder(folder: Folder) {
-        database.FolderDao().insert(folder)
+        database.FolderDao().insert(folder).also { controller.loadFolders() }
     }
 
     suspend fun deleteFoldere(folder: Folder) {
-        database.FolderDao().delete(folder)
+        database.FolderDao().delete(folder).also { controller.loadFolders() }
     }
 }

@@ -13,7 +13,7 @@ import kotlin.coroutines.CoroutineContext
 
 
 class FolderFormController : Controller, CoroutineScope,
-    FolderFormContract.Controller {
+    FolderFormContract.Controller, FolderFormInteractor.Controller {
     //#region vals and vars
 
     private val READ_REQUEST_CODE = 1
@@ -57,18 +57,18 @@ class FolderFormController : Controller, CoroutineScope,
     //#region public methods
 
     override fun saveFolder(folder: Folder) {
-        // This one is using the GlobalScope to save the folder because when the onBackPressed is called the local scope no longer exists
-        GlobalScope.launch { interactor.addFolder(folder) }
-        activity!!.onBackPressed()
+        launch { interactor.addFolder(folder) }
     }
 
     override fun cancelEdit() {
-        activity!!.onBackPressed()
+        done()
     }
 
     override fun deleteFolder(folder: Folder) {
-        // This one is using the GlobalScope to delete the folder because when the onBackPressed is called the local scope no longer exists
-        GlobalScope.launch { interactor.deleteFoldere(folder) }
+        launch { interactor.deleteFoldere(folder) }
+    }
+
+    override fun done() {
         activity!!.onBackPressed()
     }
 

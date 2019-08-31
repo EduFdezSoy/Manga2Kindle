@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
+import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
+import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -69,6 +71,10 @@ class FolderFormController : Controller, CoroutineScope,
 
     override fun deleteFolder(folder: Folder) {
         launch { interactor.deleteFoldere(folder) }
+        (activity as BaseActivity).showSnackbar(
+            "Folder " + folder.name + " deleted",
+            Snackbar.LENGTH_LONG
+        )
     }
 
     override fun done() {

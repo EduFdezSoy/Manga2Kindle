@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
+import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm.FolderFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +72,14 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     }
 
     override fun deleteFolder(folder: Folder) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        launch { interactor.deleteFoldere(folder) }
+        (activity as BaseActivity).showSnackbar("Folder " + folder.name + " deleted",
+            Snackbar.LENGTH_LONG,
+            "Undo",
+            View.OnClickListener {
+                launch { interactor.addFolder(folder) }
+                loadFolders()
+            })
     }
 
     override fun setFolders(folders: List<Folder>) {

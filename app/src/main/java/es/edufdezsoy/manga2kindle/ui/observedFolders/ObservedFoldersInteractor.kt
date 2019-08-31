@@ -29,4 +29,12 @@ class ObservedFoldersInteractor(val controller: Controller, val database: M2kDat
         val folders = database.FolderDao().getAll()
         controller.setFolders(folders)
     }
+
+    suspend fun addFolder(folder: Folder) {
+        database.FolderDao().insert(folder)
+    }
+
+    suspend fun deleteFoldere(folder: Folder) {
+        database.FolderDao().delete(folder)
+    }
 }

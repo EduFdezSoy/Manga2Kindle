@@ -25,6 +25,15 @@ class ObservedFoldersView(val view: View, val controller: ObservedFoldersControl
                 )
             )
         })
+        adapter.setOnLongClickListener(View.OnLongClickListener { v ->
+            controller.deleteFolder(
+                adapter.folders.get(
+                    view.rvObservedFolders.getChildAdapterPosition(v)
+                )
+            )
+            controller.loadFolders()
+            return@OnLongClickListener true
+        })
         view.rvObservedFolders.adapter = adapter
         view.flBackground.visibility = View.GONE
     }

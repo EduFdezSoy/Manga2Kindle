@@ -11,21 +11,6 @@ class ObservedFoldersInteractor(val controller: Controller, val database: M2kDat
         fun loadFolders()
     }
 
-    suspend fun loadMockFolders() {
-        var folders = listOf<Folder>()
-        withContext(Dispatchers.Default) {
-            Thread.sleep(2_000)
-            folders = listOf(
-                Folder(1, "Test 1", "/path/test/NumberOne"),
-                Folder(2, "Test 2", "/path/test/SecondFolder"),
-                Folder(3, "Test 3", "/path/test/TheNextOne"),
-                Folder(4, "Test 4", "/path/test/NotTheFifth")
-            )
-        }.also {
-            controller.setFolders(folders)
-        }
-    }
-
     suspend fun loadFolders() {
         val folders = database.FolderDao().getAll()
         controller.setFolders(folders)

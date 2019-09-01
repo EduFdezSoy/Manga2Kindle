@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Manga2Kindle</string>
+    <string name="service_description">Search for new manga chapters</string>
 </resources>

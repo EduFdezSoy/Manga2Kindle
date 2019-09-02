@@ -5,17 +5,20 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.File
+import java.net.URI
 import kotlin.coroutines.CoroutineContext
 
 class ScanManga : Service(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_ScanManga"
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default + job
+        get() = Dispatchers.Main + job
 
     override fun onCreate() {
         job = Job()
@@ -34,16 +37,18 @@ class ScanManga : Service(), CoroutineScope {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Service started")
         launch {
-            var i = 0
-            while (i < 3) {
-                try {
-                    Log.i(TAG, "Doing something")
-                    Thread.sleep(10000)
-                    i++
+            val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
+            folders.forEach {
+                val f = File(it.path).list()
+                Log.d(TAG, it.path)
 
-                } catch (e: Exception) {
-                    Log.e(TAG, "Oops!", e)
-                }
+                if (!f.isNullOrEmpty())
+                    f.forEach { s ->
+                            Log.d(TAG, "Inside:")
+
+                        if (s.isNotEmpty())
+                            Log.d(TAG, s)
+                    }
             }
         }
         return START_STICKY

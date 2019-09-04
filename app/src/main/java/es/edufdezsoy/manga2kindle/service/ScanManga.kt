@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.service
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
@@ -13,8 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.File
-import java.net.URI
 import kotlin.coroutines.CoroutineContext
 
 class ScanManga : Service(), CoroutineScope {
@@ -49,13 +46,12 @@ class ScanManga : Service(), CoroutineScope {
         return START_STICKY
     }
 
-    fun printAllFolders(doc: DocumentFile) {
+    private fun printAllFolders(doc: DocumentFile) {
         doc.listFiles().forEach {
             if (it.isDirectory) {
                 Log.d("AAA Folder", it.name!!)
                 printAllFolders(it)
-            }
-            else {
+            } else {
                 Log.d("AAA File", it.name!!)
             }
         }

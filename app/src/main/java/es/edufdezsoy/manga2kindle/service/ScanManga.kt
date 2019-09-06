@@ -18,7 +18,7 @@ class ScanManga : Service(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_ScanManga"
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = Dispatchers.IO + job
 
     override fun onCreate() {
         job = Job()
@@ -35,17 +35,24 @@ class ScanManga : Service(), CoroutineScope {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "Service started")
         launch {
             val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
             folders.forEach {
                 val docFile = DocumentFile.fromTreeUri(this@ScanManga, Uri.parse(it.path))
-                val list = getListOfFoldersNFiles(docFile!!)
+                if (docFile!!.canRead()) {
+                    val list = getListOfFoldersNFiles(docFile)
 
-                list.forEach {
-                    Log.d("AAAA", it)
+                    list.forEach {
+                        Log.d(TAG, it)
+                    }
+                } else {
+                    Log.e(
+                        TAG,
+                        "Can't read the folder. \n Folder: " + it.name + "\n (" + it.path + ")"
+                    )
                 }
             }
+            stopSelf(startId)
         }
         return START_STICKY
     }

@@ -40,20 +40,44 @@ class ScanManga : Service(), CoroutineScope {
             val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
             folders.forEach {
                 val docFile = DocumentFile.fromTreeUri(this@ScanManga, Uri.parse(it.path))
-                printAllFolders(docFile!!)
+                val list = getListOfFoldersNFiles(docFile!!)
+
+                list.forEach {
+                    Log.d("AAAA", it)
+                }
             }
         }
         return START_STICKY
     }
 
-    private fun printAllFolders(doc: DocumentFile) {
+    /**
+     *
+     * @return an ordered list of folders and files
+     */
+    private fun getListOfFoldersNFiles(doc: DocumentFile): List<String> {
+        val tree = ArrayList<String>()
+        var supTree: List<String>
+
         doc.listFiles().forEach {
             if (it.isDirectory) {
-                Log.d("AAA Folder", it.name!!)
-                printAllFolders(it)
+                supTree = getListOfFoldersNFiles(it)
+
+                tree.add(it.name!! + '/')
+                tree.addAll(supTree)
             } else {
-                Log.d("AAA File", it.name!!)
+                tree.add(it.name!!)
             }
         }
+
+        return tree
+    }
+
+    /**
+     *
+     * @return a list of mangas
+     */
+    private fun searchForMangas(tree: List<String>): List<String> {
+
+        return tree
     }
 }

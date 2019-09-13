@@ -5,7 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Manga(
-    @PrimaryKey val id: Int,
+    var id: Int,
     val title: String,
-    val author_id: String?
-)
+    val author_id: Int?
+) {
+    @PrimaryKey(autoGenerate = true)
+    var identifier: Int = 0
+    var synchronized: Boolean = false
+}

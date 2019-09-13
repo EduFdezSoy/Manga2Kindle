@@ -14,7 +14,7 @@ interface ChapterDao {
     suspend fun getChapter(chapter_id: Int): Chapter
 
     @Query("SELECT * FROM chapter WHERE manga_id = :manga_id AND chapter = :chapter")
-    suspend fun search(manga_id: Int, chapter: Float)
+    suspend fun search(manga_id: Int, chapter: Float): Chapter?
 
     @Insert
     suspend fun insert(chapter: Chapter)

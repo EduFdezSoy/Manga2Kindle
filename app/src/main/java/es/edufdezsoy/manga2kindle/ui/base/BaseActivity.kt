@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -19,6 +20,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.service.ScanManga
 import es.edufdezsoy.manga2kindle.ui.main.MainController
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
 import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
@@ -46,6 +48,9 @@ open class BaseActivity : AppCompatActivity() {
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()
+
+        // Start our scanner service
+        startService(Intent(this, ScanManga::class.java))
     }
 
     override fun onBackPressed() {

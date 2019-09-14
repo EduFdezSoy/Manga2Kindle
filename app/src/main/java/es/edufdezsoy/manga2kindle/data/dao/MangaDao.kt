@@ -14,6 +14,9 @@ interface MangaDao {
     @Query("SELECT * FROM manga WHERE id = :manga_id")
     suspend fun getManga(manga_id: Int): Manga
 
+    @Query("SELECT * FROM manga ORDER BY id DESC LIMIT 1")
+    suspend fun getLastManga(): Manga?
+
     // TODO: the params in 'LIKE' maye be in between %, search how to edit the var before performing the query
     @Query("SELECT * FROM manga WHERE title LIKE :search")
     suspend fun search(search: String): List<Manga>

@@ -54,10 +54,6 @@ class ScanManga : Service(), CoroutineScope {
                     }
 
                     if (series.size == 1) {
-                        Log.i(
-                            TAG,
-                            "Only one manga found for this chapters (thats the right thing!)"
-                        )
                         var manga = M2kDatabase(this@ScanManga).MangaDao().search(series[0])
                         if (manga.isEmpty()) {
                             manga = ApiService.apiService.searchManga(series[0])
@@ -82,11 +78,11 @@ class ScanManga : Service(), CoroutineScope {
                             // Chapter Name can have numbers take care with it
 
                             var chapterName: String? = ""
-                            val chapterNum = pickChapter(it)
-                            val chapterVol = pickVolume(it)
+                            val chapterNum = pickChapter(it[0])
+                            val chapterVol = pickVolume(it[0])
 
 
-                            val str = it.split(" - ")
+                            val str = it[0].split(" - ")
 
                             // chapterName
                             if (str.size == 2) {
@@ -117,7 +113,7 @@ class ScanManga : Service(), CoroutineScope {
                                     chapterVol,
                                     chapterNum,
                                     chapterName,
-                                    "TODO",
+                                    it[1],
                                     null,
                                     false,
                                     false,
@@ -133,14 +129,14 @@ class ScanManga : Service(), CoroutineScope {
                 } else {
                     Log.e(
                         TAG,
-                        "Can't read the folder. \n Folder: " + it.name + "\n (" + it.path + ")"
+                        "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
                     )
                 }
             }
-            stopSelf(startId)
-
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
             val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
+
+            Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
             chaptersDebug.forEach {
                 Log.d(
                     TAG,
@@ -148,26 +144,27 @@ class ScanManga : Service(), CoroutineScope {
                 )
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+
+            stopSelf(startId)
         }
         return START_STICKY
     }
 
     /**
      *
-     * @return an ordered list of folders and files
+     * @return an ordered list of folders and files with their paths
      */
-    private fun getListOfFoldersNFiles(doc: DocumentFile): List<String> {
-        val tree = ArrayList<String>()
-        var supTree: List<String>
+    private fun getListOfFoldersNFiles(doc: DocumentFile): List<Array<String>> {
+        val tree = ArrayList<Array<String>>()
 
         doc.listFiles().forEach {
             if (it.isDirectory) {
-                supTree = getListOfFoldersNFiles(it)
+                val supTree = getListOfFoldersNFiles(it)
 
-                tree.add(it.name!!)
+                tree.add(arrayOf(it.name!!, it.uri.toString()))
                 tree.addAll(supTree)
             } else {
-                tree.add(it.name!!)
+                tree.add(arrayOf(it.name!!, it.uri.toString()))
             }
         }
 
@@ -178,17 +175,17 @@ class ScanManga : Service(), CoroutineScope {
      *
      * @return a list of mangas
      */
-    private fun searchForMangas(tree: List<String>): List<String> {
-        val mangas = ArrayList<String>()
+    private fun searchForMangas(tree: List<Array<String>>): List<Array<String>> {
+        val mangas = ArrayList<Array<String>>()
         val mangaPageRegex = Pattern.compile("[0-9]{3}\\.(png|jpg)")
         var canBe = false
 
         tree.asReversed().forEach {
-            if (mangaPageRegex.matcher(it).matches()) {
+            if (mangaPageRegex.matcher(it[0]).matches()) {
                 canBe = true
             } else {
                 if (canBe)
-                    mangas.add(it)
+                    mangas.add(arrayOf(it[0], it[1]))
 
                 canBe = false
             }
@@ -201,7 +198,7 @@ class ScanManga : Service(), CoroutineScope {
      *
      * @return a list of series based on the list of mangas
      */
-    private fun getSeries(tree: List<String>, mangas: List<String>): List<String> {
+    private fun getSeries(tree: List<Array<String>>, mangas: List<Array<String>>): List<String> {
         val series = ArrayList<String>()
         var thisOne = false
         val mangaPageRegex = Pattern.compile("[0-9]{3}\\.(png|jpg)")
@@ -209,13 +206,13 @@ class ScanManga : Service(), CoroutineScope {
         mangas.forEach { manga ->
             tree.asReversed().forEach {
                 if (thisOne) {
-                    if (!mangaPageRegex.matcher(it).matches()) {
-                        series.add(it)
+                    if (!mangaPageRegex.matcher(it[0]).matches()) {
+                        series.add(it[0])
                     }
                     thisOne = false
                 }
 
-                if (it == manga) {
+                if (it[0] == manga[0]) {
                     thisOne = true
                 }
             }
@@ -271,4 +268,6 @@ class ScanManga : Service(), CoroutineScope {
         else
             return volume.toInt()
     }
+
+
 }

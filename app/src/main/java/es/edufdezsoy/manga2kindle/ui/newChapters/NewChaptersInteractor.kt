@@ -9,8 +9,7 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
     }
 
     suspend fun loadChapters() {
-        val chapters = database.ChapterDao().getAll()
-        // TODO: FILTER UPLOADED ONES, CREATE A NEW QUERY
+        val chapters = database.ChapterDao().getNoUploadedChapters()
         controller.setNewChapters(chapters)
     }
 }

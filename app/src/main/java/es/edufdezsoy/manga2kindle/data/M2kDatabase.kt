@@ -13,7 +13,7 @@ import es.edufdezsoy.manga2kindle.data.model.*
 )
 abstract class M2kDatabase : RoomDatabase() {
     abstract fun FolderDao(): FolderDao
-    abstract fun authorDao(): AuthorDao
+    abstract fun AuthorDao(): AuthorDao
     abstract fun MangaDao(): MangaDao
     abstract fun LanguageDao(): LanguageDao
     abstract fun ChapterDao(): ChapterDao

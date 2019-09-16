@@ -115,10 +115,10 @@ class ScanManga : Service(), CoroutineScope {
                                     chapterName,
                                     it[1],
                                     null,
-                                    false,
-                                    false,
-                                    null,
-                                    true
+                                    delivered = false,
+                                    error = false,
+                                    reason = null,
+                                    visible = true
                                 )
                                 M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
                             }

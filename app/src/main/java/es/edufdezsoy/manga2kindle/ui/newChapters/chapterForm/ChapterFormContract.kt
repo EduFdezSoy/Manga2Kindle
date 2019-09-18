@@ -5,11 +5,14 @@ import es.edufdezsoy.manga2kindle.data.model.Manga
 
 interface ChapterFormContract {
     interface Controller {
-        fun saveData(chapter: Chapter, manga: Manga)
+        fun saveData(chapter: Chapter, manga: Manga, mail: String?)
         fun sendChapter(chapter: Chapter, manga: Manga, mail: String)
+        fun cancelEdit()
     }
 
     interface View {
-        fun setView(chapter: Chapter, manga: Manga, mail: String?)
+        fun setChapter(chapter: Chapter)
+        fun setManga(manga: Manga)
+        fun setMail(mail: String)
     }
 }

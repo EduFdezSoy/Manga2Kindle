@@ -19,13 +19,22 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
     override fun setChapters(chapters: List<Chapter>) {
         val adapter = NewChapterAdapter(chapters)
         adapter.setOnClickListener(View.OnClickListener { v ->
-            Toast.makeText(
-                view.context,
-                "yeah, it works",
-                Toast.LENGTH_LONG
-            ).show()
+            controller.openChapterDetails(
+                adapter.chapters.get(
+                    view.rvNewChapters.getChildAdapterPosition(v)
+                )
+            )
         })
 
+        adapter.setOnLongClickListener(View.OnLongClickListener {
+            Toast.makeText(
+                view.context,
+                "TODO: hide entry",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return@OnLongClickListener false
+        })
         view.rvNewChapters.adapter = adapter
         view.flBackground.visibility = View.GONE
     }

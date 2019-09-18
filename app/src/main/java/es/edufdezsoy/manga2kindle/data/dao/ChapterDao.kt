@@ -3,6 +3,7 @@ package es.edufdezsoy.manga2kindle.data.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 
 @Dao
@@ -22,6 +23,9 @@ interface ChapterDao {
 
     @Insert
     suspend fun insert(chapter: Chapter)
+
+    @Update
+    suspend fun update(chapter: Chapter)
 
     @Query("UPDATE chapter SET visible = 0 WHERE id = :chapter_id")
     suspend fun delete(chapter_id: Int)

@@ -4,7 +4,7 @@ import android.view.View
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import kotlinx.android.synthetic.main.view_folder_form.view.*
 
-class FolderFormView(val view: View, val controller: FolderFormController) :
+class FolderFormView(val view: View, val controller: FolderFormContract.Controller) :
     FolderFormContract.View {
     private var folder = Folder(0, "", "")
 

@@ -40,7 +40,7 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
             holder.manga?.text = ""
             holder.author?.text = ""
 
-            val manga = M2kDatabase(context).MangaDao().getManga(chapters[position].manga_id)
+            val manga = M2kDatabase(context).MangaDao().getMangaById(chapters[position].manga_id)
             holder.manga?.text = manga.title
 
             val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }

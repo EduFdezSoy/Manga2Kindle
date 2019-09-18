@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Manga(
-    var id: Int,
+    var id: Int?,
     val title: String,
     val author_id: Int?
 ) {

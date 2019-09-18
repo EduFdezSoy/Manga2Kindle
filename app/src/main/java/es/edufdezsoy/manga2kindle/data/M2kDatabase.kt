@@ -9,7 +9,7 @@ import es.edufdezsoy.manga2kindle.data.model.*
 
 @Database(
     entities = [Folder::class, Author::class, Manga::class, Language::class, Chapter::class],
-    version = 2
+    version = 3
 )
 abstract class M2kDatabase : RoomDatabase() {
     abstract fun FolderDao(): FolderDao
@@ -28,6 +28,8 @@ abstract class M2kDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context, M2kDatabase::class.java, "manga2kindle.db").build()
+            Room.databaseBuilder(context, M2kDatabase::class.java, "manga2kindle.db")
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }

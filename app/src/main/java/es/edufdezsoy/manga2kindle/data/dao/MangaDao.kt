@@ -14,6 +14,9 @@ interface MangaDao {
     @Query("SELECT * FROM manga WHERE id = :manga_id")
     suspend fun getManga(manga_id: Int): Manga
 
+    @Query("SELECT * FROM manga WHERE identifier = :manga_id")
+    suspend fun getMangaById(manga_id: Int): Manga
+
     @Query("SELECT * FROM manga ORDER BY id DESC LIMIT 1")
     suspend fun getLastManga(): Manga?
 

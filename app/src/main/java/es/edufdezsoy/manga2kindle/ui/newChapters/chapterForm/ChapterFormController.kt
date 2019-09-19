@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +72,7 @@ class ChapterFormController : Controller, CoroutineScope,
     /**
      * Called from the view
      */
-    override fun sendChapter(chapter: Chapter, manga: Manga, mail: String) {
+    override fun sendChapter(chapter: Chapter, mail: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -87,6 +88,17 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun setManga(manga: Manga) {
         view.setManga(manga)
+        launch {
+            if (manga.author_id != null)
+                interactor.getAuthor(manga.author_id)
+        }
+    }
+
+    /**
+     * Called from the interactor
+     */
+    override fun setAuthor(author: Author) {
+        view.setAuthor(author)
     }
 
     /**

@@ -1,6 +1,8 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
+import android.text.InputType
 import android.view.View
+import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
@@ -12,7 +14,9 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
 
     init {
-
+        view.btnReturn.setOnClickListener { controller.cancelEdit() }
+        view.btnUpload.setOnClickListener {  }
+        view.btnSave.setOnClickListener {  }
     }
 
     override fun setChapter(chapter: Chapter) {
@@ -29,6 +33,24 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         this.manga = manga
 
         view.tietManga.setText(manga.title)
+    }
+
+    override fun setAuthor(author: Author) {
+        var authorText = ""
+        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
+            if (!author.surname.isNullOrEmpty())
+                authorText += author.surname + " "
+            if (!author.name.isNullOrEmpty())
+                authorText += author.name + " "
+            if (!author.nickname.isNullOrEmpty())
+                authorText += "(AKA " + author.nickname + ")"
+        } else {
+            if (!author.nickname.isNullOrEmpty())
+                authorText += author.nickname
+        }
+
+        view.tietAuthor.inputType = InputType.TYPE_NULL
+        view.tietAuthor.setText(authorText)
     }
 
     override fun setMail(mail: String) {

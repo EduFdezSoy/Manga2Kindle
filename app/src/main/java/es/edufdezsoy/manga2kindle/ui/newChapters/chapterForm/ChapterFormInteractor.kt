@@ -1,12 +1,17 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
+import android.util.Log
+import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.network.ApiService
 
 class ChapterFormInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
         fun setManga(manga: Manga)
+        fun setAuthor(author: Author)
         fun setMail(mail: String?)
         fun done()
     }
@@ -21,6 +26,31 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
 
     suspend fun saveManga(manga: Manga) {
         database.MangaDao().update(manga).also { controller.done() }
+    }
+
+    suspend fun getAuthor(id: Int) {
+        var author = database.AuthorDao().getAuthor(id)
+
+        if (author == null) {
+            author = ApiService.apiService.getAuthor(id)[0]
+            database.AuthorDao().insert(author)
+        }
+
+        controller.setAuthor(author)
+    }
+
+    suspend fun saveAuthor(author: Author) {
+        if (database.AuthorDao().getAuthor(author.id) == null) {
+            val authorFinal = ApiService.apiService.addAuthor(author.name, author.surname, author.nickname)[0]
+            database.AuthorDao().insert(authorFinal)
+        } else {
+            Log.e(
+                M2kApplication.TAG, "Author alredy exists"
+                        + "\nID: " + author.id
+                        + "\nName: " + author.name + " " + author.surname
+                        + "\nAlias: " + author.nickname
+            )
+        }
     }
 
     suspend fun getMail() {

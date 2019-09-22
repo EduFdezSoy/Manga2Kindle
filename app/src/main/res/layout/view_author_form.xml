@@ -6,6 +6,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <FrameLayout
+            android:id="@+id/flBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnSave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tilNickname">
+
+        <TextView
+                android:id="@+id/tvViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text='Hey! \nRemeber, in Japanese names and surnames are reversed so in "Kamoshida Hajime" the name is "Hajime"! \nTry not to mess this up!'
+                android:textStyle="bold" />
+    </FrameLayout>
+
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilName"
             android:layout_width="match_parent"

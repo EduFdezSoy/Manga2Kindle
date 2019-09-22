@@ -11,12 +11,14 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     ChapterFormContract.View {
     private lateinit var chapter: Chapter
     private lateinit var manga: Manga
+    private lateinit var mail: String
 
 
     init {
+        view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
         view.btnReturn.setOnClickListener { controller.cancelEdit() }
-        view.btnUpload.setOnClickListener {  }
-        view.btnSave.setOnClickListener {  }
+        view.btnUpload.setOnClickListener { controller.sendChapter(chapter, mail) }
+        view.btnSave.setOnClickListener { controller.saveData(chapter, manga, mail) }
     }
 
     override fun setChapter(chapter: Chapter) {
@@ -54,6 +56,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     }
 
     override fun setMail(mail: String) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.mail = mail
+        view.tietEmail.setText(mail)
     }
 }

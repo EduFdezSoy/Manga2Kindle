@@ -15,7 +15,7 @@ interface AuthorDao {
     @Query("SELECT * FROM author WHERE name LIKE :search OR surname LIKE :search OR nickname LIKE :search")
     suspend fun search(search: String): List<Author>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg authors: Author)
 
     @Update

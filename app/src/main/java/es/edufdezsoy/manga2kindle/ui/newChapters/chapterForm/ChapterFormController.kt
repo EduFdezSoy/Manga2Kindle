@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -74,6 +76,17 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun sendChapter(chapter: Chapter, mail: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * Called from the view
+     */
+    override fun openAuthorForm() {
+        router.pushController(
+            RouterTransaction.with(AuthorFormController(chapter))
+                .pushChangeHandler(overriddenPushHandler)
+                .popChangeHandler(overriddenPopHandler)
+        )
     }
 
     /**

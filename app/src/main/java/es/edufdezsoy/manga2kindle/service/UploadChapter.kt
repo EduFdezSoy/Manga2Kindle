@@ -9,9 +9,9 @@ import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.network.ApiService
 import org.apache.commons.io.IOUtils
-import java.io.File
-import java.io.FileOutputStream
-import java.util.zip.ZipFile
+import java.io.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 class UploadChapter(val context: Context) {
     private val TAG = M2kApplication.TAG + "_UploadChap"
@@ -79,6 +79,50 @@ class UploadChapter(val context: Context) {
         // get the list of files inside that uri
         val docList = getFileList(uri)
 
+
+        val pfd = context.contentResolver.openFileDescriptor(uri, "r")
+        val fd = pfd!!.fileDescriptor
+        // use this
+        //https://stackoverflow.com/questions/28897329/documentfile-randomaccessfile
+        //https://developer.android.com/reference/java/io/FileInputStream
+        //https://stackoverflow.com/questions/25562262/how-to-compress-files-into-zip-folder-in-android
+
+        // zip the file, this is another function because yes
+        zip()
+    }
+
+    private suspend fun zip(_files: Array<String>, zipFileName: String) {
+        try {
+            val BUFFER = 2048
+            var origin: BufferedInputStream? = null
+            val dest = FileOutputStream(zipFileName)
+            val out = ZipOutputStream(BufferedOutputStream(dest))
+            val data = ByteArray(BUFFER)
+
+            _files.forEach {
+                Log.v("Compress", "Adding: " + it)
+                val fi = FileInputStream(it)
+                val f = FileInputStream(File())
+                origin = BufferedInputStream(fi, BUFFER)
+
+                val entry = ZipEntry(it.substring(it.lastIndexOf("/") + 1))
+                out.putNextEntry(entry)
+                var count: Int
+
+                do {
+                    count = origin!!.read(data, 0, BUFFER)
+                    if (count != -1) {
+                        out.write(data, 0, count)
+                    }
+                } while (count != -1)
+                origin!!.close()
+            }
+            out.close()
+        } catch (e: Exception) {
+            Log.e(TAG, "Something goes wrong while zipping!")
+            e.printStackTrace()
+        }
+
     }
 
     private fun getFileList(uri: Uri): List<DocumentFile> {
@@ -89,9 +133,11 @@ class UploadChapter(val context: Context) {
             docFile.listFiles().forEach {
                 docFileList.add(it)
             }
-
         } else {
-            Log.e(TAG, "Can't read the folder, is null or is not a folder. \n Folder: " + uri.toString())
+            Log.e(
+                TAG,
+                "Can't read the folder, is null or is not a folder. \n Folder: " + uri.toString()
+            )
         }
 
         return docFileList

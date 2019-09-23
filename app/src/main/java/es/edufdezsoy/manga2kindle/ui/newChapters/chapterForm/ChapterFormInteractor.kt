@@ -41,7 +41,8 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
 
     suspend fun saveAuthor(author: Author) {
         if (database.AuthorDao().getAuthor(author.id) == null) {
-            val authorFinal = ApiService.apiService.addAuthor(author.name, author.surname, author.nickname)[0]
+            val authorFinal =
+                ApiService.apiService.addAuthor(author.name, author.surname, author.nickname)[0]
             database.AuthorDao().insert(authorFinal)
         } else {
             Log.e(
@@ -54,11 +55,26 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
     }
 
     suspend fun getMail() {
-        // TODO(get mail from shared preferences)
+        // TODO("get mail from shared preferences")
         controller.setMail(null)
     }
 
     suspend fun saveMail(mail: String) {
-        TODO("save mail into shared preferences")
+        // TODO("save mail into shared preferences")
+    }
+
+    suspend fun sendChapter(chapter: Chapter, mail: String) {
+        chapter.sended = true
+        database.ChapterDao().update(chapter)
+        ApiService.apiService.sendChapter(
+            manga_id = chapter.manga_id,
+            lang_id = chapter.lang_id,
+            title = chapter.title,
+            chapter = chapter.chapter,
+            volume = chapter.volume,
+            checksum = chapter.checksum,
+            mail = mail
+        )
+        controller.done()
     }
 }

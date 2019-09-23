@@ -13,13 +13,14 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     private lateinit var manga: Manga
     private lateinit var mail: String
 
-
     init {
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
         view.btnReturn.setOnClickListener { controller.cancelEdit() }
         view.btnUpload.setOnClickListener { controller.sendChapter(chapter, mail) }
         view.btnSave.setOnClickListener { controller.saveData(chapter, manga, mail) }
     }
+
+    // TODO: if something is edited disable the upload button until changes are saved
 
     override fun setChapter(chapter: Chapter) {
         this.chapter = chapter

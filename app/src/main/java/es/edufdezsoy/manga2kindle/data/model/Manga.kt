@@ -10,6 +10,6 @@ data class Manga(
     val author_id: Int?
 ) {
     @PrimaryKey(autoGenerate = true)
-    var identifier: Int = 0
+    val identifier: Int = 0
     var synchronized: Boolean = false
 }

@@ -75,7 +75,10 @@ class ChapterFormController : Controller, CoroutineScope,
      * Called from the view
      */
     override fun sendChapter(chapter: Chapter, mail: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        launch {
+            interactor.saveMail(mail)
+            interactor.
+        }
     }
 
     /**

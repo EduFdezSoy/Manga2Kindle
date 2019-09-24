@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ class ChapterFormController : Controller, CoroutineScope,
     private lateinit var interactor: ChapterFormInteractor
     private lateinit var view: ChapterFormView
     private lateinit var chapter: Chapter
+    private lateinit var context: Context
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -43,6 +45,7 @@ class ChapterFormController : Controller, CoroutineScope,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_chapter_form, container, false)
         interactor = ChapterFormInteractor(this, M2kDatabase.invoke(v.context))
+        context = v.context
 
         job = Job()
         view = ChapterFormView(view = v, controller = this)
@@ -77,7 +80,7 @@ class ChapterFormController : Controller, CoroutineScope,
     override fun sendChapter(chapter: Chapter, mail: String) {
         launch {
             interactor.saveMail(mail)
-            interactor.
+            interactor.sendChapter(chapter, mail, context)
         }
     }
 

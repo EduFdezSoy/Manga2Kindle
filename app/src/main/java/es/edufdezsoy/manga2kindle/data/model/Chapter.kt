@@ -19,6 +19,6 @@ data class Chapter(
     var visible: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
-    val identifier: Int = 0
+    var identifier: Int = 0
     var sended: Boolean =  false
 }

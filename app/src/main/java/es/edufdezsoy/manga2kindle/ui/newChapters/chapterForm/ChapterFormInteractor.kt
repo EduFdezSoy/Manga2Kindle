@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
+import android.content.Context
 import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
@@ -7,6 +8,7 @@ import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.service.UploadChapter
 
 class ChapterFormInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
@@ -63,18 +65,9 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
         // TODO("save mail into shared preferences")
     }
 
-    suspend fun sendChapter(chapter: Chapter, mail: String) {
+    suspend fun sendChapter(chapter: Chapter, mail: String, context: Context) {
         chapter.sended = true
-        database.ChapterDao().update(chapter)
-        ApiService.apiService.sendChapter(
-            manga_id = chapter.manga_id,
-            lang_id = chapter.lang_id,
-            title = chapter.title,
-            chapter = chapter.chapter,
-            volume = chapter.volume,
-            checksum = chapter.checksum,
-            mail = mail
-        )
+        UploadChapter(context).upload(chapter, mail)
         controller.done()
     }
 }

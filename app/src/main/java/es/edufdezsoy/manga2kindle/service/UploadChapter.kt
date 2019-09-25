@@ -81,7 +81,7 @@ class UploadChapter(val context: Context) {
 
             // upload the chapter
             ApiService.apiService.sendChapter(
-                manga_id = chapter.manga_id,
+                manga_id = manga.id!!,
                 lang_id = chapter.lang_id!!,
                 title = title,
                 chapter = chapter.chapter,
@@ -89,8 +89,11 @@ class UploadChapter(val context: Context) {
                 checksum = chapter.checksum!!,
                 mail = mail,
                 file = part
-            )
-
+            ).also {
+                chapter.id = it[0].id
+                chapter.sended = true
+                database.ChapterDao().update(chapter)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Something's bad with the upload!")
             e.printStackTrace()
@@ -118,7 +121,7 @@ class UploadChapter(val context: Context) {
             val data = ByteArray(BUFFER)
 
             files.forEach {
-                Log.v(TAG, "Compressing. Adding: \n" + it.toString())
+//                Log.v(TAG, "Compressing. Adding: \n" + it.toString())
                 val fd = context.contentResolver.openFileDescriptor(it, "r")
                 val fi = FileInputStream(fd!!.fileDescriptor)
                 origin = BufferedInputStream(fi, BUFFER)

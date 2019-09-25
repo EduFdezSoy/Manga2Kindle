@@ -8,7 +8,7 @@ data class Chapter(
     var id: Int?,
     val manga_id: Int,
     var lang_id: Int?,
-    val volume: Int?,
+    var volume: Int?,
     val chapter: Float,
     var title: String?,
     var file_path: String?,

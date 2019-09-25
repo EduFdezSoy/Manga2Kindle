@@ -66,7 +66,6 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
     }
 
     suspend fun sendChapter(chapter: Chapter, mail: String, context: Context) {
-        chapter.sended = true
         UploadChapter(context).upload(chapter, mail)
         controller.done()
     }

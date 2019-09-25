@@ -11,7 +11,7 @@ object ApiService {
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
+//        .addInterceptor(interceptor)
         .build()
 
     private val retrofit = Retrofit.Builder()

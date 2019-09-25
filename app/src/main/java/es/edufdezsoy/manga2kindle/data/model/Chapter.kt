@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Chapter(
-    val id: Int?,
+    var id: Int?,
     val manga_id: Int,
-    val lang_id: Int?,
-    val volume: Int?,
+    var lang_id: Int?,
+    var volume: Int?,
     val chapter: Float,
-    val title: String?,
+    var title: String?,
     var file_path: String?,
-    val checksum: String?,
+    var checksum: String?,
     var delivered: Boolean,
     var error: Boolean,
     var reason: String?,
@@ -20,4 +20,5 @@ data class Chapter(
 ) {
     @PrimaryKey(autoGenerate = true)
     var identifier: Int = 0
+    var sended: Boolean =  false
 }

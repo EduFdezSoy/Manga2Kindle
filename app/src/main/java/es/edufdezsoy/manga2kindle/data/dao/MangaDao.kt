@@ -1,9 +1,6 @@
 package es.edufdezsoy.manga2kindle.data.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import es.edufdezsoy.manga2kindle.data.model.Manga
 
 @Dao
@@ -26,6 +23,9 @@ interface MangaDao {
 
     @Insert
     suspend fun insert(vararg manga: Manga)
+
+    @Update
+    suspend fun update(manga: Manga)
 
     @Delete
     suspend fun delete(manga: Manga)

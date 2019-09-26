@@ -27,6 +27,8 @@ class ScanManga : Service(), CoroutineScope {
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
         Pattern.compile(".*Ch.\\d+.*"),
+        // Oneshot chapters usually dont have Vol or Ch
+        Pattern.compile(".*Oneshot.*"),
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
         Pattern.compile("[#]\\d+.*")
     )
@@ -106,25 +108,32 @@ class ScanManga : Service(), CoroutineScope {
                                 chapterTitle = null
                             }
 
-
-                            val chapterExists = M2kDatabase(this@ScanManga).ChapterDao()
-                                .search(manga[0].identifier, chapterNum)
-                            if (chapterExists == null) {
-                                val chapter = Chapter(
-                                    id = null,
-                                    manga_id = manga[0].identifier,
-                                    lang_id = null,
-                                    volume = chapterVol,
-                                    chapter = chapterNum,
-                                    title = chapterTitle,
-                                    file_path = it.uri.toString(),
-                                    checksum = null,
-                                    delivered = false,
-                                    error = false,
-                                    reason = null,
-                                    visible = true
-                                )
-                                M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
+                            try {
+                                val chapterExists = M2kDatabase(this@ScanManga).ChapterDao()
+                                    .search(manga[0].identifier, chapterNum)
+                                if (chapterExists == null) {
+                                    val chapter = Chapter(
+                                        id = null,
+                                        manga_id = manga[0].identifier,
+                                        lang_id = null,
+                                        volume = chapterVol,
+                                        chapter = chapterNum,
+                                        title = chapterTitle,
+                                        file_path = it.uri.toString(),
+                                        checksum = null,
+                                        delivered = false,
+                                        error = false,
+                                        reason = null,
+                                        visible = true
+                                    )
+                                    M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
+                                }
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error in 111, thats the data I can see useful: \n" +
+                                        "manga: List<Manga> Size = " + manga.size + "\n" +
+                                        "docFile name = " + it.name!! + "\n" +
+                                        "uri = " + it.uri)
+                                e.printStackTrace()
                             }
                         }
                     }
@@ -136,6 +145,7 @@ class ScanManga : Service(), CoroutineScope {
                 }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+            // TODO("remove DEBUG when no longer needed")
             val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
 
             Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
@@ -246,6 +256,9 @@ class ScanManga : Service(), CoroutineScope {
         while (matcher.find()) {
             chapter = matcher.group()
         }
+
+        if (chapter.isBlank())
+            chapter = "0"
 
         return chapter.toFloat()
     }

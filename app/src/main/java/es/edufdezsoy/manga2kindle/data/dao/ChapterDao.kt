@@ -18,6 +18,9 @@ interface ChapterDao {
     @Query("SELECT * FROM chapter WHERE sended = 0")
     suspend fun getNoUploadedChapters(): List<Chapter>
 
+    @Query("SELECT * FROM chapter WHERE sended = 1")
+    suspend fun getUploadedChapters(): List<Chapter>
+
     @Query("SELECT * FROM chapter WHERE manga_id = :manga_id AND chapter = :chapter")
     suspend fun search(manga_id: Int, chapter: Float): Chapter?
 

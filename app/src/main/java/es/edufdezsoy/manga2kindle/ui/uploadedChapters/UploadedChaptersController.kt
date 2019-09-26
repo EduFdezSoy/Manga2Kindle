@@ -5,15 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class UploadedChaptersController : Controller(), CoroutineScope {
+class UploadedChaptersController : Controller(), CoroutineScope,
+    UploadedChaptersContract.Controller, UploadedChaptersInteractor.Controller {
     //#region vars and vals
 
-    val interactor = UploadedChaptersInteractor
+    private lateinit var interactor: UploadedChaptersInteractor
     lateinit var view: UploadedChaptersView
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -24,6 +28,8 @@ class UploadedChaptersController : Controller(), CoroutineScope {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_uploaded_chapters, container, false)
+
+        interactor = UploadedChaptersInteractor(this, M2kDatabase.invoke(v.context))
 
         job = Job()
         view = UploadedChaptersView(view = v, controller = this)
@@ -36,5 +42,26 @@ class UploadedChaptersController : Controller(), CoroutineScope {
         super.onDestroyView(view)
     }
 
+    //#endregion
+    //#region override methods
+
+    override fun loadChapters() {
+        launch {
+            interactor.loadChapters()
+        }
+    }
+
+    override fun openChapterDetails(chapter: Chapter) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideChapter(chapter: Chapter) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setNewChapters(chapters: List<Chapter>) {
+        (chapters as ArrayList).sortWith(compareBy({ it.manga_id }, { it.chapter }))
+        view.setChapters(chapters)
+    }
     //#endregion
 }

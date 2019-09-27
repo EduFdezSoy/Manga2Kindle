@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.text.InputType
 import android.view.View
+import android.widget.ArrayAdapter
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
@@ -12,6 +13,9 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     private lateinit var chapter: Chapter
     private lateinit var manga: Manga
     private lateinit var mail: String
+    private lateinit var author: Author
+    private lateinit var authors: List<Author>
+    private var authorArray = arrayOf("")
 
     init {
         //#region clickListeners
@@ -20,10 +24,12 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         view.btnReturn.setOnClickListener { controller.cancelEdit() }
         view.btnUpload.setOnClickListener {
             disableAllButtons()
+            saveData()
             mail = view.tietEmail.text.toString()
             controller.sendChapter(chapter, mail)
         }
         view.btnSave.setOnClickListener {
+            disableAllButtons()
             saveData()
             onSaveEnableButtons()
         }
@@ -47,9 +53,15 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
         // TODO: manga title cant actually be edited because to the server it will be a new manga
         // manga.title = view.tietManga.text.toString()
-        // manga.author_id = // TODO: same here with the author. May add or search it in the database before adding the id
+        if (manga.author_id == null) {
+            val newManga = Manga(manga.id, manga.title, author.id)
+            newManga.synchronized = manga.synchronized
+            newManga.identifier = manga.identifier
 
+            controller.saveData(chapter, newManga, mail)
+        } else {
             controller.saveData(chapter, manga, mail)
+        }
     }
 
     private fun disableAllButtons() {
@@ -83,6 +95,53 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         }
     }
 
+    private fun formatAuthor(author: Author): String {
+        var authorText = ""
+        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
+            if (!author.surname.isNullOrEmpty())
+                authorText += author.surname + " "
+            if (!author.name.isNullOrEmpty())
+                authorText += author.name + " "
+            if (!author.nickname.isNullOrEmpty())
+                authorText += "(AKA " + author.nickname + ")"
+        } else {
+            if (!author.nickname.isNullOrEmpty())
+                authorText += author.nickname
+        }
+
+        return authorText
+    }
+
+    private fun setAuthorTextList(authors: List<Author>): Array<String> {
+        val authorsStr = ArrayList<String>()
+
+        authors.forEach {
+            authorsStr.add(formatAuthor(it))
+        }
+
+        return authorsStr.toTypedArray()
+    }
+
+    private fun notifyAuthorAdapter() {
+        val adapter = ArrayAdapter<String>(
+            view.context,
+            android.R.layout.simple_dropdown_item_1line,
+            authorArray
+        )
+        view.actvAuthor.setAdapter(adapter)
+        view.actvAuthor.threshold = 1
+        view.actvAuthor.setOnItemClickListener { adapterView, view, i, l ->
+            val authorStr = adapterView.getItemAtPosition(i)
+
+            authors.forEach {
+                if (formatAuthor(it) == authorStr) {
+                    author = it
+                    return@forEach
+                }
+            }
+        }
+    }
+
     //#endregion
     //#region override functions
 
@@ -103,21 +162,14 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     }
 
     override fun setAuthor(author: Author) {
-        var authorText = ""
-        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
-            if (!author.surname.isNullOrEmpty())
-                authorText += author.surname + " "
-            if (!author.name.isNullOrEmpty())
-                authorText += author.name + " "
-            if (!author.nickname.isNullOrEmpty())
-                authorText += "(AKA " + author.nickname + ")"
-        } else {
-            if (!author.nickname.isNullOrEmpty())
-                authorText += author.nickname
-        }
+        view.actvAuthor.inputType = InputType.TYPE_NULL
+        view.actvAuthor.setText(formatAuthor(author))
+    }
 
-        view.tietAuthor.inputType = InputType.TYPE_NULL
-        view.tietAuthor.setText(authorText)
+    override fun setAuthors(authors: List<Author>) {
+        this.authors = authors
+        authorArray = setAuthorTextList(authors)
+        notifyAuthorAdapter()
     }
 
     override fun setMail(mail: String) {

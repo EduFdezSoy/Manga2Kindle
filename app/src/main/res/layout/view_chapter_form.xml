@@ -109,28 +109,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tilTitle">
 
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tietAuthor"
+        <AutoCompleteTextView
+                android:id="@+id/actvAuthor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:hint="Author" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilLang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilTitle">
+            android:id="@+id/tilLang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnAddAuthor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnAddAuthor">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tietLang"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="Lang" />
+                android:id="@+id/tietLang"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:hint="Lang" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

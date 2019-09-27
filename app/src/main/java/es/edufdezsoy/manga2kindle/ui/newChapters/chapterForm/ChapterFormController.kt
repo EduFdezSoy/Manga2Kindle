@@ -51,7 +51,10 @@ class ChapterFormController : Controller, CoroutineScope,
         view = ChapterFormView(view = v, controller = this)
 
         view.setChapter(chapter)
-        launch { interactor.getManga(chapter.manga_id) }
+        launch {
+            interactor.getManga(chapter.manga_id)
+            interactor.getMail(activity!!)
+        }
 
         return v
     }
@@ -71,7 +74,7 @@ class ChapterFormController : Controller, CoroutineScope,
         launch { interactor.saveChapter(chapter) }
         launch { interactor.saveManga(manga) }
         if (mail != null)
-            launch { interactor.saveMail(mail) }
+            launch { interactor.saveMail(activity!!, mail) }
     }
 
     /**
@@ -79,7 +82,6 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun sendChapter(chapter: Chapter, mail: String) {
         launch {
-            interactor.saveMail(mail)
             interactor.sendChapter(chapter, mail, context)
         }
     }
@@ -110,6 +112,8 @@ class ChapterFormController : Controller, CoroutineScope,
         launch {
             if (manga.author_id != null)
                 interactor.getAuthor(manga.author_id)
+            else
+                interactor.getAuthors()
         }
     }
 
@@ -118,6 +122,13 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun setAuthor(author: Author) {
         view.setAuthor(author)
+    }
+
+    /**
+     * Called from the interactor
+     */
+    override fun setAuthors(authors: List<Author>) {
+        view.setAuthors(authors)
     }
 
     /**

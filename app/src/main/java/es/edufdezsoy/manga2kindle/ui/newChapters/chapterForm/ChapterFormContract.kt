@@ -16,6 +16,7 @@ interface ChapterFormContract {
         fun setChapter(chapter: Chapter)
         fun setManga(manga: Manga)
         fun setAuthor(author: Author)
+        fun setAuthors(authors: List<Author>)
         fun setMail(mail: String)
     }
 }

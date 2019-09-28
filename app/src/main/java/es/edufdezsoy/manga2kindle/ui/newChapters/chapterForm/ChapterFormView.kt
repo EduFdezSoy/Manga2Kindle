@@ -136,7 +136,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             authors.forEach {
                 if (formatAuthor(it) == authorStr) {
                     author = it
-                    return@forEach
+                    return@setOnItemClickListener
                 }
             }
         }

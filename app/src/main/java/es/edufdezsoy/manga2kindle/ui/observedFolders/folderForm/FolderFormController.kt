@@ -62,10 +62,16 @@ class FolderFormController : Controller, CoroutineScope,
     //#region public methods
 
     override fun saveFolder(folder: Folder) {
-        if (folder.id == 0)
-            launch { interactor.addFolder(folder) }
+        if (folder.path.isBlank())
+            (activity as BaseActivity).showSnackbar(
+                "The path can't be empty!",
+                Snackbar.LENGTH_LONG
+            )
         else
-            launch { interactor.updateFolder(folder) }
+            if (folder.id == 0)
+                launch { interactor.addFolder(folder) }
+            else
+                launch { interactor.updateFolder(folder) }
     }
 
     override fun cancelEdit() {

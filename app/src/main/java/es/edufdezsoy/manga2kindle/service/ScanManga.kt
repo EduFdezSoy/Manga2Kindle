@@ -53,6 +53,10 @@ class ScanManga : Service(), CoroutineScope {
             val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
 
             folders.forEach {
+                // if the folder path is empty we jump the entry
+                if (it.path.isBlank())
+                    return@forEach // continue like sentence
+
                 val docFile = DocumentFile.fromTreeUri(this@ScanManga, Uri.parse(it.path))
                 if (docFile!!.canRead()) {
                     val list = getListOfFoldersNFiles(docFile)

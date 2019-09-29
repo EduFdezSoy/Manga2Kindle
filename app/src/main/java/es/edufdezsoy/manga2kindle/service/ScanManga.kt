@@ -97,20 +97,43 @@ class ScanManga : Service(), CoroutineScope {
                             val chapterVol = pickVolume(chapterName)
 
 
-                            val str = chapterName.split(" - ", ": ")
+                            val str = chapterName.split(" - ")
 
                             // chapterName
                             if (str.size == 2) {
-                                chapterTitle = str.last()
+                                chapterTitle = str.last() + " - "
                             } else if (str.size > 2) {
                                 var first = true
                                 str.forEach {
                                     if (!first) {
-                                        chapterTitle += it
+                                        chapterTitle += it + " - "
                                     } else {
                                         first = false
                                     }
                                 }
+                            }
+                            if (!chapterTitle.isNullOrBlank())
+                                chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
+
+                            if (chapterTitle.isNullOrBlank()) {
+                                val str = chapterName.split(": ")
+
+                                // chapterName
+                                if (str.size == 2) {
+                                    chapterTitle = str.last() + ": "
+                                } else if (str.size > 2) {
+                                    var first = true
+                                    str.forEach {
+                                        if (!first) {
+                                            chapterTitle += it + ": "
+                                        } else {
+                                            first = false
+                                        }
+                                    }
+                                }
+                                if (!chapterTitle.isNullOrBlank())
+                                    chapterTitle =
+                                        chapterTitle.substring(0, chapterTitle.length - 2)
                             }
 
                             if (chapterTitle.isNullOrBlank()) {

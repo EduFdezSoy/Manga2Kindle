@@ -30,7 +30,9 @@ class ScanManga : Service(), CoroutineScope {
         // Oneshot chapters usually dont have Vol or Ch
         Pattern.compile(".*Oneshot.*"),
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
-        Pattern.compile("[#]\\d+.*")
+        Pattern.compile("[#]\\d+.*"),
+        // Manga Rock, this one uses Chapter NNN, what a nightmare
+        Pattern.compile(".*Chapter \\d+.*")
     )
 
 
@@ -63,20 +65,22 @@ class ScanManga : Service(), CoroutineScope {
                     val mangas = searchForMangas(list)
 
                     mangas.forEach {
-                        Log.d(TAG, it.name!!)
+                        Log.d(TAG, formatName(it.name))
                     }
 
                     mangas.forEach {
-                        var manga = M2kDatabase(this@ScanManga).MangaDao().search(it.name!!)
+                        val mangaName = formatName(it.name)
+
+                        var manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
                         if (manga.isEmpty()) {
-                            manga = ApiService.apiService.searchManga(it.name!!)
+                            manga = ApiService.apiService.searchManga(mangaName)
 
                             if (manga.isEmpty()) {
-                                manga = listOf(Manga(null, it.name!!, null))
+                                manga = listOf(Manga(null, mangaName, null))
                             }
 
                             M2kDatabase(this@ScanManga).MangaDao().insert(manga[0])
-                            manga = M2kDatabase(this@ScanManga).MangaDao().search(it.name!!)
+                            manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
                         }
 
                         val chapters = getChapters(it)
@@ -86,29 +90,53 @@ class ScanManga : Service(), CoroutineScope {
                             // [Vol.N] Ch.N [- Chapter Name]
                             // N can be any number, 1, 2 or 3 digits
                             // Chapter Name can have numbers take care with it
+                            val chapterName = formatName(it.name)
 
                             var chapterTitle: String? = ""
-                            val chapterNum = pickChapter(it.name!!)
-                            val chapterVol = pickVolume(it.name!!)
+                            val chapterNum = pickChapter(chapterName)
+                            val chapterVol = pickVolume(chapterName)
 
 
-                            val str = it.name!!.split(" - ")
+                            val str = chapterName.split(" - ")
 
                             // chapterName
                             if (str.size == 2) {
-                                chapterTitle = str.last()
+                                chapterTitle = str.last() + " - "
                             } else if (str.size > 2) {
                                 var first = true
                                 str.forEach {
                                     if (!first) {
-                                        chapterTitle += it
+                                        chapterTitle += it + " - "
                                     } else {
                                         first = false
                                     }
                                 }
                             }
+                            if (!chapterTitle.isNullOrBlank())
+                                chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
 
-                            if (chapterTitle == "") {
+                            if (chapterTitle.isNullOrBlank()) {
+                                val str = chapterName.split(": ")
+
+                                // chapterName
+                                if (str.size == 2) {
+                                    chapterTitle = str.last() + ": "
+                                } else if (str.size > 2) {
+                                    var first = true
+                                    str.forEach {
+                                        if (!first) {
+                                            chapterTitle += it + ": "
+                                        } else {
+                                            first = false
+                                        }
+                                    }
+                                }
+                                if (!chapterTitle.isNullOrBlank())
+                                    chapterTitle =
+                                        chapterTitle.substring(0, chapterTitle.length - 2)
+                            }
+
+                            if (chapterTitle.isNullOrBlank()) {
                                 chapterTitle = null
                             }
 
@@ -133,10 +161,12 @@ class ScanManga : Service(), CoroutineScope {
                                     M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
                                 }
                             } catch (e: Exception) {
-                                Log.e(TAG, "Error in 111, thats the data I can see useful: \n" +
-                                        "manga: List<Manga> Size = " + manga.size + "\n" +
-                                        "docFile name = " + it.name!! + "\n" +
-                                        "uri = " + it.uri)
+                                Log.e(
+                                    TAG, "Error in 116, thats the data I can see useful: \n" +
+                                            "manga: List<Manga> Size = " + manga.size + "\n" +
+                                            "docFile name = " + chapterName + "\n" +
+                                            "uri = " + it.uri
+                                )
                                 e.printStackTrace()
                             }
                         }
@@ -146,23 +176,29 @@ class ScanManga : Service(), CoroutineScope {
                         TAG,
                         "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
                     )
-                    try {
-                        docFile.listFiles()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+                    if (M2kApplication.debug) {
+                        try {
+                            docFile.listFiles()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
+                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+
                 }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-            // TODO("remove DEBUG when no longer needed")
-            val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
+            if (M2kApplication.debug) {
+                val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
 
-            Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
-            chaptersDebug.forEach {
-                Log.d(
-                    TAG,
-                    "Chapter:" + it.manga_id + " Vol." + it.volume + " Ch." + it.chapter + " - " + it.title
-                )
+                Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
+                chaptersDebug.forEach {
+                    Log.d(
+                        TAG,
+                        "Chapter:" + it.manga_id + " Vol." + it.volume + " Ch." + it.chapter + " - " + it.title
+                    )
+                }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
 
@@ -301,5 +337,37 @@ class ScanManga : Service(), CoroutineScope {
             return volume.toInt()
     }
 
-    //#endregion
+    /**
+     * Format the name to a more standard way
+     * This method is not private to allow tests of it
+     *
+     * @return formatted string
+     */
+    fun formatName(name: String?): String {
+        if (name.isNullOrBlank())
+            return ""
+
+        var outName = name
+
+        // Match: Chapter Name_ chapter something -to-make-> Chapter Name: chapter something
+        val matcher = Pattern.compile(".+\\S[_]\\s.+").matcher(outName)
+        if (matcher.matches()) {
+            val split = outName.split(".+\\S[_]\\s")
+            var str = ""
+            split.forEach {
+                val it2 = it.split("_ ")
+                for (i in it2.indices - 1) {
+                    str += it2[i]
+                    if (it2[i][it2[i].lastIndex] != ' ')
+                        str += ": "
+                }
+                str += it2[it2.lastIndex]
+            }
+            outName = str
+        }
+
+        return outName
+    }
+
+//#endregion
 }

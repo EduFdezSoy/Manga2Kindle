@@ -104,6 +104,16 @@ class FolderFormController : Controller, CoroutineScope,
         if (requestCode == READ_REQUEST_CODE && data != null) {
             folder.path = data.data?.toString()!!
             view.setPath(folder.path)
+
+            activity!!.grantUriPermission(
+                activity!!.packageName,
+                data.data,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            activity!!.contentResolver.takePersistableUriPermission(
+                data.data!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
         }
     }
 

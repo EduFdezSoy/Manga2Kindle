@@ -153,23 +153,29 @@ class ScanManga : Service(), CoroutineScope {
                         TAG,
                         "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
                     )
-                    try {
-                        docFile.listFiles()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+                    if (M2kApplication.debug) {
+                        try {
+                            docFile.listFiles()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
+                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+
                 }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-            // TODO("remove DEBUG when no longer needed")
-            val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
+            if (M2kApplication.debug) {
+                val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
 
-            Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
-            chaptersDebug.forEach {
-                Log.d(
-                    TAG,
-                    "Chapter:" + it.manga_id + " Vol." + it.volume + " Ch." + it.chapter + " - " + it.title
-                )
+                Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
+                chaptersDebug.forEach {
+                    Log.d(
+                        TAG,
+                        "Chapter:" + it.manga_id + " Vol." + it.volume + " Ch." + it.chapter + " - " + it.title
+                    )
+                }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
 

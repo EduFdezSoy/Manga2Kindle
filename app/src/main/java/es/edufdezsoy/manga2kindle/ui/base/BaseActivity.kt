@@ -24,6 +24,7 @@ import es.edufdezsoy.manga2kindle.service.ScanManga
 import es.edufdezsoy.manga2kindle.ui.main.MainController
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
 import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
+import es.edufdezsoy.manga2kindle.ui.settings.SettingsController
 import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersController
 import kotlinx.android.synthetic.main.activity_base.*
 
@@ -146,6 +147,11 @@ open class BaseActivity : AppCompatActivity() {
                         observedFolders -> router.setRoot(
                             RouterTransaction.with(
                                 ObservedFoldersController()
+                            )
+                        )
+                        settings -> router.setRoot(
+                            RouterTransaction.with(
+                                SettingsController()
                             )
                         )
                         else -> Toast.makeText(

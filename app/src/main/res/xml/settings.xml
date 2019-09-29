@@ -1,0 +1,19 @@
+<?xml version ="1.0" encoding ="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Dev Settings">
+
+        <SwitchPreference
+                android:defaultValue="false"
+                android:key="switchDebug"
+                android:summary="Can make the app slower"
+                android:title="Enable Debug" />
+        <EditTextPreference
+                android:defaultValue="dont"
+                android:key="etPrefResetChapters"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary='Only the ones not uploaded yet (write "yes, please")'
+                android:title="Reset list of new detected chapters" />
+    </PreferenceCategory>
+</PreferenceScreen>

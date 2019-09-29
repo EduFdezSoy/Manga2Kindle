@@ -146,6 +146,11 @@ class ScanManga : Service(), CoroutineScope {
                         TAG,
                         "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
                     )
+                    try {
+                        docFile.listFiles()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-

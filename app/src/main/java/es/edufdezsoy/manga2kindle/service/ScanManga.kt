@@ -63,20 +63,22 @@ class ScanManga : Service(), CoroutineScope {
                     val mangas = searchForMangas(list)
 
                     mangas.forEach {
-                        Log.d(TAG, it.name!!)
+                        Log.d(TAG, formatName(it.name))
                     }
 
                     mangas.forEach {
-                        var manga = M2kDatabase(this@ScanManga).MangaDao().search(it.name!!)
+                        val mangaName = formatName(it.name)
+
+                        var manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
                         if (manga.isEmpty()) {
-                            manga = ApiService.apiService.searchManga(it.name!!)
+                            manga = ApiService.apiService.searchManga(mangaName)
 
                             if (manga.isEmpty()) {
-                                manga = listOf(Manga(null, it.name!!, null))
+                                manga = listOf(Manga(null, mangaName, null))
                             }
 
                             M2kDatabase(this@ScanManga).MangaDao().insert(manga[0])
-                            manga = M2kDatabase(this@ScanManga).MangaDao().search(it.name!!)
+                            manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
                         }
 
                         val chapters = getChapters(it)
@@ -107,8 +109,9 @@ class ScanManga : Service(), CoroutineScope {
                                     }
                                 }
                             }
+                            chapterTitle = formatName(chapterTitle)
 
-                            if (chapterTitle == "") {
+                            if (chapterTitle.isNullOrBlank()) {
                                 chapterTitle = null
                             }
 
@@ -133,10 +136,12 @@ class ScanManga : Service(), CoroutineScope {
                                     M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
                                 }
                             } catch (e: Exception) {
-                                Log.e(TAG, "Error in 111, thats the data I can see useful: \n" +
-                                        "manga: List<Manga> Size = " + manga.size + "\n" +
-                                        "docFile name = " + it.name!! + "\n" +
-                                        "uri = " + it.uri)
+                                Log.e(
+                                    TAG, "Error in 115, thats the data I can see useful: \n" +
+                                            "manga: List<Manga> Size = " + manga.size + "\n" +
+                                            "docFile name = " + it.name!! + "\n" +
+                                            "uri = " + it.uri
+                                )
                                 e.printStackTrace()
                             }
                         }
@@ -296,5 +301,37 @@ class ScanManga : Service(), CoroutineScope {
             return volume.toInt()
     }
 
-    //#endregion
+    /**
+     * Format the name to a more standard way
+     * This method is not private to allow tests of it
+     *
+     * @return formatted string
+     */
+    fun formatName(name: String?): String {
+        if (name.isNullOrBlank())
+            return ""
+
+        var outName = name
+
+        // Match: Chapter Name_ chapter something -to-make-> Chapter Name: chapter something
+        val matcher = Pattern.compile(".+\\S[_]\\s.+").matcher(outName)
+        if (matcher.matches()) {
+            val split = outName.split(".+\\S[_]\\s")
+            var str = ""
+            split.forEach {
+                val it2 = it.split("_ ")
+                for (i in it2.indices - 1) {
+                    str += it2[i]
+                    if (it2[i][it2[i].lastIndex] != ' ')
+                        str += ": "
+                }
+                str += it2[it2.lastIndex]
+            }
+            outName = str
+        }
+
+        return outName
+    }
+
+//#endregion
 }

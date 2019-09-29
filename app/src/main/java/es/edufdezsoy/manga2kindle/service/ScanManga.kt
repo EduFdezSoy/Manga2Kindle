@@ -30,7 +30,9 @@ class ScanManga : Service(), CoroutineScope {
         // Oneshot chapters usually dont have Vol or Ch
         Pattern.compile(".*Oneshot.*"),
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
-        Pattern.compile("[#]\\d+.*")
+        Pattern.compile("[#]\\d+.*"),
+        // Manga Rock, this one uses Chapter NNN, what a nightmare
+        Pattern.compile(".*Chapter \\d+.*")
     )
 
 
@@ -137,7 +139,7 @@ class ScanManga : Service(), CoroutineScope {
                                 }
                             } catch (e: Exception) {
                                 Log.e(
-                                    TAG, "Error in 115, thats the data I can see useful: \n" +
+                                    TAG, "Error in 116, thats the data I can see useful: \n" +
                                             "manga: List<Manga> Size = " + manga.size + "\n" +
                                             "docFile name = " + it.name!! + "\n" +
                                             "uri = " + it.uri

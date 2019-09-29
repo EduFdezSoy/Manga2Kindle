@@ -90,13 +90,14 @@ class ScanManga : Service(), CoroutineScope {
                             // [Vol.N] Ch.N [- Chapter Name]
                             // N can be any number, 1, 2 or 3 digits
                             // Chapter Name can have numbers take care with it
+                            val chapterName = formatName(it.name)
 
                             var chapterTitle: String? = ""
-                            val chapterNum = pickChapter(it.name!!)
-                            val chapterVol = pickVolume(it.name!!)
+                            val chapterNum = pickChapter(chapterName)
+                            val chapterVol = pickVolume(chapterName)
 
 
-                            val str = it.name!!.split(" - ")
+                            val str = chapterName.split(" - ", ": ")
 
                             // chapterName
                             if (str.size == 2) {
@@ -111,7 +112,6 @@ class ScanManga : Service(), CoroutineScope {
                                     }
                                 }
                             }
-                            chapterTitle = formatName(chapterTitle)
 
                             if (chapterTitle.isNullOrBlank()) {
                                 chapterTitle = null
@@ -141,7 +141,7 @@ class ScanManga : Service(), CoroutineScope {
                                 Log.e(
                                     TAG, "Error in 116, thats the data I can see useful: \n" +
                                             "manga: List<Manga> Size = " + manga.size + "\n" +
-                                            "docFile name = " + it.name!! + "\n" +
+                                            "docFile name = " + chapterName + "\n" +
                                             "uri = " + it.uri
                                 )
                                 e.printStackTrace()

@@ -32,4 +32,7 @@ interface ChapterDao {
 
     @Query("UPDATE chapter SET visible = 0 WHERE id = :chapter_id")
     suspend fun delete(chapter_id: Int)
+
+    @Query("DELETE FROM chapter WHERE sended = 0")
+    suspend fun clearNotSended()
 }

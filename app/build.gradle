@@ -71,4 +71,9 @@ dependencies {
 
     // CONDUCTOR (https://github.com/bluelinelabs/Conductor)
     implementation 'com.bluelinelabs:conductor:2.1.5'
+
+    // PREFERENCES
+    implementation "androidx.legacy:legacy-preference-v14:1.0.0"
+    implementation "androidx.preference:preference:1.1.0"
+    implementation 'com.github.inorichi:conductor-support-preference:78e2344'
 }

@@ -48,14 +48,15 @@ class SettingsController : PreferenceController(), CoroutineScope {
 
     private fun checkResetChapters(sharedPreferences: SharedPreferences, key: String) {
         if (key == "etPrefResetChapters") {
-            launch {
-                if (sharedPreferences.getString(key, "")!!.toLowerCase() == "yes, please") {
-                    M2kDatabase.invoke(activity!!).ChapterDao().clearNotSended()
-                    if (M2kApplication.debug)
-                        Log.d(
-                            M2kApplication.TAG,
-                            "Non uploaded chapters removed from the database."
-                        )
+            if (sharedPreferences.getString(key, "")!!.toLowerCase() == "yes, please") {
+                launch {
+                    M2kDatabase.invoke(activity!!).ChapterDao().clearNotSended().also {
+                        if (M2kApplication.debug)
+                            Log.d(
+                                M2kApplication.TAG,
+                                "Non uploaded chapters removed from the database."
+                            )
+                    }
                 }
                 sharedPreferences.edit().putString(key, "dont").apply()
             }

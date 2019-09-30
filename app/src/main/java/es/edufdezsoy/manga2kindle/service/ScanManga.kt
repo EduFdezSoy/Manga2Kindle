@@ -366,6 +366,23 @@ class ScanManga : Service(), CoroutineScope {
             outName = str
         }
 
+        // Match: Chapter Name _ chapter something -to-make-> Chapter Name - chapter something
+        val matcher2 = Pattern.compile(".+\\s[_]\\s.+").matcher(outName)
+        if (matcher2.matches()) {
+            val split = outName.split(".+\\s[_]\\s")
+            var str = ""
+            split.forEach {
+                val it2 = it.split(" _ ")
+                for (i in it2.indices - 1) {
+                    str += it2[i]
+                    if (it2[i][it2[i].lastIndex] != ' ')
+                        str += " - "
+                }
+                str += it2[it2.lastIndex]
+            }
+            outName = str
+        }
+
         return outName
     }
 

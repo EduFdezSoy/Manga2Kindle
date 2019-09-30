@@ -19,6 +19,7 @@ class ScanMangaTest {
             "Gokushufudou_ The Way of the House Husband",
             "5Toubun no Hanayome",
             "Kyou_no Yuiko-san_ testo",
+            "Capítulo 1.00 _ Una invocación real",
             null
         )
 
@@ -33,6 +34,7 @@ class ScanMangaTest {
             "Gokushufudou: The Way of the House Husband",
             "5Toubun no Hanayome",
             "Kyou_no Yuiko-san: testo",
+            "Capítulo 1.00 - Una invocación real",
             ""
         )
 

@@ -32,7 +32,10 @@ class ScanManga : Service(), CoroutineScope {
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
         Pattern.compile("[#]\\d+.*"),
         // Manga Rock, this one uses Chapter NNN, what a nightmare
-        Pattern.compile(".*Chapter \\d+.*")
+        Pattern.compile(".*Chapter \\d+.*"),
+        // LectorManga, uses Capítulo N.NN
+        // TuMangaOnline, same
+        Pattern.compile(".*Capítulo \\d+.*")
     )
 
 
@@ -347,24 +350,20 @@ class ScanManga : Service(), CoroutineScope {
         if (name.isNullOrBlank())
             return ""
 
-        var outName = name
+        // Replace multiples white spaces
+        var outName = name.replace(Regex("[ \\xa0]{2,}"), " ")
+
+        /*
+         * CAUTION: take care with this!
+         * The order here is really important!
+         * Use the unit test as many times as you need (also extend it if useful)
+         */
+
+        // Match: Chapter Name _ chapter something -to-make-> Chapter Name - chapter something
+        outName = outName.replace(Regex("\\s[_]\\s"), " - ")
 
         // Match: Chapter Name_ chapter something -to-make-> Chapter Name: chapter something
-        val matcher = Pattern.compile(".+\\S[_]\\s.+").matcher(outName)
-        if (matcher.matches()) {
-            val split = outName.split(".+\\S[_]\\s")
-            var str = ""
-            split.forEach {
-                val it2 = it.split("_ ")
-                for (i in it2.indices - 1) {
-                    str += it2[i]
-                    if (it2[i][it2[i].lastIndex] != ' ')
-                        str += ": "
-                }
-                str += it2[it2.lastIndex]
-            }
-            outName = str
-        }
+        outName = outName.replace(Regex("[_]\\s"), ": ")
 
         return outName
     }

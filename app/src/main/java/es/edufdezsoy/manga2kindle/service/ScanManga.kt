@@ -32,7 +32,9 @@ class ScanManga : Service(), CoroutineScope {
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
         Pattern.compile("[#]\\d+.*"),
         // Manga Rock, this one uses Chapter NNN, what a nightmare
-        Pattern.compile(".*Chapter \\d+.*")
+        Pattern.compile(".*Chapter \\d+.*"),
+        // LectorManga, uses Capítulo N, what a nightmare
+        Pattern.compile(".*Capítulo \\d+.*")
     )
 
 

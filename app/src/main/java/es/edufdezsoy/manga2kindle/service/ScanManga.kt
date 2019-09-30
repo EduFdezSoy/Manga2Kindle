@@ -33,7 +33,8 @@ class ScanManga : Service(), CoroutineScope {
         Pattern.compile("[#]\\d+.*"),
         // Manga Rock, this one uses Chapter NNN, what a nightmare
         Pattern.compile(".*Chapter \\d+.*"),
-        // LectorManga, uses Capítulo N, what a nightmare
+        // LectorManga, uses Capítulo N.NN
+        // TuMangaOnline, Capítulo N
         Pattern.compile(".*Capítulo \\d+.*")
     )
 

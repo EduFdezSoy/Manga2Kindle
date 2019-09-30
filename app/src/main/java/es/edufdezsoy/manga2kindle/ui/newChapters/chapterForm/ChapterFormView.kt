@@ -1,12 +1,15 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
+import java.lang.Exception
 
 class ChapterFormView(val view: View, val controller: ChapterFormContract.Controller) :
     ChapterFormContract.View {
@@ -47,7 +50,12 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     private fun saveData() {
         mail = view.tietEmail.text.toString()
 
-        chapter.volume = view.etVolume.text.toString().toInt()
+        try {
+            chapter.volume = view.etVolume.text.toString().toInt()
+        } catch (e: Exception) {
+            if (M2kApplication.debug)
+                Log.e(M2kApplication.TAG, "Yo fucker, the volume thrown an exception in the ChapterForm")
+        }
         // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
         chapter.title = view.tietTitle.text.toString()
 

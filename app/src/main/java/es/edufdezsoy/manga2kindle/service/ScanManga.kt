@@ -274,12 +274,25 @@ class ScanManga : Service(), CoroutineScope {
     private fun getChapters(manga: DocumentFile): List<DocumentFile> {
         val chapterRegex = chapterRegex
         val chapters = ArrayList<DocumentFile>()
+        val tmpChapterRegex = arrayOf(".*_tmp", ".*_temp")
 
         manga.listFiles().forEach {
             if (it.isDirectory) {
                 chapterRegex.forEach(fun(regex: Pattern) {
                     if (regex.matcher(it.name!!).matches()) {
-                        chapters.add(it)
+                        var temporal = false
+                        tmpChapterRegex.forEach(fun(regex: String) {
+                            if (Pattern.compile(regex).matcher(it.name!!).matches()) {
+                                temporal = true
+                                return
+                            }
+                        })
+                        if (!temporal) {
+                            chapters.add(it)
+                        } else {
+                            if (M2kApplication.debug)
+                                Log.d(TAG, "This chapter is not downloaded yet (" + it.name + ")")
+                        }
                         return
                     }
                 })

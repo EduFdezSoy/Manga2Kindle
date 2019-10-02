@@ -19,11 +19,14 @@ import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
 class ScanManga : Service(), CoroutineScope {
+    //#region vars and vals
+
     private val TAG = M2kApplication.TAG + "_ScanManga"
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 
+    // Those regex are from different sources, with them we find the chapters
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
         Pattern.compile(".*Ch.\\d+.*"),
@@ -37,6 +40,9 @@ class ScanManga : Service(), CoroutineScope {
         // TuMangaOnline, same
         Pattern.compile(".*Capítulo \\d+.*")
     )
+
+    //#endregion
+    //#region lifecycle methods
 
 
     override fun onCreate() {
@@ -211,10 +217,13 @@ class ScanManga : Service(), CoroutineScope {
         return START_STICKY
     }
 
+    //#endregion
     //#region private methods
 
     /**
+     *  Digs in the DocumentFile to read all the folder structure
      *
+     * @param doc must be a folder
      * @return an ordered list of folders and files
      */
     private fun getListOfFoldersNFiles(doc: DocumentFile): List<DocumentFile> {
@@ -235,7 +244,9 @@ class ScanManga : Service(), CoroutineScope {
     }
 
     /**
+     * Searches mangas in an ordered list of folders and files
      *
+     * @param tree an ordered list of folders and files, like the one getListOfFoldersNFiles() does
      * @return a list of mangas (those folders may have chapters or may not)
      */
     private fun searchForMangas(tree: List<DocumentFile>): List<DocumentFile> {
@@ -267,8 +278,10 @@ class ScanManga : Service(), CoroutineScope {
     }
 
     /**
-     * TODO: this method may check if the folder is _tmp
+     * Get the chapters from a manga folder
+     * This method ignores temporally folders
      *
+     * @param manga a manga folder
      * @return a list of chapters (in folders) for the given manga
      */
     private fun getChapters(manga: DocumentFile): List<DocumentFile> {
@@ -303,8 +316,10 @@ class ScanManga : Service(), CoroutineScope {
     }
 
     /**
+     * Pick the chapter number from the folder name pased
      *
-     * @return the chapter number
+     * @param name a folder name from a chapter
+     * @return the chapter number or 0 if none
      */
     private fun pickChapter(name: String): Float {
         val chapterRegex = Pattern.compile("[+-]?\\d+(?:\\.\\d+)?")
@@ -325,8 +340,10 @@ class ScanManga : Service(), CoroutineScope {
     }
 
     /**
+     * Pick the volume number from the folder name pased
      *
-     * @return the volume number
+     * @param name a folder name from a chapter
+     * @return the volume number or null if none
      */
     private fun pickVolume(name: String): Int? {
         val volumeRegex = Pattern.compile("[V-v][O-o][L-l].[+-]?\\d+(?:\\.\\d+)?")
@@ -357,6 +374,7 @@ class ScanManga : Service(), CoroutineScope {
      * Format the name to a more standard way
      * This method is not private to allow tests of it
      *
+     * @param name a chapter name, a folder name, something that we want to parse from folder characters to all characters
      * @return formatted string
      */
     fun formatName(name: String?): String {

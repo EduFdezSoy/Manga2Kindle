@@ -24,7 +24,12 @@ class UploadChapter(val context: Context) {
     private val TAG = M2kApplication.TAG + "_UploadChap"
     private val database = M2kDatabase.invoke(context)
 
-
+    /**
+     * Uploads a chapter to the server
+     *
+     * @param chapter chapter to upload
+     * @param mail mail to be sent to
+     */
     suspend fun upload(chapter: Chapter, mail: String) {
         var manga = database.MangaDao().getMangaById(chapter.manga_id)
 
@@ -104,6 +109,12 @@ class UploadChapter(val context: Context) {
         }
     }
 
+    /**
+     * Zips a file from its uri
+     *
+     * @param uri uri where the file to be zipped is
+     * @param zipFileName string name the file will have
+     */
     private suspend fun zip(uri: Uri, zipFileName: String) {
         // get the list of files inside that uri
         val uriList = getUriList(getFileList(uri))
@@ -112,6 +123,12 @@ class UploadChapter(val context: Context) {
         zip(uriList, zipFileName)
     }
 
+    /**
+     * Zips files from its uris
+     *
+     * @param files uri list with all the files to be compressed
+     * @param zipFileName string name the file will have
+     */
     private suspend fun zip(files: List<Uri>, zipFileName: String) {
         try {
             val BUFFER = 8192
@@ -149,6 +166,12 @@ class UploadChapter(val context: Context) {
         }
     }
 
+    /**
+     * Get a list of files inside a folder
+     *
+     * @param uri folder to be searched
+     * @return a list of files inside the given uri, can be empty
+     */
     private suspend fun getFileList(uri: Uri): List<DocumentFile> {
         val docFileList = ArrayList<DocumentFile>()
 
@@ -174,6 +197,12 @@ class UploadChapter(val context: Context) {
         return docFileList
     }
 
+    /**
+     * Get a list of uris from a list of files
+     *
+     * @param docFileList files to pick the uris
+     * @return a list of uris, can be empty
+     */
     private suspend fun getUriList(docFileList: List<DocumentFile>): List<Uri> {
         val uriList = ArrayList<Uri>()
 
@@ -188,6 +217,8 @@ class UploadChapter(val context: Context) {
      * WORKAROUND: iterate folders inside that until the uri match with our one
      * // TODO: WORKAROUND, need a fix if answered: https://stackoverflow.com/questions/58078606/documentfile-not-opening-the-correct-uri
      *
+     * @param docFile folder to be iterated
+     * @param uri uri to be searched in the folder
      * @return a docFile if it match with the uri or null it it cant find it
      */
     private suspend fun getTheRightDocFile(docFile: DocumentFile, uri: Uri): DocumentFile? {
@@ -209,6 +240,12 @@ class UploadChapter(val context: Context) {
         return null
     }
 
+    /**
+     * Get the name of a file
+     *
+     * @param uri uri from the file
+     * @return the name of the pased file
+     */
     private suspend fun getFileName(uri: Uri): String {
         var result: String? = null
         if (uri.scheme == "content") {
@@ -234,6 +271,12 @@ class UploadChapter(val context: Context) {
         return result
     }
 
+    /**
+     * Calculates the MD5 checksum
+     *
+     * @param iStr input stream to be checksumed
+     * @return the md5 string
+     */
     private suspend fun calculateMD5(iStr: InputStream): String {
         val BUFFER = 8192
         val digest = MessageDigest.getInstance("MD5")
@@ -255,6 +298,12 @@ class UploadChapter(val context: Context) {
         return output
     }
 
+    /**
+     * Removes zeros from strings, Ej: 2.0 => 2
+     *
+     * @param value string to clean
+     * @return cleaned string
+     */
     private fun trimTrailingZero(value: String?): String? {
         return if (!value.isNullOrEmpty()) {
             if (value.indexOf(".") < 0) {

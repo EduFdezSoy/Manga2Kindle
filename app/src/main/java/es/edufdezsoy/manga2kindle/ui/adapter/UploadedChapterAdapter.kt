@@ -4,11 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Chapter
-import kotlinx.android.synthetic.main.item_chapter.view.*
+import es.edufdezsoy.manga2kindle.network.ApiService
+import kotlinx.android.synthetic.main.item_chapter_uploaded.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -30,7 +32,7 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
         context = parent.context
         return ViewHolder(
             LayoutInflater.from(context).inflate(
-                R.layout.item_chapter, parent, false
+                R.layout.item_chapter_uploaded, parent, false
             )
         )
     }
@@ -83,6 +85,31 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
                 holder.lang.text = lang.code
         }
 
+        // get and set status
+        launch {
+            holder.status.text = ""
+            holder.reason.text = ""
+
+            // TODO: this must be saved in the database and checked in the db before the api call
+            ApiService.apiService.getStatus(chapters[position].id!!).also {
+                if (!it[0].error) {
+                    if (!it[0].delivered) {
+                        holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorProcessing)
+                        )
+                        holder.status.text = "processing"
+                    } else {
+                        holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorSuccess)
+                        )
+                        holder.status.text = "success"
+                    }
+                } else {
+                    holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorFailed))
+                    holder.status.text = "failed"
+                    holder.status.text = it[0].reason
+                }
+            }
+        }
+
         if (onClickListener != null)
             holder.setOnClickListener(onClickListener!!)
         if (onLongClickListener != null)
@@ -115,6 +142,8 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
         val title = view.tvChTitle
         val author = view.tvAuthor
         val lang = view.tvLang
+        val status = view.tvStatus
+        val reason = view.tvReason
 
         fun setOnClickListener(onClickListener: View.OnClickListener) {
             itemView.setOnClickListener(onClickListener)

@@ -3,4 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorSuccess">#4CAF50</color>
+    <color name="colorFailed">#F44336</color>
+    <color name="colorProcessing">#FFC107</color>
 </resources>

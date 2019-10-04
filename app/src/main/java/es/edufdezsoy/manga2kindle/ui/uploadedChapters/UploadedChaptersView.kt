@@ -5,10 +5,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.ui.adapter.UploadedChapterAdapter
-import kotlinx.android.synthetic.main.view_new_chapters.view.*
 import kotlinx.android.synthetic.main.view_uploaded_chapters.view.*
-import kotlinx.android.synthetic.main.view_uploaded_chapters.view.flBackground
-import kotlinx.android.synthetic.main.view_uploaded_chapters.view.tvViewTitle
 
 class UploadedChaptersView(val view: View, val controller: UploadedChaptersController) :
     UploadedChaptersContract.View {

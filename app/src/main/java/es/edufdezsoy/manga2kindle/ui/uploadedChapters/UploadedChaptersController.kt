@@ -60,8 +60,7 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     }
 
     override fun setNewChapters(chapters: List<Chapter>) {
-        (chapters as ArrayList).sortWith(compareBy({ it.manga_id }, { it.chapter }))
-        view.setChapters(chapters)
+        view.setChapters(chapters.asReversed())
     }
     //#endregion
 }

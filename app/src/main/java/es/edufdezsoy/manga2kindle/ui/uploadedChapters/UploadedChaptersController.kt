@@ -60,6 +60,7 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     }
 
     override fun setNewChapters(chapters: List<Chapter>) {
+        (chapters as ArrayList).sortBy { it.id }
         view.setChapters(chapters.asReversed())
     }
     //#endregion

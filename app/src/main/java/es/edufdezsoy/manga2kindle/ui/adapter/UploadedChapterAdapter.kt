@@ -17,7 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class UploadedChapterAdapter(var chapters: List<UploadedChapter>) :
+class UploadedChapterAdapter(var chapters: ArrayList<UploadedChapter>) :
     RecyclerView.Adapter<UploadedChapterAdapter.ViewHolder>(), CoroutineScope {
 
     private lateinit var context: Context
@@ -27,6 +27,8 @@ class UploadedChapterAdapter(var chapters: List<UploadedChapter>) :
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
+
+    constructor(chapters: List<UploadedChapter>) : this(chapters as ArrayList<UploadedChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -66,10 +68,12 @@ class UploadedChapterAdapter(var chapters: List<UploadedChapter>) :
         return chapters.size
     }
 
-    fun addAll(chapters: List<UploadedChapter>) {
-        val result = DiffUtil.calculateDiff(UploadedChapterDiffCallback(this.chapters, chapters))
-        result.dispatchUpdatesTo(this)
-        this.chapters = chapters
+    fun setData(chapters: List<UploadedChapter>) {
+        val diffCallback = UploadedChapterDiffCallback(this.chapters, chapters)
+        val diffRes = DiffUtil.calculateDiff(diffCallback)
+        this.chapters.clear()
+        this.chapters.addAll(chapters)
+        diffRes.dispatchUpdatesTo(this)
     }
 
     fun setOnClickListener(listener: View.OnClickListener) {

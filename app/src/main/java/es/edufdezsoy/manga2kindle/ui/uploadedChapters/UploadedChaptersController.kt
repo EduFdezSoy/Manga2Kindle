@@ -46,6 +46,7 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     override fun onDestroyView(view: View) {
         handler.removeCallbacksAndMessages(null)
         job.cancel()
+        interactor.close(context)
         super.onDestroyView(view)
     }
 
@@ -78,7 +79,9 @@ class UploadedChaptersController : Controller(), CoroutineScope,
         (chapters as ArrayList).sortBy { it.server_id }
 
         launch(Dispatchers.Main) {
-            view.setChapters(chapters.asReversed())
+            // this unnecessary cast prevent .asReverse() to lock the List
+            (chapters as ArrayList).asReversed()
+            view.setChapters(chapters)
         }
     }
 

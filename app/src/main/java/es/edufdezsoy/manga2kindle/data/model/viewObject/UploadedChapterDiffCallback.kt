@@ -2,7 +2,7 @@ package es.edufdezsoy.manga2kindle.data.model.viewObject
 
 import androidx.recyclerview.widget.DiffUtil
 
-class UploadedChapterDiffCallback(val new: List<UploadedChapter>, val old: List<UploadedChapter>) :
+class UploadedChapterDiffCallback(val old: List<UploadedChapter>, val new: List<UploadedChapter>) :
     DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -15,6 +15,8 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
         fun updateList()
     }
 
+    private lateinit var receiver: ServiceReceiver
+
     suspend fun loadChapters() {
         getChaptersList().also {
             controller.setNewChapters(it)
@@ -24,11 +26,17 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
     suspend fun updateStatus(context: Context) {
         UpdateChapterStatus.enqueueWork(context, Intent())
 
-        //register reciver
-        val filter = IntentFilter(ServiceReceiver.ACTION_UPDATED_CHAPTER_STATUS)
-        filter.addCategory(Intent.CATEGORY_DEFAULT)
-        val receiver = ServiceReceiver(controller)
-        context.registerReceiver(receiver, filter)
+        // register reciver
+        if (!::receiver.isInitialized) {
+            val filter = IntentFilter(ServiceReceiver.ACTION_UPDATED_CHAPTER_STATUS)
+            filter.addCategory(Intent.CATEGORY_DEFAULT)
+            receiver = ServiceReceiver(controller)
+            context.registerReceiver(receiver, filter)
+        }
+    }
+
+    fun close(context: Context) {
+        context.unregisterReceiver(receiver)
     }
 
     private suspend fun getChaptersList(): ArrayList<UploadedChapter> {

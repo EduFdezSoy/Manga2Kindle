@@ -36,7 +36,8 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
     }
 
     fun close(context: Context) {
-        context.unregisterReceiver(receiver)
+        if (::receiver.isInitialized)
+            context.unregisterReceiver(receiver)
     }
 
     private suspend fun getChaptersList(): ArrayList<UploadedChapter> {

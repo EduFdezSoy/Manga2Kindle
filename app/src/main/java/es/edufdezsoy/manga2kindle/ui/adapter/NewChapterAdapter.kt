@@ -45,34 +45,10 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
             val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }
 
-            var authorText = ""
-            if (!author?.surname.isNullOrEmpty() || !author?.name.isNullOrEmpty()) {
-                if (!author?.surname.isNullOrEmpty())
-                    authorText += author?.surname + " "
-                if (!author?.name.isNullOrEmpty())
-                    authorText += author?.name + " "
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += "(AKA " + author?.nickname + ")"
-            } else {
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += author?.nickname
-            }
-            holder.author?.text = authorText
+            holder.author?.text = author.toString()
         }
 
-        if (chapters[position].volume == null) {
-            holder.volText?.visibility = View.GONE
-            holder.vol?.visibility = View.GONE
-            holder.spacer?.visibility = View.GONE
-        } else {
-            holder.volText?.visibility = View.VISIBLE
-            holder.vol?.visibility = View.VISIBLE
-            holder.spacer?.visibility = View.VISIBLE
-            holder.vol?.text = chapters[position].volume!!.toString()
-        }
-
-        holder.ch?.text = chapters[position].chapter.toString()
-        holder.title?.text = chapters[position].title
+        holder.chapter.text = chapters[position].toString()
 
         launch {
             holder.lang.text = ""
@@ -107,12 +83,7 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val manga = view.tvTitle
-        val vol = view.tvVol
-        val volText = view.tvVolText
-        val spacer = view.tvLineText
-        val ch = view.tvCh
-        val chText = view.tvChText
-        val title = view.tvChTitle
+        val chapter = view.tvChapter
         val author = view.tvAuthor
         val lang = view.tvLang
 

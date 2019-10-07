@@ -9,7 +9,6 @@ import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
-import java.lang.Exception
 
 class ChapterFormView(val view: View, val controller: ChapterFormContract.Controller) :
     ChapterFormContract.View {
@@ -103,28 +102,11 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         }
     }
 
-    private fun formatAuthor(author: Author): String {
-        var authorText = ""
-        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
-            if (!author.surname.isNullOrEmpty())
-                authorText += author.surname + " "
-            if (!author.name.isNullOrEmpty())
-                authorText += author.name + " "
-            if (!author.nickname.isNullOrEmpty())
-                authorText += "(AKA " + author.nickname + ")"
-        } else {
-            if (!author.nickname.isNullOrEmpty())
-                authorText += author.nickname
-        }
-
-        return authorText
-    }
-
     private fun setAuthorTextList(authors: List<Author>): Array<String> {
         val authorsStr = ArrayList<String>()
 
         authors.forEach {
-            authorsStr.add(formatAuthor(it))
+            authorsStr.add(it.toString())
         }
 
         return authorsStr.toTypedArray()
@@ -142,7 +124,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             val authorStr = adapterView.getItemAtPosition(i)
 
             authors.forEach {
-                if (formatAuthor(it) == authorStr) {
+                if (it.toString() == authorStr) {
                     author = it
                     return@setOnItemClickListener
                 }
@@ -171,7 +153,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
     override fun setAuthor(author: Author) {
         view.actvAuthor.inputType = InputType.TYPE_NULL
-        view.actvAuthor.setText(formatAuthor(author))
+        view.actvAuthor.setText(author.toString())
     }
 
     override fun setAuthors(authors: List<Author>) {

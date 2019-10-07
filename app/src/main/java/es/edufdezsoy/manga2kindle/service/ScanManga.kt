@@ -35,7 +35,9 @@ class ScanManga : Service(), CoroutineScope {
         Pattern.compile(".*Chapter \\d+.*"),
         // LectorManga, uses Capítulo N.NN
         // TuMangaOnline, same
-        Pattern.compile(".*Capítulo \\d+.*")
+        Pattern.compile(".*Capítulo \\d+.*"),
+        // NHentai, it only says Chapter
+        Pattern.compile("Chapter")
     )
 
 

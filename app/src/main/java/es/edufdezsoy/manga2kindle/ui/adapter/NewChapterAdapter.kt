@@ -4,10 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapterDiffCallback
 import kotlinx.android.synthetic.main.item_chapter.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class NewChapterAdapter(var chapters: List<Chapter>) :
+class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     RecyclerView.Adapter<NewChapterAdapter.ViewHolder>(), CoroutineScope {
 
     private lateinit var context: Context
@@ -25,6 +26,8 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
+
+    constructor(chapters: List<NewChapter>): this(chapters as ArrayList<NewChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -37,40 +40,29 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
-            holder.manga?.text = ""
-            holder.author?.text = ""
-
-            val manga = M2kDatabase(context).MangaDao().getMangaById(chapters[position].manga_id)
-            holder.manga?.text = manga.title
-
-            val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }
-
-            holder.author?.text = author.toString()
-        }
-
-        holder.chapter.text = chapters[position].toString()
-
-        launch {
             holder.lang.text = ""
-            val lang = chapters[position].lang_id?.let {
-                M2kDatabase(context).LanguageDao().getLanguage(it)
-            }
-            if (lang != null)
-                holder.lang.text = lang.code
-        }
 
-        if (onClickListener != null)
-            holder.setOnClickListener(onClickListener!!)
-        if (onLongClickListener != null)
-            holder.setOnLongClickListener(onLongClickListener!!)
+            holder.manga.text = chapters[position].manga_title
+            holder.chapter.text = chapters[position].chapter
+            holder.author.text = chapters[position].author
+
+            if (onClickListener != null)
+                holder.setOnClickListener(onClickListener!!)
+            if (onLongClickListener != null)
+                holder.setOnLongClickListener(onLongClickListener!!)
+        }
     }
 
     override fun getItemCount(): Int {
         return chapters.size
     }
 
-    fun addAll(chapters: List<Chapter>) {
-        this.chapters = chapters
+    fun setData(chapters: List<NewChapter>) {
+        val diffCallback = NewChapterDiffCallback(this.chapters, chapters)
+        val diffRes = DiffUtil.calculateDiff(diffCallback)
+        this.chapters.clear()
+        this.chapters.addAll(chapters)
+        diffRes.dispatchUpdatesTo(this)
     }
 
     fun setOnClickListener(listener: View.OnClickListener) {
@@ -95,5 +87,4 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
             itemView.setOnLongClickListener(onLongClickListener)
         }
     }
-
 }

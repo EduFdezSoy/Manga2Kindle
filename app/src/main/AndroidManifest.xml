@@ -19,9 +19,15 @@
 
         <service
                 android:name=".service.ScanManga"
-                android:description="@string/service_description"
+                android:description="@string/service_ScanManga_description"
                 android:enabled="true"
                 android:exported="false" />
+
+        <service
+                android:name=".service.UpdateChapterStatus"
+                android:description="@string/service_UpdateChapterStatus_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity android:name=".ui.base.BaseActivity">
             <intent-filter>

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Manga2Kindle</string>
-    <string name="service_description">Search for new manga chapters</string>
+    <string name="service_ScanManga_description">Search for new manga chapters</string>
+    <string name="service_UpdateChapterStatus_description">Update uploaded chapters statuses</string>
 </resources>

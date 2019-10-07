@@ -76,12 +76,12 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     }
 
     override fun setNewChapters(chapters: List<UploadedChapter>) {
-        (chapters as ArrayList).sortBy { it.server_id }
+        val ar = chapters as ArrayList
+        ar.sortBy { it.server_id }
+        ar.reverse()
 
         launch(Dispatchers.Main) {
-            // this unnecessary cast prevent .asReverse() to lock the List
-            (chapters as ArrayList).asReversed()
-            view.setChapters(chapters)
+            view.setChapters(ar)
         }
     }
 

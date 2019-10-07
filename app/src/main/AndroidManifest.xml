@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
             android:name=".M2kApplication"
@@ -21,7 +22,8 @@
                 android:name=".service.ScanManga"
                 android:description="@string/service_ScanManga_description"
                 android:enabled="true"
-                android:exported="false" />
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
                 android:name=".service.UpdateChapterStatus"
@@ -33,6 +35,13 @@
                 android:description="@string/service_ScanRemovedChapters_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name="es.edufdezsoy.manga2kindle.service.util.ServiceStartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
 
         <activity android:name=".ui.base.BaseActivity">
             <intent-filter>

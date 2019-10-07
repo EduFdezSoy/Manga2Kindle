@@ -1,9 +1,8 @@
 package es.edufdezsoy.manga2kindle.service
 
-import android.app.Service
-import android.content.Intent
+import android.app.job.JobParameters
+import android.app.job.JobService
 import android.net.Uri
-import android.os.IBinder
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
-class ScanManga : Service(), CoroutineScope {
+class ScanManga : JobService(), CoroutineScope {
     //#region vars and vals
 
     private val TAG = M2kApplication.TAG + "_ScanManga"
@@ -46,22 +45,10 @@ class ScanManga : Service(), CoroutineScope {
     //#endregion
     //#region lifecycle methods
 
-
-    override fun onCreate() {
+    override fun onStartJob(params: JobParameters?): Boolean {
         job = Job()
         Log.i(TAG, "Service created")
-    }
 
-    override fun onDestroy() {
-        job.cancel()
-        Log.i(TAG, "Service destroyed")
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         launch {
             val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
 
@@ -213,10 +200,18 @@ class ScanManga : Service(), CoroutineScope {
             }
             // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
 
-            stopSelf(startId)
+            Log.i(TAG, "Done")
+            jobFinished(params, true)
         }
 
-        return START_STICKY
+        return true
+    }
+
+    override fun onStopJob(params: JobParameters?): Boolean {
+        job.cancel()
+        Log.i(TAG, "Service destroyed")
+
+        return true
     }
 
     //#endregion

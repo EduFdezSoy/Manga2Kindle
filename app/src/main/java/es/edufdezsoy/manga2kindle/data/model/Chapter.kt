@@ -21,4 +21,25 @@ data class Chapter(
     @PrimaryKey(autoGenerate = true)
     var identifier: Int = 0
     var sended: Boolean =  false
+
+    override fun toString(): String {
+        var text = ""
+
+        if (volume != null)
+            text += "Vol. $volume "
+
+        var chapter = chapter.toString()
+        if (chapter.isNotEmpty()) {
+            if (chapter.indexOf(".") >= 0) {
+                chapter = chapter.replace("0*$".toRegex(), "").replace("\\.$".toRegex(), "")
+            }
+        }
+
+        text += "Ch. $chapter"
+
+        if (title != null)
+            text += " - $title"
+
+        return text
+    }
 }

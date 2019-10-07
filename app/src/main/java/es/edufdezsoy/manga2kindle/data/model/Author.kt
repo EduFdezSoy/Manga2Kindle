@@ -5,6 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Author(
+    /**
+     * The id mus't be the same in the server
+     */
     @PrimaryKey val id: Int,
     val name: String?,
     val surname: String?,

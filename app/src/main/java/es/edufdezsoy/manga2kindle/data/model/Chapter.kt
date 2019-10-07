@@ -5,6 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Chapter(
+    /**
+     * This id is not the identifier!
+     * This id is the same as the server one
+     */
     var id: Int?,
     val manga_id: Int,
     var lang_id: Int?,

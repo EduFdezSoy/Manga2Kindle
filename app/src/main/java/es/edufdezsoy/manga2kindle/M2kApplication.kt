@@ -19,6 +19,7 @@ class M2kApplication : Application() {
         super.onCreate()
         Log.v(M2kApplication.TAG, "All systems online.")
 
+        // This async work checks if the debug mode is activated
         GlobalScope.launch {
             M2kApplication.debug =
                 getSharedPreferences(

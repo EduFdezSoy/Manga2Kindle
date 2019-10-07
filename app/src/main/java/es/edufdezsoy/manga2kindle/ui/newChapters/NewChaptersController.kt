@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
+import com.bluelinelabs.conductor.RouterTransaction
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -68,11 +70,11 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
     }
 
     override fun openChapterDetails(chapter: NewChapter) {
-//        router.pushController(
-//            RouterTransaction.with(ChapterFormController(chapter))
-//                .pushChangeHandler(overriddenPushHandler)
-//                .popChangeHandler(overriddenPopHandler)
-//        )
+        router.pushController(
+            RouterTransaction.with(ChapterFormController(chapter))
+                .pushChangeHandler(overriddenPushHandler)
+                .popChangeHandler(overriddenPopHandler)
+        )
     }
 
     override fun hideChapter(chapter: NewChapter) {

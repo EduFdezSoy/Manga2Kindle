@@ -9,16 +9,24 @@ import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.service.UploadChapter
 
 class ChapterFormInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
+        fun setChapter(chapter: Chapter)
         fun setManga(manga: Manga)
         fun setAuthor(author: Author)
         fun setAuthors(authors: List<Author>)
         fun setMail(mail: String?)
         fun done()
+    }
+
+    suspend fun getChapter(chapter: NewChapter) {
+        database.ChapterDao().getChapter(chapter.local_id).also {
+            controller.setChapter(it)
+        }
     }
 
     suspend fun saveChapter(chapter: Chapter) {

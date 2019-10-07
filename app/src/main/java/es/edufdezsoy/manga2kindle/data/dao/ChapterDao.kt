@@ -16,10 +16,10 @@ interface ChapterDao {
     /**
      * Get a chapter by id
      *
-     * @param chapter_id the id from the chapter we are picking from the database
+     * @param chapter_id the local identifier from the chapter we are picking from the database
      * @return the chapter we requested
      */
-    @Query("SELECT * FROM chapter WHERE id = :chapter_id")
+    @Query("SELECT * FROM chapter WHERE identifier = :chapter_id")
     suspend fun getChapter(chapter_id: Int): Chapter
 
     /**

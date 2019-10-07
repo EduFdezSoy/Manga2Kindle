@@ -11,6 +11,7 @@ import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class ChapterFormController : Controller, CoroutineScope,
 
     private lateinit var interactor: ChapterFormInteractor
     private lateinit var view: ChapterFormView
+    private lateinit var newChapter: NewChapter
     private lateinit var chapter: Chapter
     private lateinit var context: Context
     lateinit var job: Job
@@ -35,8 +37,8 @@ class ChapterFormController : Controller, CoroutineScope,
 
     constructor() : super()
 
-    constructor(chapter: Chapter) : super() {
-        this.chapter = chapter
+    constructor(chapter: NewChapter) : super() {
+        this.newChapter = chapter
     }
 
     //#endregion
@@ -50,9 +52,9 @@ class ChapterFormController : Controller, CoroutineScope,
         job = Job()
         view = ChapterFormView(view = v, controller = this)
 
-        view.setChapter(chapter)
         launch {
-            interactor.getManga(chapter.manga_id)
+            interactor.getChapter(newChapter)
+            interactor.getManga(newChapter.manga_local_id)
             interactor.getMail(activity!!)
         }
 
@@ -102,6 +104,14 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun cancelEdit() {
         done()
+    }
+
+    /**
+     * Called from the interactor
+     */
+    override fun setChapter(chapter: Chapter) {
+        this.chapter = chapter
+        view.setChapter(chapter)
     }
 
     /**

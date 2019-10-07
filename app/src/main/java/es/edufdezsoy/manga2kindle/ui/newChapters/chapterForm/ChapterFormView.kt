@@ -53,7 +53,10 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             chapter.volume = view.etVolume.text.toString().toInt()
         } catch (e: Exception) {
             if (M2kApplication.debug)
-                Log.e(M2kApplication.TAG, "Yo fucker, the volume thrown an exception in the ChapterForm")
+                Log.e(
+                    M2kApplication.TAG,
+                    "Yo fucker, the volume thrown an exception in the ChapterForm"
+                )
         }
         // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
         chapter.title = view.tietTitle.text.toString()

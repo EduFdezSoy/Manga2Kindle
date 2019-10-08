@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.service
 
-import android.app.job.JobParameters
-import android.app.job.JobService
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
@@ -14,14 +13,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
-class ScanManga : JobService(), CoroutineScope {
+class ScanManga : CoroutineScope {
     //#region vars and vals
 
     private val TAG = M2kApplication.TAG + "_ScanManga"
-    lateinit var job: Job
+    private val job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 
@@ -43,175 +43,137 @@ class ScanManga : JobService(), CoroutineScope {
     )
 
     //#endregion
-    //#region lifecycle methods
+    //#region constructor and destructor
 
-    override fun onStartJob(params: JobParameters?): Boolean {
+    init {
         job = Job()
-        Log.i(TAG, "Service created")
+    }
 
+    protected fun finalize() {
+        job.cancel()
+    }
+
+    //#endregion
+    //#region public methods
+
+    fun performScan(context: Context, done: () -> Unit) {
         launch {
-            val folders = M2kDatabase(this@ScanManga).FolderDao().getAll()
+            Log.i(TAG, "performing manga scan")
 
+            val finishedCounter = AtomicInteger()
+            val database = M2kDatabase(context)
+
+            val folders = database.FolderDao().getAll()
             folders.forEach {
-                // if the folder path is empty we jump the entry
-                if (it.path.isBlank())
-                    return@forEach // continue like sentence
+                launch {
+                    // if the folder path is empty we stop here
+                    if (it.path.isNotBlank()) {
+                        val uri = Uri.parse(it.path)
+                        val docFile = DocumentFile.fromTreeUri(context, uri)
+                        if (docFile!!.canRead()) {
+                            val list = getListOfFoldersNFiles(docFile)
+                            val mangas = searchForMangas(list)
 
-                val docFile = DocumentFile.fromTreeUri(this@ScanManga, Uri.parse(it.path))
-                if (docFile!!.canRead()) {
-                    val list = getListOfFoldersNFiles(docFile)
-                    val mangas = searchForMangas(list)
+                            if (M2kApplication.debug)
+                                mangas.forEach { Log.d(TAG, formatName(it.name)) }
 
-                    mangas.forEach {
-                        Log.d(TAG, formatName(it.name))
-                    }
+                            mangas.forEach {
+                                val mangaName = formatName(it.name)
 
-                    mangas.forEach {
-                        val mangaName = formatName(it.name)
+                                var manga = database.MangaDao().search(mangaName)
+                                if (manga.isEmpty()) {
+                                    manga = ApiService.apiService.searchManga(mangaName)
+                                    if (manga.isEmpty())
+                                        manga = listOf(Manga(null, mangaName, null))
 
-                        var manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
-                        if (manga.isEmpty()) {
-                            manga = ApiService.apiService.searchManga(mangaName)
-
-                            if (manga.isEmpty()) {
-                                manga = listOf(Manga(null, mangaName, null))
-                            }
-
-                            M2kDatabase(this@ScanManga).MangaDao().insert(manga[0])
-                            manga = M2kDatabase(this@ScanManga).MangaDao().search(mangaName)
-                        }
-
-                        val chapters = getChapters(it)
-
-                        chapters.forEach {
-                            // this string will be something like:
-                            // [Vol.N] Ch.N [- Chapter Name]
-                            // N can be any number, 1, 2 or 3 digits
-                            // Chapter Name can have numbers take care with it
-                            val chapterName = formatName(it.name)
-
-                            var chapterTitle: String? = ""
-                            val chapterNum = pickChapter(chapterName)
-                            val chapterVol = pickVolume(chapterName)
-
-
-                            val str = chapterName.split(" - ")
-
-                            // chapterName
-                            if (str.size == 2) {
-                                chapterTitle = str.last() + " - "
-                            } else if (str.size > 2) {
-                                var first = true
-                                str.forEach {
-                                    if (!first) {
-                                        chapterTitle += it + " - "
-                                    } else {
-                                        first = false
-                                    }
+                                    database.MangaDao().insert(manga[0])
+                                    manga = database.MangaDao().search(mangaName)
                                 }
-                            }
-                            if (!chapterTitle.isNullOrBlank())
-                                chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
 
-                            if (chapterTitle.isNullOrBlank()) {
-                                val str = chapterName.split(": ")
+                                val chapters = getChapters(it)
+                                chapters.forEach {
+                                    val chapterName = formatName(it.name)
+                                    var chapterTitle: String? = getChapterTitle(chapterName)
+                                    val chapterNum = pickChapter(chapterName)
+                                    val chapterVol = pickVolume(chapterName)
 
-                                // chapterName
-                                if (str.size == 2) {
-                                    chapterTitle = str.last() + ": "
-                                } else if (str.size > 2) {
-                                    var first = true
-                                    str.forEach {
-                                        if (!first) {
-                                            chapterTitle += it + ": "
-                                        } else {
-                                            first = false
+                                    if (chapterTitle.isNullOrBlank())
+                                        chapterTitle = null
+
+                                    val chapterExists = database.ChapterDao()
+                                        .search(manga[0].identifier, chapterNum)
+
+                                    if (chapterExists == null) {
+                                        val chapter = Chapter(
+                                            id = null,
+                                            manga_id = manga[0].identifier,
+                                            lang_id = null,
+                                            volume = chapterVol,
+                                            chapter = chapterNum,
+                                            title = chapterTitle,
+                                            file_path = it.uri.toString(),
+                                            checksum = null,
+                                            delivered = false,
+                                            error = false,
+                                            reason = null,
+                                            visible = true
+                                        )
+                                        database.ChapterDao().insert(chapter)
+                                    } else {
+                                        if (M2kApplication.debug)
+                                            Log.d(
+                                                TAG,
+                                                formatName(
+                                                    "Looks like " + manga[0].identifier
+                                                            + " Ch. " + chapterNum + " already exists."
+                                                )
+                                            )
+
+                                        // if exists check the uri and rewrite it if needed
+                                        if (Uri.parse(chapterExists.file_path) != it.uri) {
+                                            if (M2kApplication.debug)
+                                                Log.d(
+                                                    TAG, formatName(
+                                                        "Chapter uri missmatch: \n" +
+                                                                "Old: " + chapterExists.file_path + "\n" +
+                                                                "New: " + it.uri.toString()
+                                                    )
+                                                )
+
+                                            chapterExists.file_path = it.uri.toString()
+                                            if (M2kApplication.debug)
+                                                Log.d(TAG, formatName("Chapter uri rewrited."))
+
+                                            database.ChapterDao().update(chapterExists)
                                         }
                                     }
                                 }
-                                if (!chapterTitle.isNullOrBlank())
-                                    chapterTitle =
-                                        chapterTitle.substring(0, chapterTitle.length - 2)
                             }
+                        } else {
+                            Log.e(
+                                TAG,
+                                "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
+                            )
 
-                            if (chapterTitle.isNullOrBlank()) {
-                                chapterTitle = null
-                            }
-
-                            try {
-                                val chapterExists = M2kDatabase(this@ScanManga).ChapterDao()
-                                    .search(manga[0].identifier, chapterNum)
-                                if (chapterExists == null) {
-                                    val chapter = Chapter(
-                                        id = null,
-                                        manga_id = manga[0].identifier,
-                                        lang_id = null,
-                                        volume = chapterVol,
-                                        chapter = chapterNum,
-                                        title = chapterTitle,
-                                        file_path = it.uri.toString(),
-                                        checksum = null,
-                                        delivered = false,
-                                        error = false,
-                                        reason = null,
-                                        visible = true
-                                    )
-                                    M2kDatabase(this@ScanManga).ChapterDao().insert(chapter)
+                            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
+                            if (M2kApplication.debug) {
+                                try {
+                                    docFile.listFiles()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
                                 }
-                            } catch (e: Exception) {
-                                Log.e(
-                                    TAG, "Error in 116, thats the data I can see useful: \n" +
-                                            "manga: List<Manga> Size = " + manga.size + "\n" +
-                                            "docFile name = " + chapterName + "\n" +
-                                            "uri = " + it.uri
-                                )
-                                e.printStackTrace()
                             }
+                            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
                         }
                     }
-                } else {
-                    Log.e(
-                        TAG,
-                        "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
-                    )
-                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-                    if (M2kApplication.debug) {
-                        try {
-                            docFile.listFiles()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+
+                    if (finishedCounter.incrementAndGet() == folders.size) {
+                        done()
+                        Log.i(TAG, "Done scanning mangas")
                     }
-                    // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-
                 }
             }
-            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-            if (M2kApplication.debug) {
-                val chaptersDebug = M2kDatabase(this@ScanManga).ChapterDao().getAll()
-
-                Log.i(TAG, "Mangas in database: " + chaptersDebug.size)
-                chaptersDebug.forEach {
-                    Log.d(
-                        TAG,
-                        "Chapter:" + it.manga_id + " Vol." + it.volume + " Ch." + it.chapter + " - " + it.title
-                    )
-                }
-            }
-            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-
-            Log.i(TAG, "Done")
-            jobFinished(params, true)
         }
-
-        return true
-    }
-
-    override fun onStopJob(params: JobParameters?): Boolean {
-        job.cancel()
-        Log.i(TAG, "Service destroyed")
-
-        return true
     }
 
     //#endregion
@@ -396,5 +358,49 @@ class ScanManga : JobService(), CoroutineScope {
         return outName
     }
 
+    private fun getChapterTitle(chapterName: String): String {
+        val str = chapterName.split(" - ")
+        var chapterTitle = ""
+
+        if (str.size == 2) {
+            chapterTitle = str.last() + " - "
+        } else if (str.size > 2) {
+            var first = true
+            str.forEach {
+                if (!first) {
+                    chapterTitle += "$it - "
+                } else {
+                    first = false
+                }
+            }
+        }
+        if (!chapterTitle.isBlank())
+            chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
+
+        if (chapterTitle.isBlank()) {
+            val str = chapterName.split(": ")
+
+            // chapterName
+            if (str.size == 2) {
+                chapterTitle = str.last() + ": "
+            } else if (str.size > 2) {
+                var first = true
+                str.forEach {
+                    if (!first) {
+                        chapterTitle += "$it: "
+                    } else {
+                        first = false
+                    }
+                }
+            }
+            if (!chapterTitle.isBlank())
+                chapterTitle =
+                    chapterTitle.substring(0, chapterTitle.length - 2)
+        }
+
+        return chapterTitle
+    }
+
 //#endregion
+
 }

@@ -3,10 +3,10 @@ package es.edufdezsoy.manga2kindle.service
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ScanMangaTest {
+class ScanMangaJobServiceTest {
     @Test
     fun formatNameTest() {
-        val scanManga = ScanManga()
+        val scanManga = ScanMangaJobService()
 
         // Mock data
         val names = arrayOf(

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
-import es.edufdezsoy.manga2kindle.service.ScanRemovedChapters
+import es.edufdezsoy.manga2kindle.service.ScanRemovedChaptersIntentService
 
 class NewChaptersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
@@ -23,7 +23,7 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
     }
 
     suspend fun updateChapters(context: Context) {
-        ScanRemovedChapters.enqueueWork(context, Intent())
+        ScanRemovedChaptersIntentService.enqueueWork(context, Intent())
 
         // register receiver
         if (!::receiver.isInitialized) {

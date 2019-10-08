@@ -19,19 +19,19 @@
                 android:resource="@xml/settings" />
 
         <service
-                android:name=".service.ScanManga"
+                android:name=".service.ScanMangaJobService"
                 android:description="@string/service_ScanManga_description"
                 android:enabled="true"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
-                android:name=".service.UpdateChapterStatus"
+                android:name=".service.UpdateChapterStatusIntentService"
                 android:description="@string/service_UpdateChapterStatus_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-                android:name=".service.ScanRemovedChapters"
+                android:name=".service.ScanRemovedChaptersIntentService"
                 android:description="@string/service_ScanRemovedChapters_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />

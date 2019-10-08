@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
-import es.edufdezsoy.manga2kindle.service.UpdateChapterStatus
+import es.edufdezsoy.manga2kindle.service.UpdateChapterStatusIntentService
 
 class UploadedChaptersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
@@ -24,7 +24,7 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
     }
 
     suspend fun updateStatus(context: Context) {
-        UpdateChapterStatus.enqueueWork(context, Intent())
+        UpdateChapterStatusIntentService.enqueueWork(context, Intent())
 
         // register reciver
         if (!::receiver.isInitialized) {

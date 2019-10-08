@@ -15,7 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class ScanRemovedChapters : JobIntentService(), CoroutineScope {
+class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_ScanRmCh"
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -23,12 +23,12 @@ class ScanRemovedChapters : JobIntentService(), CoroutineScope {
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, ScanRemovedChapters::class.java, 0, intent)
+            enqueueWork(context, ScanRemovedChaptersIntentService::class.java, 0, intent)
         }
     }
 
     override fun onHandleWork(intent: Intent) {
-        Log.d(TAG, "Service ScanRemovedChapters started.")
+        Log.d(TAG, "Service ScanRemovedChaptersIntentService started.")
         job = Job()
         val database = M2kDatabase.invoke(this)
 
@@ -36,7 +36,7 @@ class ScanRemovedChapters : JobIntentService(), CoroutineScope {
             database.ChapterDao().getNoUploadedChapters().also {
                 it.forEach {
                     val docFile = DocumentFile.fromSingleUri(
-                        this@ScanRemovedChapters,
+                        this@ScanRemovedChaptersIntentService,
                         Uri.parse(it.file_path)
                     )
 
@@ -62,6 +62,6 @@ class ScanRemovedChapters : JobIntentService(), CoroutineScope {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "Service ScanRemovedChapters destroyed.")
+        Log.d(TAG, "Service ScanRemovedChaptersIntentService destroyed.")
     }
 }

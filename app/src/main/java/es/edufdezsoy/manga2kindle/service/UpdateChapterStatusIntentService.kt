@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 
-class UpdateChapterStatus : JobIntentService(), CoroutineScope {
+class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_UpdateChSt"
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -23,12 +23,12 @@ class UpdateChapterStatus : JobIntentService(), CoroutineScope {
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, UpdateChapterStatus::class.java, 0, intent)
+            enqueueWork(context, UpdateChapterStatusIntentService::class.java, 0, intent)
         }
     }
 
     override fun onHandleWork(workIntent: Intent) {
-        Log.d(TAG, "Service UpdateChapterStatus started.")
+        Log.d(TAG, "Service UpdateChapterStatusIntentService started.")
         job = Job()
         val database = M2kDatabase.invoke(this)
         val apiService = ApiService.apiService
@@ -60,6 +60,6 @@ class UpdateChapterStatus : JobIntentService(), CoroutineScope {
 
 
     override fun onDestroy() {
-        Log.d(TAG, "Service UpdateChapterStatus destroyed.")
+        Log.d(TAG, "Service UpdateChapterStatusIntentService destroyed.")
     }
 }

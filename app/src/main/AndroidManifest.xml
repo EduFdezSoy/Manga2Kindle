@@ -26,12 +26,17 @@
                 android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
-                android:name=".service.UpdateChapterStatusIntentService"
+                android:name=".service.intentService.ScanMangaIntentService"
+                android:description="@string/service_ScanManga_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+                android:name=".service.intentService.UpdateChapterStatusIntentService"
                 android:description="@string/service_UpdateChapterStatus_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-                android:name=".service.ScanRemovedChaptersIntentService"
+                android:name=".service.intentService.ScanRemovedChaptersIntentService"
                 android:description="@string/service_ScanRemovedChapters_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />

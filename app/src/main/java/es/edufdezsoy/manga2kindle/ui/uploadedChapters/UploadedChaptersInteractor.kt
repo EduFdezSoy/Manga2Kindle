@@ -1,13 +1,13 @@
 package es.edufdezsoy.manga2kindle.ui.uploadedChapters
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
-import es.edufdezsoy.manga2kindle.service.UpdateChapterStatusIntentService
+import es.edufdezsoy.manga2kindle.service.intentService.UpdateChapterStatusIntentService
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
 class UploadedChaptersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
@@ -15,7 +15,7 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
         fun updateList()
     }
 
-    private lateinit var receiver: ServiceReceiver
+    private lateinit var receiver: BroadcastReceiver
 
     suspend fun loadChapters() {
         getChaptersList().also {
@@ -28,9 +28,11 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
 
         // register reciver
         if (!::receiver.isInitialized) {
-            val filter = IntentFilter(ServiceReceiver.ACTION_UPDATED_CHAPTER_STATUS)
+            val filter = IntentFilter(BroadcastReceiver.ACTION_UPDATED_CHAPTER_STATUS)
             filter.addCategory(Intent.CATEGORY_DEFAULT)
-            receiver = ServiceReceiver(controller)
+            receiver = BroadcastReceiver(BroadcastReceiver.ACTION_UPDATED_CHAPTER_STATUS) {
+                controller.updateList()
+            }
             context.registerReceiver(receiver, filter)
         }
     }
@@ -87,17 +89,6 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
             }
 
             return uploadedChapters
-        }
-    }
-
-    class ServiceReceiver(val controller: Controller) : BroadcastReceiver() {
-
-        companion object {
-            val ACTION_UPDATED_CHAPTER_STATUS = "es.edufdezsoy.intent.action.UPDATED_CHAPTER_STATUS"
-        }
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            controller.updateList()
         }
     }
 }

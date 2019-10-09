@@ -1,4 +1,4 @@
-package es.edufdezsoy.manga2kindle.service
+package es.edufdezsoy.manga2kindle.service.intentService
 
 import android.content.Context
 import android.content.Intent
@@ -7,7 +7,7 @@ import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.network.ApiService
-import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersInteractor
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,6 +17,7 @@ import kotlin.coroutines.CoroutineContext
 
 class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_UpdateChSt"
+    private val broadcastIntent = Intent()
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
@@ -25,6 +26,11 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, UpdateChapterStatusIntentService::class.java, 0, intent)
         }
+    }
+
+    init {
+        broadcastIntent.action = BroadcastReceiver.ACTION_UPDATED_CHAPTER_STATUS
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
     }
 
     override fun onHandleWork(workIntent: Intent) {
@@ -49,11 +55,8 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
                     }
                 }
 
-                val broadcastIntent = Intent()
-                broadcastIntent.action =
-                    UploadedChaptersInteractor.ServiceReceiver.ACTION_UPDATED_CHAPTER_STATUS
-                broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
                 sendBroadcast(broadcastIntent)
+                stopSelf()
             }
         }
     }

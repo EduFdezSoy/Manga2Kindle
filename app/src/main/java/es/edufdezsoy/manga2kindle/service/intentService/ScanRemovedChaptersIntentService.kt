@@ -1,4 +1,4 @@
-package es.edufdezsoy.manga2kindle.service
+package es.edufdezsoy.manga2kindle.service.intentService
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import androidx.core.app.JobIntentService
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersInteractor
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,6 +17,7 @@ import kotlin.coroutines.CoroutineContext
 
 class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
     private val TAG = M2kApplication.TAG + "_ScanRmCh"
+    private val broadcastIntent = Intent()
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
@@ -25,6 +26,11 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, ScanRemovedChaptersIntentService::class.java, 0, intent)
         }
+    }
+
+    init {
+        broadcastIntent.action = BroadcastReceiver.ACTION_UPDATED_CHAPTER_LIST
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -53,11 +59,8 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
                 }
             }
 
-            val broadcastIntent = Intent()
-            broadcastIntent.action =
-                NewChaptersInteractor.ServiceReceiver.ACTION_UPDATED_CHAPTER_LIST
-            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
             sendBroadcast(broadcastIntent)
+            stopSelf()
         }
     }
 

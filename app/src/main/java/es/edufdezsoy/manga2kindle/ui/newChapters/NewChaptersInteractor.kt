@@ -1,12 +1,12 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
-import es.edufdezsoy.manga2kindle.service.ScanRemovedChaptersIntentService
+import es.edufdezsoy.manga2kindle.service.intentService.ScanRemovedChaptersIntentService
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
 class NewChaptersInteractor(val controller: Controller, val database: M2kDatabase) {
     interface Controller {
@@ -14,7 +14,7 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
         fun updateList()
     }
 
-    private lateinit var receiver: ServiceReceiver
+    private lateinit var receiver: BroadcastReceiver
 
     suspend fun loadChapters() {
         getChaptersList().also {
@@ -27,9 +27,11 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
 
         // register receiver
         if (!::receiver.isInitialized) {
-            val filter = IntentFilter(ServiceReceiver.ACTION_UPDATED_CHAPTER_LIST)
+            val filter = IntentFilter(BroadcastReceiver.ACTION_UPDATED_CHAPTER_LIST)
             filter.addCategory(Intent.CATEGORY_DEFAULT)
-            receiver = ServiceReceiver(controller)
+            receiver = BroadcastReceiver(BroadcastReceiver.ACTION_UPDATED_CHAPTER_LIST) {
+                controller.updateList()
+            }
             context.registerReceiver(receiver, filter)
         }
     }
@@ -66,17 +68,6 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
             }
 
             return newChapters
-        }
-    }
-
-    class ServiceReceiver(val controller: Controller) : BroadcastReceiver() {
-
-        companion object {
-            val ACTION_UPDATED_CHAPTER_LIST = "es.edufdezsoy.intent.action.UPDATED_CHAPTER_LIST"
-        }
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            controller.updateList()
         }
     }
 }

@@ -7,7 +7,7 @@ import org.junit.Test
 class ScanMangaJobServiceTest {
     @Test
     fun formatNameTest() {
-        val scanManga = ScanMangaJobService()
+        val scanManga = ScanManga()
 
         // Mock data
         val names = arrayOf(

@@ -4,7 +4,7 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import es.edufdezsoy.manga2kindle.service.ScanMangaJobService
+import es.edufdezsoy.manga2kindle.service.service.ScanMangaJobService
 
 class ServiceScheduler {
     fun sheduleScanManga(context: Context) {

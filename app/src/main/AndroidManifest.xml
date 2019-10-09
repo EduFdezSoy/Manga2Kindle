@@ -19,7 +19,7 @@
                 android:resource="@xml/settings" />
 
         <service
-                android:name=".service.ScanMangaJobService"
+                android:name=".service.service.ScanMangaJobService"
                 android:description="@string/service_ScanManga_description"
                 android:enabled="true"
                 android:exported="false"

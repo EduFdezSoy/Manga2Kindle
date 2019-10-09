@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.service
 
+import es.edufdezsoy.manga2kindle.service.service.ScanMangaJobService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

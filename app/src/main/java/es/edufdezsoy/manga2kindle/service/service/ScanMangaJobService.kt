@@ -1,9 +1,10 @@
-package es.edufdezsoy.manga2kindle.service
+package es.edufdezsoy.manga2kindle.service.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.service.ScanManga
 
 class ScanMangaJobService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {

@@ -40,6 +40,11 @@
                 android:description="@string/service_ScanRemovedChapters_description"
                 android:exported="false"
                 android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+                android:name=".service.intentService.UploadChapterIntentService"
+                android:description="@string/service_UploadChapter_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name="es.edufdezsoy.manga2kindle.service.util.ServiceStartReceiver">
             <intent-filter>

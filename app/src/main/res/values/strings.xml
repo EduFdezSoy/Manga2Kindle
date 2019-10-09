@@ -3,4 +3,5 @@
     <string name="service_ScanManga_description">Search for new manga chapters</string>
     <string name="service_UpdateChapterStatus_description">Update uploaded chapters statuses</string>
     <string name="service_ScanRemovedChapters_description">Remove from database the new chapters removed from the device</string>
+    <string name="service_UploadChapter_description">Upload the chapters to the server</string>
 </resources>

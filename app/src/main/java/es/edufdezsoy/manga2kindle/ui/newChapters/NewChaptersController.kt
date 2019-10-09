@@ -10,6 +10,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,7 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
         handler = Handler()
         context = v.context
         view = NewChaptersView(view = v, controller = this)
+        (activity as BaseActivity).scanMangas()
 
         return v
     }
@@ -66,6 +68,7 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
         launch {
             handler.removeCallbacksAndMessages(null)
             interactor.updateChapters(context)
+            (activity as BaseActivity).scanMangas()
         }
     }
 

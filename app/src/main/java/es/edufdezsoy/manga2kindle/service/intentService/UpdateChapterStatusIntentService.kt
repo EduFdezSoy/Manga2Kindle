@@ -56,7 +56,6 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
                 }
 
                 sendBroadcast(broadcastIntent)
-                stopSelf()
             }
         }
     }

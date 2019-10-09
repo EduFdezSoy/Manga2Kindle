@@ -60,7 +60,6 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
             }
 
             sendBroadcast(broadcastIntent)
-            stopSelf()
         }
     }
 

@@ -63,6 +63,7 @@ class ChapterFormController : Controller, CoroutineScope,
 
     override fun onDestroyView(view: View) {
         job.cancel()
+        interactor.close(context)
         super.onDestroyView(view)
     }
 
@@ -84,7 +85,7 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun sendChapter(chapter: Chapter, mail: String) {
         launch {
-            interactor.sendChapter(chapter, mail, context)
+            interactor.sendChapter(chapter.identifier, mail, context)
         }
     }
 

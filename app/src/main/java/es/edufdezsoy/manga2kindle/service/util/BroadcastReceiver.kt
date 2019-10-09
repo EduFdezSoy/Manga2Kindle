@@ -13,6 +13,12 @@ class BroadcastReceiver(private val action: String) : BroadcastReceiver() {
 
         val ACTION_UPDATE_CHAPTER_STATUS = "es.edufdezsoy.intent.action.CHAPTER_STATUS_UPDATE"
         val ACTION_UPDATED_CHAPTER_STATUS = "es.edufdezsoy.intent.action.CHAPTER_STATUS"
+
+        val ACTION_UPLOAD_CHAPTER = "es.edufdezsoy.intent.action.CHAPTER_UPLOAD_UPDATE"
+        val ACTION_UPLOADED_CHAPTER = "es.edufdezsoy.intent.action.CHAPTER_UPLOAD"
+
+        val ACTION_SCANNING_MANGA = "es.edufdezsoy.intent.action.SCAN_MANGA_UPDATE"
+        val ACTION_SCAN_MANGA = "es.edufdezsoy.intent.action.SCAN_MANGA"
     }
 
     private lateinit var onFinished: () -> Unit

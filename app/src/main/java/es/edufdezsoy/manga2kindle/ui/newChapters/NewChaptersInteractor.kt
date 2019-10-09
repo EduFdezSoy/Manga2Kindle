@@ -23,7 +23,8 @@ class NewChaptersInteractor(val controller: Controller, val database: M2kDatabas
     }
 
     suspend fun updateChapters(context: Context) {
-        ScanRemovedChaptersIntentService.enqueueWork(context, Intent())
+        val intent = Intent()
+        ScanRemovedChaptersIntentService.enqueueWork(context, intent)
 
         // register receiver
         if (!::receiver.isInitialized) {

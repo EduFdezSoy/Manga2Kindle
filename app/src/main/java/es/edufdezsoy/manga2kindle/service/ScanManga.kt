@@ -358,6 +358,12 @@ class ScanManga : CoroutineScope {
         return outName
     }
 
+    /**
+     * Splits the vol/chapter info from the chapter title
+     *
+     * @param chapterName
+     * @return the chapter title
+     */
     private fun getChapterTitle(chapterName: String): String {
         val str = chapterName.split(" - ")
         var chapterTitle = ""

@@ -7,4 +7,7 @@
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorFailed">#F44336</color>
     <color name="colorProcessing">#FFC107</color>
+
+    <color name="btnUpload">#2196F3</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

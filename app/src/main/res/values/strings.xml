@@ -4,4 +4,8 @@
     <string name="service_UpdateChapterStatus_description">Update uploaded chapters statuses</string>
     <string name="service_ScanRemovedChapters_description">Remove from database the new chapters removed from the device</string>
     <string name="service_UploadChapter_description">Upload the chapters to the server</string>
+
+    <!-- Upload Chapter Form -->
+    <string name="btn_upload_ucf">Upload</string>
+    <string name="btn_upload_loading_ucf">Uploading</string>
 </resources>

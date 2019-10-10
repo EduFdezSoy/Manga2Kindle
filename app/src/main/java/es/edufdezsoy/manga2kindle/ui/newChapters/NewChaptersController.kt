@@ -38,7 +38,7 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_new_chapters, container, false)
 
-        interactor = NewChaptersInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = NewChaptersInteractor(this, v.context)
 
         job = Job()
         handler = Handler()

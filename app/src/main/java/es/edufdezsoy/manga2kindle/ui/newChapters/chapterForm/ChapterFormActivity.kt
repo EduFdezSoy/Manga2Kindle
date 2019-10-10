@@ -48,18 +48,17 @@ class ChapterFormActivity : AppCompatActivity(), BaseInteractor.Controller {
 
     override fun onBackPressed() {
         if (!router.handleBack())
-            if (!router.handleBack())
-                super.onBackPressed()
+            super.onBackPressed()
     }
 
     //#endregion
     //#region toolbar functions
 
     private fun setToolbar() {
+        setSupportActionBar(baseToolbar)
         baseToolbar.setTitle(R.string.app_name)
         baseToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         baseToolbar.setNavigationOnClickListener { onBackPressed() }
-        setSupportActionBar(baseToolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

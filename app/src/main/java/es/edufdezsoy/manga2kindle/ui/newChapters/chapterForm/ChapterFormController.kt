@@ -1,6 +1,7 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,7 @@ import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -87,6 +89,7 @@ class ChapterFormController : Controller, CoroutineScope,
         view.saveData()
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save -> actionSaveData()
@@ -104,14 +107,14 @@ class ChapterFormController : Controller, CoroutineScope,
             interactor.saveChapter(chapter).also {
                 done[0] = true
                 if (done[0] && done[1] && done[2])
-                    done()
+                    doneSaving()
             }
         }
         launch {
             interactor.saveManga(manga).also {
                 done[1] = true
                 if (done[0] && done[1] && done[2])
-                    done()
+                    doneSaving()
             }
         }
         if (mail != null)
@@ -119,13 +122,13 @@ class ChapterFormController : Controller, CoroutineScope,
                 interactor.saveMail(activity!!, mail).also {
                     done[2] = true
                     if (done[0] && done[1] && done[2])
-                        done()
+                        doneSaving()
                 }
             }
         else {
             done[2] = true
             if (done[0] && done[1] && done[2])
-                done()
+                doneSaving()
         }
     }
 
@@ -201,5 +204,19 @@ class ChapterFormController : Controller, CoroutineScope,
     }
 
     //#endregion
+    //#region private methods
 
+    /**
+     * Called on save
+     */
+    private fun doneSaving() {
+        val broadcastIntent = Intent()
+        broadcastIntent.action = BroadcastReceiver.ACTION_UPDATED_CHAPTER_LIST
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
+
+        context.sendBroadcast(broadcastIntent)
+        done()
+    }
+
+    //#endregion
 }

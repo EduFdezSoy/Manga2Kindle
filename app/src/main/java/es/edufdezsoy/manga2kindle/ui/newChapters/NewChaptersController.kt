@@ -1,6 +1,7 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
+import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormActivity
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,11 +75,13 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
     }
 
     override fun openChapterDetails(chapter: NewChapter) {
-        router.pushController(
-            RouterTransaction.with(ChapterFormController(chapter))
-                .pushChangeHandler(overriddenPushHandler)
-                .popChangeHandler(overriddenPopHandler)
-        )
+        val intent = Intent(context, ChapterFormActivity::class.java)
+
+        intent.putExtra(ChapterFormActivity.CHAPTER_KEY, chapter.local_id)
+        intent.putExtra(ChapterFormActivity.MANGA_KEY, chapter.manga_local_id)
+        intent.putExtra(ChapterFormActivity.AUTHOR_KEY, chapter.author_id)
+
+        context.startActivity(intent)
     }
 
     override fun hideChapter(chapter: NewChapter) {

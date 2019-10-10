@@ -29,8 +29,8 @@ class ChapterFormInteractor(val controller: Controller, val database: M2kDatabas
 
     private lateinit var receiver: BroadcastReceiver
 
-    suspend fun getChapter(chapter: NewChapter) {
-        database.ChapterDao().getChapter(chapter.local_id).also {
+    suspend fun getChapter(chapter_id: Int) {
+        database.ChapterDao().getChapter(chapter_id).also {
             controller.setChapter(it)
         }
     }

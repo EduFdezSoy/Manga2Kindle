@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
@@ -11,7 +12,6 @@ import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,9 @@ class ChapterFormController : Controller, CoroutineScope,
 
     private lateinit var interactor: ChapterFormInteractor
     private lateinit var view: ChapterFormView
-    private lateinit var newChapter: NewChapter
+    private var chapter_id: Int = 0
+    private var manga_id: Int = 0
+    private var author_id: Int = 0
     private lateinit var chapter: Chapter
     private lateinit var context: Context
     lateinit var job: Job
@@ -37,8 +39,10 @@ class ChapterFormController : Controller, CoroutineScope,
 
     constructor() : super()
 
-    constructor(chapter: NewChapter) : super() {
-        this.newChapter = chapter
+    constructor(chapter_id: Int, manga_id: Int, author_id: Int) : super() {
+        this.chapter_id = chapter_id
+        this.manga_id = manga_id
+        this.author_id = author_id
     }
 
     //#endregion
@@ -53,8 +57,14 @@ class ChapterFormController : Controller, CoroutineScope,
         view = ChapterFormView(view = v, controller = this)
 
         launch {
-            interactor.getChapter(newChapter)
-            interactor.getManga(newChapter.manga_local_id)
+            interactor.getChapter(chapter_id)
+            interactor.getManga(manga_id)
+
+            if (author_id != 0)
+                interactor.getAuthor(author_id)
+            else
+                interactor.getAuthors()
+
             interactor.getMail(activity!!)
         }
 
@@ -71,13 +81,52 @@ class ChapterFormController : Controller, CoroutineScope,
     //#region public methods
 
     /**
+     * Called from the activity toolbar
+     */
+    override fun actionSaveData() {
+        view.saveData()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_save -> actionSaveData()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
      * Called from the view
      */
     override fun saveData(chapter: Chapter, manga: Manga, mail: String?) {
-        launch { interactor.saveChapter(chapter) }
-        launch { interactor.saveManga(manga) }
+        val done = arrayOf(false, false, false)
+        launch {
+            interactor.saveChapter(chapter).also {
+                done[0] = true
+                if (done[0] && done[1] && done[2])
+                    done()
+            }
+        }
+        launch {
+            interactor.saveManga(manga).also {
+                done[1] = true
+                if (done[0] && done[1] && done[2])
+                    done()
+            }
+        }
         if (mail != null)
-            launch { interactor.saveMail(activity!!, mail) }
+            launch {
+                interactor.saveMail(activity!!, mail).also {
+                    done[2] = true
+                    if (done[0] && done[1] && done[2])
+                        done()
+                }
+            }
+        else {
+            done[2] = true
+            if (done[0] && done[1] && done[2])
+                done()
+        }
     }
 
     /**
@@ -120,12 +169,6 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun setManga(manga: Manga) {
         view.setManga(manga)
-        launch {
-            if (manga.author_id != null)
-                interactor.getAuthor(manga.author_id)
-            else
-                interactor.getAuthors()
-        }
     }
 
     /**

@@ -96,15 +96,15 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
                     if (!it[0].delivered) {
                         holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorProcessing)
                         )
-                        holder.status.text = "processing"
+                        holder.status.text = context.getString(R.string.status_processing)
                     } else {
                         holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorSuccess)
                         )
-                        holder.status.text = "success"
+                        holder.status.text = context.getString(R.string.status_success)
                     }
                 } else {
                     holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorFailed))
-                    holder.status.text = "failed"
+                    holder.status.text = context.getString(R.string.status_failed)
                     holder.status.text = it[0].reason
                 }
             }

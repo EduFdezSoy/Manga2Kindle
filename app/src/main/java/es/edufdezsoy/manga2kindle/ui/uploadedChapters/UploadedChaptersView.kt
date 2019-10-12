@@ -3,6 +3,7 @@ package es.edufdezsoy.manga2kindle.ui.uploadedChapters
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.ui.adapter.UploadedChapterAdapter
 import kotlinx.android.synthetic.main.view_new_chapters.view.*
@@ -14,7 +15,7 @@ class UploadedChaptersView(val view: View, val controller: UploadedChaptersContr
     UploadedChaptersContract.View {
     init {
         view.rvUploadedChapters.layoutManager = LinearLayoutManager(controller.activity)
-        view.tvViewTitle.text = "loading list..."
+        view.tvViewTitle.text = view.context.getString(R.string.view_uploaded_chapters_title)
 
         controller.loadChapters()
     }
@@ -43,7 +44,7 @@ class UploadedChaptersView(val view: View, val controller: UploadedChaptersContr
             view.flBackground.visibility = View.GONE
 
         } else {
-            view.tvViewTitle.text = "Looks like this list is empty!"
+            view.tvViewTitle.text = view.context.getString(R.string.uploaded_chapters_empty_list)
         }
     }
 }

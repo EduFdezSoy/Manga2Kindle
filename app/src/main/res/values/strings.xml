@@ -1,4 +1,34 @@
 <resources>
     <string name="app_name">Manga2Kindle</string>
     <string name="service_description">Search for new manga chapters</string>
+    <string name="uploaded_chapters_empty_list">Looks like this list is empty!</string>
+    <string name="uploaded_chapters_todo_hide_entry">TODO: hide entry</string>
+    <string name="author_form_name_input_hint">Name</string>
+    <string name="author_form_surname_input_hint">Surname</string>
+    <string name="author_form_nickname_input_hint">Nickname</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_save">Save</string>
+    <string name="chapter_form_manga_hint">Manga</string>
+    <string name="chapter_form_chapter">Chapter</string>
+    <string name="chapter_form_volume">Volume</string>
+    <string name="chapter_form_title_hint">Title</string>
+    <string name="chapter_form_author_hint">Author</string>
+    <string name="chapter_form_lang_hint">Lang</string>
+    <string name="button_upload">Upload</string>
+    <string name="view_folder_form_name">Name</string>
+    <string name="view_folder_form_path">Path</string>
+    <string name="button_return">Return</string>
+    <string name="view_folder_form_no_path_selected">no path selected</string>
+    <string name="button_search">Search</string>
+    <string name="button_delete">Delete</string>
+    <string name="view_new_chapters_view_title">Observed Folders View</string>
+    <string name="observed_folders_view_title">Observed Folders View</string>
+    <string name="view_uploaded_chapters_title">Uploaded Chapters View</string>
+    <string name="view_chapter_form_add_author">Add</string>
+    <string name="view_chapter_form_email_hint">Kindle email address</string>
+    <string name="main_view_tv1_text">currando...</string>
+    <string name="new_chapters_view_title">loading list...</string>
+    <string name="status_processing">processing</string>
+    <string name="status_success">success</string>
+    <string name="status_failed">failed</string>
 </resources>

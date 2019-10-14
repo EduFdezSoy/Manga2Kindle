@@ -27,8 +27,7 @@ interface ChapterDao {
      *
      * @return this list can be empty
      */
-    // NOTE: booleans in sqlite! 0 = false, 1 = true
-    @Query("SELECT * FROM chapter WHERE sended = 0")
+    @Query("SELECT * FROM chapter WHERE status = 0")
     suspend fun getNoUploadedChapters(): List<Chapter>
 
     /**
@@ -36,8 +35,7 @@ interface ChapterDao {
      *
      * @return this list can be empty
      */
-    // NOTE: booleans in sqlite! 0 = false, 1 = true
-    @Query("SELECT * FROM chapter WHERE sended = 1")
+    @Query("SELECT * FROM chapter WHERE status != 0")
     suspend fun getUploadedChapters(): List<Chapter>
 
     /**
@@ -74,7 +72,6 @@ interface ChapterDao {
     /**
      * Delete the chapters that hasn't been sent to the server
      */
-    // NOTE: booleans in sqlite! 0 = false, 1 = true
-    @Query("DELETE FROM chapter WHERE sended = 0")
+    @Query("DELETE FROM chapter WHERE status != 3")
     suspend fun clearNotSended()
 }

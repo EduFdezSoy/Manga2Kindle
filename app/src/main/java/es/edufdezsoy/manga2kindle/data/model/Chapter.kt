@@ -24,7 +24,15 @@ data class Chapter(
 ) {
     @PrimaryKey(autoGenerate = true)
     var identifier: Int = 0
-    var sended: Boolean =  false
+
+    /**
+     * 0 = default
+     * 1 = processing
+     * 2 = uploading
+     * 3 = uploaded
+     * 4 = local error
+     */
+    var status: Int = 0
 
     override fun toString(): String {
         var text = ""

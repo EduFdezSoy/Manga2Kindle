@@ -130,7 +130,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
                     file = part
                 ).also {
                     chapter.id = it[0].id
-                    chapter.sended = true
+                    chapter.status = 3
                     database.ChapterDao().update(chapter)
                 }
             } catch (e: Exception) {

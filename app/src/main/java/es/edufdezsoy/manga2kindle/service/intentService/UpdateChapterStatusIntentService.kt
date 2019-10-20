@@ -44,13 +44,14 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
                 it.forEach { chapter ->
                     if (!chapter.delivered && !chapter.error) {
                         apiService.getStatus(chapter.id!!).also {
-                            if (it[0].delivered || it[0].error) {
-                                chapter.delivered = it[0].delivered
-                                chapter.error = it[0].error
+                            if (it.isNotEmpty())
+                                if (it[0].delivered || it[0].error) {
+                                    chapter.delivered = it[0].delivered
+                                    chapter.error = it[0].error
 
-                                Log.d(TAG, it[0].toString())
-                                database.ChapterDao().update(chapter)
-                            }
+                                    Log.d(TAG, it[0].toString())
+                                    database.ChapterDao().update(chapter)
+                                }
                         }
                     }
                 }

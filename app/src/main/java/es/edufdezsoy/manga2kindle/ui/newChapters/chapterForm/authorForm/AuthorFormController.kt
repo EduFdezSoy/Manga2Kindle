@@ -148,7 +148,6 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
      * Called from the interactor
      */
     override fun done() {
-        (activity!! as BaseActivity).showSnackbar("Author saved")
         onBackPressed()
     }
 

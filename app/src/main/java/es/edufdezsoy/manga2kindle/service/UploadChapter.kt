@@ -98,8 +98,10 @@ class UploadChapter(val context: Context) : CoroutineScope {
             }
 
             // compress the file
-            val zipName =
-                manga.title + " Ch." + trimTrailingZero(chapter.chapter.toString()) + ".zip"
+            val zipName = cleanTextContent(manga.title) +
+                    " Ch." +
+                    trimTrailingZero(chapter.chapter.toString()) +
+                    ".zip"
             zip(Uri.parse(chapter.file_path), zipName)
 
             // get the checksum (md5)
@@ -355,6 +357,20 @@ class UploadChapter(val context: Context) : CoroutineScope {
         } else {
             value
         }
+    }
+
+    private fun cleanTextContent(text: String): String {
+        var text = text
+        // strips off all non-ASCII characters
+        text = text.replace("[^\\x00-\\x7F]".toRegex(), "")
+
+        // erases all the ASCII control characters
+        text = text.replace("[\\p{Cntrl}&&[^\r\n\t]]".toRegex(), "")
+
+        // removes non-printable characters from Unicode
+        text = text.replace("\\p{C}".toRegex(), "")
+
+        return text.trim { it <= ' ' }
     }
 
     //#endregion

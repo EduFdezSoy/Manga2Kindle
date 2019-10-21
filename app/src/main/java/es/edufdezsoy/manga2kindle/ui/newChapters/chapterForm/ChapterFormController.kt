@@ -7,14 +7,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
-import com.bluelinelabs.conductor.RouterTransaction
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
-import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormController
+import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm.AuthorFormActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -145,11 +144,10 @@ class ChapterFormController : Controller, CoroutineScope,
      * Called from the view
      */
     override fun openAuthorForm() {
-        router.pushController(
-            RouterTransaction.with(AuthorFormController(chapter))
-                .pushChangeHandler(overriddenPushHandler)
-                .popChangeHandler(overriddenPopHandler)
-        )
+        val intent = Intent(context, AuthorFormActivity::class.java)
+        intent.putExtra(AuthorFormActivity.CHAPTER_KEY, chapter_id)
+
+        context.startActivity(intent)
     }
 
     /**

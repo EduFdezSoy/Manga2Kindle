@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm
 
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import es.edufdezsoy.manga2kindle.network.ApiService
 
@@ -11,6 +12,7 @@ class AuthorFormInteractor(val controller: Controller, val database: M2kDatabase
         fun setAuthorList(authors: List<Author>)
         fun setAuthor(author: Author)
         fun setManga(manga: Manga)
+        fun setChapter(chapter: Chapter)
         fun done()
     }
 
@@ -47,6 +49,12 @@ class AuthorFormInteractor(val controller: Controller, val database: M2kDatabase
     suspend fun getManga(id: Int) {
         database.MangaDao().getMangaById(id).also {
             controller.setManga(it)
+        }
+    }
+
+    suspend fun getChapter(id: Int) {
+        database.ChapterDao().getChapter(id).also {
+            controller.setChapter(it)
         }
     }
 }

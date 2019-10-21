@@ -75,6 +75,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
+        <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
     </application>
 
 </manifest>

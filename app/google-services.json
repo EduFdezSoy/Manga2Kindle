@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "837065747429",
+    "firebase_url": "https://manga2kindle.firebaseio.com",
+    "project_id": "manga2kindle",
+    "storage_bucket": "manga2kindle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837065747429:android:e3b849746916757d3edd0c",
+        "android_client_info": {
+          "package_name": "es.edufdezsoy.manga2kindle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837065747429-b1mf707o271hnlln78plue8k59ojmla5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.edufdezsoy.manga2kindle",
+            "certificate_hash": "bd4cca5a7b545d9018990e9fabbfa6bd2c6c1544"
+          }
+        },
+        {
+          "client_id": "837065747429-k7j2tots7394b22a4bn1nbsehgvq6e1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiycSVB-TS19gWL0nHh0h-fTqqYQllhSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837065747429-k7j2tots7394b22a4bn1nbsehgvq6e1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         package="es.edufdezsoy.manga2kindle">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -54,10 +55,23 @@
         </receiver>
 
         <activity android:name=".ui.base.BaseActivity">
+            <tools:validation testUrl="https://manga2kindle.com/app" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:scheme="https"
+                        android:host="manga2kindle.com"
+                        android:path="/app" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />

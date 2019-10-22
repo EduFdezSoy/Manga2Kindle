@@ -50,9 +50,6 @@ android {
             // No special config
         }
     }
-    packagingOptions {
-        pickFirst 'META-INF/library-core_release.kotlin_module'
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -91,7 +88,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
@@ -99,11 +96,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // ROOM IMPLEMENTATION
-    implementation 'androidx.room:room-runtime:2.2.0-rc01'
-    annotationProcessor 'androidx.room:room-compiler:2.2.0-rc01'
-    kapt 'androidx.room:room-compiler:2.2.0-rc01'
-    implementation 'androidx.room:room-ktx:2.2.0-rc01' // Kotlin Extensions
-    testImplementation 'androidx.room:room-testing:2.2.0-rc01'
+    implementation 'androidx.room:room-runtime:2.2.0'
+    annotationProcessor 'androidx.room:room-compiler:2.2.0'
+    kapt 'androidx.room:room-compiler:2.2.0'
+    implementation 'androidx.room:room-ktx:2.2.0' // Kotlin Extensions
+    testImplementation 'androidx.room:room-testing:2.2.0'
 
     // RETROFIT AND SO
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
@@ -114,12 +111,12 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
 
     // MATERIAL DRAWER
-    implementation 'com.mikepenz:materialdrawer:7.0.0-rc07'
+    implementation 'com.mikepenz:materialdrawer:7.0.0-rc08'
     implementation 'com.mikepenz:iconics-core:4.0.0'
-    implementation 'com.mikepenz:fastadapter:4.0.1'
-    implementation 'com.mikepenz:fastadapter-extensions-expandable:4.0.1'
+    implementation 'com.mikepenz:fastadapter:4.1.0'
+    implementation 'com.mikepenz:fastadapter-extensions-expandable:4.1.0'
     implementation 'com.mikepenz:materialize:1.2.1'
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
 
     // CONDUCTOR (https://github.com/bluelinelabs/Conductor)
     implementation 'com.bluelinelabs:conductor:2.1.5'

@@ -4,15 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import es.edufdezsoy.manga2kindle.data.dao.*
 import es.edufdezsoy.manga2kindle.data.model.*
+import java.util.*
 
 @Database(
     entities = [Folder::class, Author::class, Manga::class, Language::class, Chapter::class],
-    version = 5
+    version = 6
 )
+@TypeConverters(Converters::class)
 abstract class M2kDatabase : RoomDatabase() {
     abstract fun FolderDao(): FolderDao
     abstract fun AuthorDao(): AuthorDao
@@ -32,6 +35,7 @@ abstract class M2kDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context, M2kDatabase::class.java, "manga2kindle.db")
                 .addMigrations(MIGRATION_4_5)
+                .addMigrations(MIGRATION_5_6)
 //                .fallbackToDestructiveMigration()
                 .build()
 
@@ -51,6 +55,16 @@ abstract class M2kDatabase : RoomDatabase() {
                 // migrate data from old to new table
                 database.execSQL("INSERT INTO chapter SELECT identifier, status, id, manga_id, lang_id, volume, chapter, title, file_path, checksum, delivered, error, reason, visible FROM chapter_old")
                 database.execSQL("DROP TABLE chapter_old")
+            }
+        }
+
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE chapter ADD upload_date INTEGER")
+
+                // lets add content to those chapters that where already uploaded
+                val a = Converters().dateToTimestamp(Calendar.getInstance().getTime())
+                database.execSQL("UPDATE chapter SET upload_date = $a WHERE status != 0")
             }
         }
     }

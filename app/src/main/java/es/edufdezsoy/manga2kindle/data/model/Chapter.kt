@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity
 data class Chapter(
@@ -33,6 +34,7 @@ data class Chapter(
      * 4 = local error
      */
     var status: Int = 0
+    var upload_date: Date? = null
 
     override fun toString(): String {
         var text = ""

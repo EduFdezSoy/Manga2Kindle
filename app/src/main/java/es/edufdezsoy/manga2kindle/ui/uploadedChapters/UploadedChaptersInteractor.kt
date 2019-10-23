@@ -60,8 +60,24 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
                 var reason = ""
                 if (!it.error) {
                     if (!it.delivered) {
-                        status = "processing"
-                        status_color = R.color.colorProcessing
+                        when (it.status) {
+                            1 -> {
+                                status = "compressing"
+                                status_color = R.color.colorCompressing
+                            }
+                            2 -> {
+                                status = "uploading"
+                                status_color = R.color.colorUploading
+                            }
+                            3 -> {
+                                status = "processing"
+                                status_color = R.color.colorProcessing
+                            }
+                            else -> {
+                                status = "failed at home"
+                                status_color = R.color.colorFailed
+                            }
+                        }
                     } else {
                         status = "success"
                         status_color = R.color.colorSuccess
@@ -81,9 +97,11 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
                         manga.title,
                         manga.author_id,
                         author,
+                        it.status,
                         status,
                         status_color,
-                        reason
+                        reason,
+                        it.upload_date
                     )
                 )
             }

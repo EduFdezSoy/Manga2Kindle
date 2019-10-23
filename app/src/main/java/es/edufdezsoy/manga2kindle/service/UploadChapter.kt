@@ -7,7 +7,9 @@ import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.network.ProgressRequestBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,11 +17,16 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.*
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 
@@ -56,12 +63,18 @@ class UploadChapter(val context: Context) : CoroutineScope {
      *
      * @param chapter chapter to upload
      * @param mail mail to be sent to
-     * @param done callback function to notify when its finished
+     * @param uploadCallBacks callback function to notify the status
      */
-    fun upload(chapter_id: Int, mail: String, done: () -> Unit) {
+    fun upload(chapter_id: Int, mail: String, uploadCallBacks : ProgressRequestBody.UploadCallbacks) {
         launch {
             val database = M2kDatabase.invoke(context)
             val chapter = database.ChapterDao().getChapter(chapter_id)
+
+            // set chapter to processing
+            chapter.id = chapter_id
+            chapter.status = 1
+            chapter.upload_date = Calendar.getInstance().time
+            database.ChapterDao().update(chapter)
 
             var manga = database.MangaDao().getMangaById(chapter.manga_id)
 
@@ -114,11 +127,13 @@ class UploadChapter(val context: Context) : CoroutineScope {
                 title = ""
 
             try {
-                val reqFile = RequestBody.create(
-                    MediaType.parse("zip"), // TODO: this may not be hardcoded
-                    chapFile
-                )
-                val part = MultipartBody.Part.createFormData("file", chapFile.name, reqFile)
+                // set chapter to uploading
+                chapter.id = chapter_id
+                chapter.status = 2
+                database.ChapterDao().update(chapter)
+
+                val fileBody = ProgressRequestBody(chapFile, uploadCallBacks)
+                val part = MultipartBody.Part.createFormData("file", chapFile.name, fileBody)
 
                 // upload the chapter
                 ApiService.apiService.sendChapter(
@@ -142,7 +157,6 @@ class UploadChapter(val context: Context) : CoroutineScope {
             } finally {
                 // remove the chapter
                 chapFile.delete()
-                done()
             }
         }
     }

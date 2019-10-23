@@ -4,9 +4,12 @@
     <color name="colorPrimaryDark">#000a12</color>
     <color name="colorAccent">#4f5b62</color>
 
+    <!-- STATUSES -->
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorFailed">#F44336</color>
     <color name="colorProcessing">#FFC107</color>
+    <color name="colorCompressing">#69F0AE</color>
+    <color name="colorUploading">#40C4FF</color>
 
     <color name="btnUpload">#2196F3</color>
     <color name="transparent">#00FFFFFF</color>

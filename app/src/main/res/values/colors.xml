@@ -13,4 +13,12 @@
 
     <color name="btnUpload">#2196F3</color>
     <color name="transparent">#00FFFFFF</color>
+
+    <!-- LIST BACKGROUNDS -->
+    <color name="listBG_1">#00000000</color>
+    <color name="listBG_2">#05000000</color>
+
+    <!-- TEXT COLOR -->
+    <color name="textImportant">#404040</color>
+    <color name="textRegular">#808080</color>
 </resources>

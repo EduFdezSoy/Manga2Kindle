@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
@@ -27,7 +28,7 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    constructor(chapters: List<NewChapter>): this(chapters as ArrayList<NewChapter>)
+    constructor(chapters: List<NewChapter>) : this(chapters as ArrayList<NewChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -40,6 +41,7 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
+            setBackgroundColor(holder, position)
             holder.lang.text = ""
 
             holder.manga.text = chapters[position].manga_title
@@ -55,6 +57,13 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
 
     override fun getItemCount(): Int {
         return chapters.size
+    }
+
+    private fun setBackgroundColor(holder: ViewHolder, position: Int) {
+        if (position % 2 == 1)
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_1))
+        else
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_2))
     }
 
     fun setData(chapters: List<NewChapter>) {

@@ -26,7 +26,8 @@ class UploadedChapter(
             if (server_id == other.server_id)
                 if (local_id == other.local_id)
                     if (status_id == other.status_id)
-                        return true
+                        if (status == other.status)
+                            return true
         return false
     }
 

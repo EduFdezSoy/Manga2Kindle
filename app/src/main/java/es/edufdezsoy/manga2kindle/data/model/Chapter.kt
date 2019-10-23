@@ -51,7 +51,7 @@ data class Chapter(
 
         text += "Ch. $chapter"
 
-        if (title != null)
+        if (title != null && title!!.isNotBlank())
             text += " - $title"
 
         return text

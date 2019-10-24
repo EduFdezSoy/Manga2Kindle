@@ -32,7 +32,7 @@ class FolderAdapter(var folders: List<Folder>) :
         setBackgroundColor(holder, position)
 
         holder.name?.text = folders[position].name
-        holder.path?.text = folders[position].path
+        holder.path?.text = Uri.parse(folders[position].path).path
 
         if (onClickListener != null)
             holder.setOnClickListener(onClickListener!!)

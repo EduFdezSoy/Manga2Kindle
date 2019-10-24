@@ -14,6 +14,7 @@
     <string name="author_form_name_input_hint">Name</string>
     <string name="author_form_surname_input_hint">Surname</string>
     <string name="author_form_nickname_input_hint">Nickname</string>
+    <string name="author_form_naming_warning">Hey! \nRemember, in Japanese names and surnames are reversed so in "Kamoshida Hajime" the name is "Hajime"! \nTry not to mess this up!</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_save">Save</string>
     <string name="chapter_form_manga_hint">Manga</string>
@@ -34,8 +35,8 @@
     <string name="view_uploaded_chapters_title">Uploaded Chapters View</string>
     <string name="view_chapter_form_add_author">Add</string>
     <string name="view_chapter_form_email_hint">Kindle email address</string>
-    <string name="main_view_tv1_text">currando...</string>
-    <string name="new_chapters_view_title">loading list...</string>
+    <string name="main_view_tv1_text">loading…</string>
+    <string name="new_chapters_view_title">loading list…</string>
     <string name="status_processing">processing</string>
     <string name="status_success">success</string>
     <string name="status_failed">failed</string>

@@ -34,11 +34,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            tools:text="TestFolder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ivFolder"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TestFolder" />
 
     <TextView
             android:id="@+id/tvFolderPath"
@@ -48,10 +48,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            tools:text="/path/to/the/test/folder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ivFolder"
-            app:layout_constraintTop_toBottomOf="@+id/tvFolderName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvFolderName"
+            tools:text="/path/to/the/test/folder" />
 </androidx.constraintlayout.widget.ConstraintLayout>

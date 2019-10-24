@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.adapter.NewChapterAdapter
@@ -16,7 +17,7 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
 
     init {
         view.rvNewChapters.layoutManager = LinearLayoutManager(controller.activity)
-        view.tvViewTitle.text = "loading list..."
+        view.tvViewTitle.text = view.context.getString(R.string.new_chapters_view_title)
 
         controller.loadChapters()
 

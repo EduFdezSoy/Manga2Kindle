@@ -27,7 +27,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text='Hey! \nRemeber, in Japanese names and surnames are reversed so in "Kamoshida Hajime" the name is "Hajime"! \nTry not to mess this up!'
+                tools:text='Hey! \nRemeber, in Japanese names and surnames are reversed so in "Kamoshida Hajime" the name is "Hajime"! \nTry not to mess this up!'
                 android:textStyle="bold" />
     </FrameLayout>
 
@@ -46,7 +46,7 @@
                 android:id="@+id/tietName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name" />
+                android:hint="@string/author_form_name_input_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +64,7 @@
                 android:id="@+id/tietSurname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Surname" />
+                android:hint="@string/author_form_surname_input_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -82,7 +82,7 @@
                 android:id="@+id/tietNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nickname" />
+                android:hint="@string/author_form_nickname_input_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Observed Folders View" />
+                android:text="@string/observed_folders_view_title" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

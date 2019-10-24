@@ -1,12 +1,13 @@
 package es.edufdezsoy.manga2kindle.ui.main
 
 import android.view.View
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Author
 import kotlinx.android.synthetic.main.view_main.view.*
 
 class MainView(val view: View, val controller: MainController) {
     init {
-        view.tv1.text = "currando..."
+        view.tv1.text = view.context.getString(R.string.main_view_tv1_text)
 
         controller.callServerHello()
         controller.callAuthorSearch()

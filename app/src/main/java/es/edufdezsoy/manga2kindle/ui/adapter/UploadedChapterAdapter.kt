@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapterDiffCallback
 import kotlinx.android.synthetic.main.item_chapter_uploaded.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class UploadedChapterAdapter(var chapters: List<Chapter>) :
+class UploadedChapterAdapter(var chapters: ArrayList<UploadedChapter>) :
     RecyclerView.Adapter<UploadedChapterAdapter.ViewHolder>(), CoroutineScope {
 
     private lateinit var context: Context
@@ -28,100 +28,61 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+    constructor(chapters: List<UploadedChapter>) : this(chapters as ArrayList<UploadedChapter>)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.item_chapter_uploaded, parent, false
-            )
-        )
+
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.item_chapter_uploaded, parent, false)
+        val viewholder = ViewHolder(view)
+
+        return viewholder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
-            holder.manga?.text = ""
-            holder.author?.text = ""
+            setBackgroundColor(holder, position)
 
-            val manga = M2kDatabase(context).MangaDao().getMangaById(chapters[position].manga_id)
-            holder.manga?.text = manga.title
+            holder.manga.text = chapters[position].manga_title
+            holder.chapter.text = chapters[position].chapter
+            holder.author.text = chapters[position].author
 
-            val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }
+            holder.status.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    chapters[position].status_color
+                )
+            )
+            holder.status.text = chapters[position].status
+            holder.reason.text = chapters[position].reason
 
-            var authorText = ""
-            if (!author?.surname.isNullOrEmpty() || !author?.name.isNullOrEmpty()) {
-                if (!author?.surname.isNullOrEmpty())
-                    authorText += author?.surname + " "
-                if (!author?.name.isNullOrEmpty())
-                    authorText += author?.name + " "
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += "(AKA " + author?.nickname + ")"
-            } else {
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += author?.nickname
-            }
-            holder.author?.text = authorText
-        }
-
-        if (chapters[position].volume == null) {
-            holder.volText?.visibility = View.GONE
-            holder.vol?.visibility = View.GONE
-            holder.spacer?.visibility = View.GONE
-        } else {
-            holder.volText?.visibility = View.VISIBLE
-            holder.vol?.visibility = View.VISIBLE
-            holder.spacer?.visibility = View.VISIBLE
-            holder.vol?.text = chapters[position].volume!!.toString()
-        }
-
-        holder.ch?.text = chapters[position].chapter.toString()
-        holder.title?.text = chapters[position].title
-
-        launch {
             holder.lang.text = ""
-            val lang = chapters[position].lang_id?.let {
-                M2kDatabase(context).LanguageDao().getLanguage(it)
-            }
-            if (lang != null)
-                holder.lang.text = lang.code
+
+            if (onClickListener != null)
+                holder.setOnClickListener(onClickListener!!)
+            if (onLongClickListener != null)
+                holder.setOnLongClickListener(onLongClickListener!!)
         }
-
-        // get and set status
-        launch {
-            holder.status.text = ""
-            holder.reason.text = ""
-
-            // TODO: this must be saved in the database and checked in the db before the api call
-            ApiService.apiService.getStatus(chapters[position].id!!).also {
-                if (!it[0].error) {
-                    if (!it[0].delivered) {
-                        holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorProcessing)
-                        )
-                        holder.status.text = context.getString(R.string.status_processing)
-                    } else {
-                        holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorSuccess)
-                        )
-                        holder.status.text = context.getString(R.string.status_success)
-                    }
-                } else {
-                    holder.status.setTextColor(ContextCompat.getColor(context, R.color.colorFailed))
-                    holder.status.text = context.getString(R.string.status_failed)
-                    holder.status.text = it[0].reason
-                }
-            }
-        }
-
-        if (onClickListener != null)
-            holder.setOnClickListener(onClickListener!!)
-        if (onLongClickListener != null)
-            holder.setOnLongClickListener(onLongClickListener!!)
     }
 
     override fun getItemCount(): Int {
         return chapters.size
     }
 
-    fun addAll(chapters: List<Chapter>) {
-        this.chapters = chapters
+    private fun setBackgroundColor(holder: ViewHolder, position: Int) {
+        if (position % 2 == 1)
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_1))
+        else
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_2))
+    }
+
+    fun setData(chapters: List<UploadedChapter>) {
+        val diffCallback = UploadedChapterDiffCallback(this.chapters, chapters)
+        val diffRes = DiffUtil.calculateDiff(diffCallback)
+        this.chapters.clear()
+        this.chapters.addAll(chapters)
+        diffRes.dispatchUpdatesTo(this)
     }
 
     fun setOnClickListener(listener: View.OnClickListener) {
@@ -134,12 +95,7 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val manga = view.tvTitle
-        val vol = view.tvVol
-        val volText = view.tvVolText
-        val spacer = view.tvLineText
-        val ch = view.tvCh
-        val chText = view.tvChText
-        val title = view.tvChTitle
+        val chapter = view.tvChapter
         val author = view.tvAuthor
         val lang = view.tvLang
         val status = view.tvStatus
@@ -153,5 +109,4 @@ class UploadedChapterAdapter(var chapters: List<Chapter>) :
             itemView.setOnLongClickListener(onLongClickListener)
         }
     }
-
 }

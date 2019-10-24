@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Manga2Kindle</string>
+
+    <!-- Services -->
     <string name="service_description">Search for new manga chapters</string>
+    <string name="service_ScanManga_description">Search for new manga chapters</string>
+    <string name="service_UpdateChapterStatus_description">Update uploaded chapters statuses</string>
+    <string name="service_ScanRemovedChapters_description">Remove from database the new chapters removed from the device</string>
+    <string name="service_UploadChapter_description">Upload the chapters to the server</string>
+
+    <!-- Views -->
     <string name="uploaded_chapters_empty_list">Looks like this list is empty!</string>
     <string name="uploaded_chapters_todo_hide_entry">TODO: hide entry</string>
     <string name="author_form_name_input_hint">Name</string>

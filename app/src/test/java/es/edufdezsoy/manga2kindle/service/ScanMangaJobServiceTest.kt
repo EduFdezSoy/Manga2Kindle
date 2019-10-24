@@ -1,9 +1,10 @@
 package es.edufdezsoy.manga2kindle.service
 
+import es.edufdezsoy.manga2kindle.service.service.ScanMangaJobService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ScanMangaTest {
+class ScanMangaJobServiceTest {
     @Test
     fun formatNameTest() {
         val scanManga = ScanManga()

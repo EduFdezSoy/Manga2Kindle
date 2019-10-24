@@ -9,7 +9,6 @@ import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
-import java.lang.Exception
 
 class ChapterFormView(val view: View, val controller: ChapterFormContract.Controller) :
     ChapterFormContract.View {
@@ -24,17 +23,11 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         //#region clickListeners
 
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
-        view.btnReturn.setOnClickListener { controller.cancelEdit() }
         view.btnUpload.setOnClickListener {
             disableAllButtons()
             saveData()
             mail = view.tietEmail.text.toString()
             controller.sendChapter(chapter, mail)
-        }
-        view.btnSave.setOnClickListener {
-            disableAllButtons()
-            saveData()
-            onSaveEnableButtons()
         }
 
         //#endregion
@@ -47,46 +40,13 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
     //#region private functions
 
-    private fun saveData() {
-        mail = view.tietEmail.text.toString()
-
-        try {
-            chapter.volume = view.etVolume.text.toString().toInt()
-        } catch (e: Exception) {
-            if (M2kApplication.debug)
-                Log.e(M2kApplication.TAG, "Yo fucker, the volume thrown an exception in the ChapterForm")
-        }
-        // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
-        chapter.title = view.tietTitle.text.toString()
-
-        // TODO: manga title cant actually be edited because to the server it will be a new manga
-        // manga.title = view.tietManga.text.toString()
-        if (manga.author_id == null) {
-            val newManga = Manga(manga.id, manga.title, author.id)
-            newManga.synchronized = manga.synchronized
-            newManga.identifier = manga.identifier
-
-            controller.saveData(chapter, newManga, mail)
-        } else {
-            controller.saveData(chapter, manga, mail)
-        }
-    }
-
     private fun disableAllButtons() {
         onEditDisableButtons()
-        view.btnSave.isEnabled = false
     }
 
     private fun onEditDisableButtons() {
         view.btnAddAuthor.isEnabled = false
-        view.btnReturn.isEnabled = false
         view.btnUpload.isEnabled = false
-    }
-
-    private fun onSaveEnableButtons() {
-        view.btnAddAuthor.isEnabled = true
-        view.btnReturn.isEnabled = true
-        view.btnUpload.isEnabled = true
     }
 
     private fun trimTrailingZero(value: String?): String? {
@@ -103,28 +63,11 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         }
     }
 
-    private fun formatAuthor(author: Author): String {
-        var authorText = ""
-        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
-            if (!author.surname.isNullOrEmpty())
-                authorText += author.surname + " "
-            if (!author.name.isNullOrEmpty())
-                authorText += author.name + " "
-            if (!author.nickname.isNullOrEmpty())
-                authorText += "(AKA " + author.nickname + ")"
-        } else {
-            if (!author.nickname.isNullOrEmpty())
-                authorText += author.nickname
-        }
-
-        return authorText
-    }
-
     private fun setAuthorTextList(authors: List<Author>): Array<String> {
         val authorsStr = ArrayList<String>()
 
         authors.forEach {
-            authorsStr.add(formatAuthor(it))
+            authorsStr.add(it.toString())
         }
 
         return authorsStr.toTypedArray()
@@ -142,7 +85,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             val authorStr = adapterView.getItemAtPosition(i)
 
             authors.forEach {
-                if (formatAuthor(it) == authorStr) {
+                if (it.toString() == authorStr) {
                     author = it
                     return@setOnItemClickListener
                 }
@@ -152,6 +95,30 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
     //#endregion
     //#region override functions
+
+    override fun saveData() {
+        mail = view.tietEmail.text.toString()
+
+        try {
+            chapter.volume = view.etVolume.text.toString().toInt()
+        } catch (e: Exception) {
+            chapter.volume = null
+        }
+        // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
+        chapter.title = view.tietTitle.text.toString()
+
+        // TODO: manga title cant actually be edited because to the server it will be a new manga
+        // manga.title = view.tietManga.text.toString()
+        if (manga.author_id == null) {
+            val newManga = Manga(manga.id, manga.title, author.id)
+            newManga.synchronized = manga.synchronized
+            newManga.identifier = manga.identifier
+
+            controller.saveData(chapter, newManga, mail)
+        } else {
+            controller.saveData(chapter, manga, mail)
+        }
+    }
 
     override fun setChapter(chapter: Chapter) {
         this.chapter = chapter
@@ -171,7 +138,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
     override fun setAuthor(author: Author) {
         view.actvAuthor.inputType = InputType.TYPE_NULL
-        view.actvAuthor.setText(formatAuthor(author))
+        view.actvAuthor.setText(author.toString())
     }
 
     override fun setAuthors(authors: List<Author>) {

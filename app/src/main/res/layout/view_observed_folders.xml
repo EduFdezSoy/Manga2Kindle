@@ -42,5 +42,6 @@
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_add_white" />
+            app:srcCompat="@drawable/ic_add_white"
+            app:backgroundTint="@color/colorPrimary" />
 </androidx.constraintlayout.widget.ConstraintLayout>

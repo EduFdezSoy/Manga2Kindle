@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,7 +19,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.service.ScanManga
 import es.edufdezsoy.manga2kindle.ui.main.MainController
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
 import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
@@ -28,12 +26,13 @@ import es.edufdezsoy.manga2kindle.ui.settings.SettingsController
 import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersController
 import kotlinx.android.synthetic.main.activity_base.*
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
     //#region vars and vals
 
     private lateinit var router: Router
     private lateinit var drawer: Drawer
+    private lateinit var interactor: BaseInteractor
 
     //#endregion
     //#region lifecycle functions
@@ -42,6 +41,7 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
+        interactor = BaseInteractor(this)
         router = Conductor.attachRouter(this, controller_container, savedInstanceState)
 
         if (!router.hasRootController())
@@ -49,9 +49,6 @@ open class BaseActivity : AppCompatActivity() {
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()
-
-        // Start our scanner service
-        startService(Intent(this, ScanManga::class.java))
     }
 
     override fun onBackPressed() {
@@ -59,8 +56,21 @@ open class BaseActivity : AppCompatActivity() {
             super.onBackPressed()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        interactor.close(this)
+    }
+
     //#endregion
     //#region public functions
+
+    fun scanMangas() {
+        interactor.scanMangas(this)
+    }
+
+    fun isScanningMangas(): Boolean {
+        return interactor.isScanning()
+    }
 
     fun showSnackbar(msg: String) {
         showSnackbar(msg, null, null, null)

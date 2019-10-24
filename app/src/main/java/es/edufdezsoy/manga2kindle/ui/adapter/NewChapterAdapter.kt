@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapterDiffCallback
 import kotlinx.android.synthetic.main.item_chapter.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class NewChapterAdapter(var chapters: List<Chapter>) :
+class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     RecyclerView.Adapter<NewChapterAdapter.ViewHolder>(), CoroutineScope {
 
     private lateinit var context: Context
@@ -25,6 +27,8 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
+
+    constructor(chapters: List<NewChapter>) : this(chapters as ArrayList<NewChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -37,64 +41,37 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
-            holder.manga?.text = ""
-            holder.author?.text = ""
-
-            val manga = M2kDatabase(context).MangaDao().getMangaById(chapters[position].manga_id)
-            holder.manga?.text = manga.title
-
-            val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }
-
-            var authorText = ""
-            if (!author?.surname.isNullOrEmpty() || !author?.name.isNullOrEmpty()) {
-                if (!author?.surname.isNullOrEmpty())
-                    authorText += author?.surname + " "
-                if (!author?.name.isNullOrEmpty())
-                    authorText += author?.name + " "
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += "(AKA " + author?.nickname + ")"
-            } else {
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += author?.nickname
-            }
-            holder.author?.text = authorText
-        }
-
-        if (chapters[position].volume == null) {
-            holder.volText?.visibility = View.GONE
-            holder.vol?.visibility = View.GONE
-            holder.spacer?.visibility = View.GONE
-        } else {
-            holder.volText?.visibility = View.VISIBLE
-            holder.vol?.visibility = View.VISIBLE
-            holder.spacer?.visibility = View.VISIBLE
-            holder.vol?.text = chapters[position].volume!!.toString()
-        }
-
-        holder.ch?.text = chapters[position].chapter.toString()
-        holder.title?.text = chapters[position].title
-
-        launch {
+            setBackgroundColor(holder, position)
             holder.lang.text = ""
-            val lang = chapters[position].lang_id?.let {
-                M2kDatabase(context).LanguageDao().getLanguage(it)
-            }
-            if (lang != null)
-                holder.lang.text = lang.code
-        }
 
-        if (onClickListener != null)
-            holder.setOnClickListener(onClickListener!!)
-        if (onLongClickListener != null)
-            holder.setOnLongClickListener(onLongClickListener!!)
+            holder.manga.text = chapters[position].manga_title
+            holder.chapter.text = chapters[position].chapter
+            holder.author.text = chapters[position].author
+
+            if (onClickListener != null)
+                holder.setOnClickListener(onClickListener!!)
+            if (onLongClickListener != null)
+                holder.setOnLongClickListener(onLongClickListener!!)
+        }
     }
 
     override fun getItemCount(): Int {
         return chapters.size
     }
 
-    fun addAll(chapters: List<Chapter>) {
-        this.chapters = chapters
+    private fun setBackgroundColor(holder: ViewHolder, position: Int) {
+        if (position % 2 == 1)
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_1))
+        else
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_2))
+    }
+
+    fun setData(chapters: List<NewChapter>) {
+        val diffCallback = NewChapterDiffCallback(this.chapters, chapters)
+        val diffRes = DiffUtil.calculateDiff(diffCallback)
+        this.chapters.clear()
+        this.chapters.addAll(chapters)
+        diffRes.dispatchUpdatesTo(this)
     }
 
     fun setOnClickListener(listener: View.OnClickListener) {
@@ -107,12 +84,7 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val manga = view.tvTitle
-        val vol = view.tvVol
-        val volText = view.tvVolText
-        val spacer = view.tvLineText
-        val ch = view.tvCh
-        val chText = view.tvChText
-        val title = view.tvChTitle
+        val chapter = view.tvChapter
         val author = view.tvAuthor
         val lang = view.tvLang
 
@@ -124,5 +96,4 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
             itemView.setOnLongClickListener(onLongClickListener)
         }
     }
-
 }

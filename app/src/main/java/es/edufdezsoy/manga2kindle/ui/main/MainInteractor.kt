@@ -5,8 +5,8 @@ import es.edufdezsoy.manga2kindle.network.ApiService
 
 object MainInteractor {
     suspend fun callServer(): String? {
-        val str = ApiService.apiService.serverHello()
-        return str
+        val hello = ApiService.apiService.serverHello()
+        return hello.name + " " + hello.version
     }
 
     suspend fun callAuthorSearch(): Author? {

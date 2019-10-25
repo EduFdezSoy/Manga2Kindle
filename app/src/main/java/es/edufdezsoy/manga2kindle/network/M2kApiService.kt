@@ -1,15 +1,12 @@
 package es.edufdezsoy.manga2kindle.network
 
-import es.edufdezsoy.manga2kindle.data.model.Author
-import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.Language
-import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface M2kApiService {
-    @GET("/")
-    suspend fun serverHello(): String
+    @GET("/hello")
+    suspend fun serverHello(): Hello
 
     //#region /author
 

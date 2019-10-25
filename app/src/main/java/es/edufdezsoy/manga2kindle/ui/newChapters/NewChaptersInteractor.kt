@@ -3,8 +3,10 @@ package es.edufdezsoy.manga2kindle.ui.newChapters
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.service.intentService.ScanRemovedChaptersIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
@@ -14,7 +16,9 @@ class NewChaptersInteractor(val controller: Controller, context: Context) {
         fun updateList()
     }
 
-    private val database: M2kDatabase = M2kDatabase.invoke(context)
+    private val chapterRepository = ChapterRepository.invoke(context)
+    private val mangaRepository = MangaRepository.invoke(context)
+    private val authorRepository = AuthorRepository.invoke(context)
     private val receiver: BroadcastReceiver
 
     init {
@@ -43,14 +47,14 @@ class NewChaptersInteractor(val controller: Controller, context: Context) {
     }
 
     private suspend fun getChaptersList(): ArrayList<NewChapter> {
-        database.ChapterDao().getNoUploadedChapters().also {
+        chapterRepository.getNoUploadedChapters().also {
             val newChapters = ArrayList<NewChapter>()
             it.forEach {
-                val manga = database.MangaDao().getMangaById(it.manga_id)
+                val manga = mangaRepository.getMangaById(it.manga_id)
 
                 var author = ""
                 if (manga.author_id != null) {
-                    val au = database.AuthorDao().getAuthor(manga.author_id)
+                    val au = authorRepository.getAuthor(manga.author_id)
                     if (au != null)
                         author = au.toString()
                 }

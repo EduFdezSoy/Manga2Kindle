@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
@@ -51,7 +50,7 @@ class ChapterFormController : Controller, CoroutineScope,
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_chapter_form, container, false)
-        interactor = ChapterFormInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = ChapterFormInteractor(this, v.context)
         context = v.context
 
         job = Job()

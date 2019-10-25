@@ -69,9 +69,12 @@ class MangaRepository {
     suspend fun search(search: String): ArrayList<Manga> {
         val coincidences = ArrayList<Manga>()
 
-        mangaList.forEach {
-            if (it.title.contains(search, true))
-                coincidences.add(it)
+        with(mangaList.iterator()) {
+            forEach {
+                if (it.title.contains(search, true)) {
+                    coincidences.add(it)
+                }
+            }
         }
 
         if (coincidences.isEmpty()) {
@@ -124,14 +127,34 @@ class MangaRepository {
         if (manga.synchronized) {
             Log.i(TAG, "TODO: cant edit mangas when synced with the server!")
         } else {
-            mangaList.forEach {
-                if (it.identifier == manga.identifier) {
-                    mangaList.remove(it)
-                    return@forEach
+            if (manga.author_id != null) {
+                try {
+                    val mangaSynced = apiService.addManga(manga.title, manga.author_id)[0]
+                    mangaSynced.identifier = manga.identifier
+                    mangaSynced.synchronized = true
+
+                    if (mangaSynced.identifier == 0) {
+                        mangaList.add(mangaSynced)
+                        database.MangaDao().insert(mangaSynced)
+                    } else {
+                        with(mangaList.iterator()) {
+                            forEach {
+                                if (it.identifier == mangaSynced.identifier) {
+                                    remove()
+                                    return@forEach
+                                }
+                            }
+                        }
+                        mangaList.add(mangaSynced)
+                        database.MangaDao().update(mangaSynced)
+                    }
+                } catch (e: Exception) {
+                    printError("cant add the manga to the server", e)
                 }
+            } else {
+                mangaList.add(manga)
+                database.MangaDao().insert(manga)
             }
-            mangaList.add(manga)
-            database.MangaDao().update(manga)
         }
     }
 

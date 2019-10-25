@@ -96,9 +96,10 @@ class AuthorRepository {
         return coincidences
     }
 
-    suspend fun insert(name: String?, nickname: String?, surname: String?) {
+    suspend fun insert(author: Author) = insert(author.name, author.surname, author.nickname)
+    suspend fun insert(name: String?, surname: String?, nickname: String?) {
         try {
-            val authorServer = apiService.addAuthor(name, nickname, surname)[0]
+            val authorServer = apiService.addAuthor(name, surname, nickname)[0]
             insertLocal(authorServer)
         } catch (e: Exception) {
             printError("cant add the author in the server", e)

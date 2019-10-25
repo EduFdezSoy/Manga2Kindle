@@ -6,20 +6,15 @@ import android.provider.OpenableColumns
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.network.ProgressRequestBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.*
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -65,32 +60,32 @@ class UploadChapter(val context: Context) : CoroutineScope {
      * @param mail mail to be sent to
      * @param uploadCallBacks callback function to notify the status
      */
-    fun upload(chapter_id: Int, mail: String, uploadCallBacks : ProgressRequestBody.UploadCallbacks) {
+    fun upload(
+        chapter_id: Int,
+        mail: String,
+        uploadCallBacks: ProgressRequestBody.UploadCallbacks
+    ) {
         launch {
-            val database = M2kDatabase.invoke(context)
-            val chapter = database.ChapterDao().getChapter(chapter_id)
+            val chapterRepository = ChapterRepository.invoke(context)
+            val mangaRepository = MangaRepository.invoke(context)
+            val chapter = chapterRepository.getChapter(chapter_id)
 
             // set chapter to processing
             chapter.id = chapter_id
             chapter.status = 1
             chapter.upload_date = Calendar.getInstance().time
-            database.ChapterDao().update(chapter)
+            chapterRepository.update(chapter)
 
-            var manga = database.MangaDao().getMangaById(chapter.manga_id)
+            var manga = mangaRepository.getMangaById(chapter.manga_id)
 
             if (!manga.synchronized) { // if the manga does not exist in the server...
                 // check if the manga is alredy there
-                val mangaList = ApiService.apiService.searchManga(manga.title)
+                val mangaList = mangaRepository.search(manga.title)
 
                 if (mangaList.isEmpty()) { // if it is really not in the server...
                     // check the author
                     if (manga.author_id != null) { // if we have an author, we add the manga
-                        val mangaList =
-                            ApiService.apiService.addManga(manga.title, manga.author_id!!)
-                        manga.synchronized = true
-                        manga.id = mangaList[0].id
-                        database.MangaDao().update(manga)
-
+                        mangaRepository.update(manga)
                     } else { // if we dont have an author we will throw an exception
                         throw IllegalArgumentException("There is no author in this manga")
                     }
@@ -130,7 +125,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
                 // set chapter to uploading
                 chapter.id = chapter_id
                 chapter.status = 2
-                database.ChapterDao().update(chapter)
+                chapterRepository.update(chapter)
 
                 val fileBody = ProgressRequestBody(chapFile, uploadCallBacks)
                 val part = MultipartBody.Part.createFormData("file", chapFile.name, fileBody)
@@ -148,7 +143,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
                 ).also {
                     chapter.id = it[0].id
                     chapter.status = 3
-                    database.ChapterDao().update(chapter)
+                    chapterRepository.update(chapter)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Something's bad with the upload!")

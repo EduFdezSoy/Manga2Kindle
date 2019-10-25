@@ -4,18 +4,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
+import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.service.intentService.UpdateChapterStatusIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
-class UploadedChaptersInteractor(val controller: Controller, val database: M2kDatabase) {
+class UploadedChaptersInteractor(val controller: Controller, context: Context) {
     interface Controller {
         fun setNewChapters(chapters: List<UploadedChapter>)
         fun updateList()
     }
 
     private lateinit var receiver: BroadcastReceiver
+    private val chapterRepository = ChapterRepository.invoke(context)
+    private val mangaRepository = MangaRepository.invoke(context)
+    private val authorRepository = AuthorRepository.invoke(context)
 
     suspend fun loadChapters() {
         getChaptersList().also {
@@ -43,14 +48,14 @@ class UploadedChaptersInteractor(val controller: Controller, val database: M2kDa
     }
 
     private suspend fun getChaptersList(): ArrayList<UploadedChapter> {
-        database.ChapterDao().getUploadedChapters().also {
+        chapterRepository.getUploadedChapters().also {
             val uploadedChapters = ArrayList<UploadedChapter>()
             it.forEach {
-                val manga = database.MangaDao().getMangaById(it.manga_id)
+                val manga = mangaRepository.getMangaById(it.manga_id)
 
                 var author = ""
                 if (manga.author_id != null) {
-                    val au = database.AuthorDao().getAuthor(manga.author_id)
+                    val au = authorRepository.getAuthor(manga.author_id)
                     if (au != null)
                         author = au.toString()
                 }

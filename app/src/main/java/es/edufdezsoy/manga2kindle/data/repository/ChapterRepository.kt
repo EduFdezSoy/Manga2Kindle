@@ -53,6 +53,9 @@ class ChapterRepository {
 
     suspend fun getNoUploadedChapters(): ArrayList<Chapter> {
         val coincidences = ArrayList<Chapter>()
+        if (chapterList.isEmpty())
+            getAll()
+
         if (chapterList.isNotEmpty()) {
             chapterList.forEach {
                 if (it.status == 0)
@@ -67,6 +70,9 @@ class ChapterRepository {
 
     suspend fun getUploadedChapters(): ArrayList<Chapter> {
         val coincidences = ArrayList<Chapter>()
+        if (chapterList.isEmpty())
+            getAll()
+
         if (chapterList.isNotEmpty()) {
             chapterList.forEach {
                 if (it.status != 0)
@@ -80,6 +86,9 @@ class ChapterRepository {
     }
 
     suspend fun search(manga_id: Int, chapter: Float): Chapter? {
+        if (chapterList.isEmpty())
+            chapterList.addAll(database.ChapterDao().getAll())
+
         if (chapterList.isNotEmpty()) {
             chapterList.forEach {
                 if (it.manga_id == manga_id && it.chapter == chapter)
@@ -92,15 +101,26 @@ class ChapterRepository {
     }
 
     suspend fun insert(chapter: Chapter) {
+        if (chapterList.isEmpty())
+            chapterList.addAll(database.ChapterDao().getAll())
+
         chapterList.add(chapter)
         database.ChapterDao().insert(chapter)
     }
 
     suspend fun update(chapter: Chapter) {
-        chapterList.forEach {
-            if (it.identifier == chapter.identifier)
-                chapterList.remove(it)
+        if (chapterList.isEmpty())
+            chapterList.addAll(database.ChapterDao().getAll())
+
+        with(chapterList.iterator()) {
+            forEach {
+                if (it.identifier == chapter.identifier) {
+                    remove()
+                    return@forEach
+                }
+            }
         }
+
         chapterList.add(chapter)
         database.ChapterDao().update(chapter)
     }

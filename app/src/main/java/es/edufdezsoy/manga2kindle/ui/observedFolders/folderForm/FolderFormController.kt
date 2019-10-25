@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +42,7 @@ class FolderFormController : Controller, CoroutineScope,
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_folder_form, container, false)
-        interactor = FolderFormInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = FolderFormInteractor(this, v.context)
 
         job = Job()
         view = FolderFormView(view = v, controller = this)

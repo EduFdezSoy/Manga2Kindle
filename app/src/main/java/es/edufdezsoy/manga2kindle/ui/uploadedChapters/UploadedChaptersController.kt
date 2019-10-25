@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,7 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_uploaded_chapters, container, false)
 
-        interactor = UploadedChaptersInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = UploadedChaptersInteractor(this, v.context)
 
         job = Job()
         handler = Handler()

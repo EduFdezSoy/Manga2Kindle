@@ -5,10 +5,11 @@ import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -61,9 +62,11 @@ class ScanManga : CoroutineScope {
             Log.i(TAG, "performing manga scan")
 
             val finishedCounter = AtomicInteger()
-            val database = M2kDatabase(context)
+            val chapterRepository = ChapterRepository.invoke(context)
+            val mangaRepository = MangaRepository.invoke(context)
+            val folderRepository = FolderRepository.invoke(context)
 
-            val folders = database.FolderDao().getAll()
+            val folders = folderRepository.getAll()
             folders.forEach {
                 launch {
                     // if the folder path is empty we stop here
@@ -79,17 +82,13 @@ class ScanManga : CoroutineScope {
 
                             mangas.forEach {
                                 val mangaName = formatName(it.name)
+                                var manga = mangaRepository.search(mangaName)
 
-                                var manga = database.MangaDao().search(mangaName)
                                 if (manga.isEmpty()) {
-                                    manga = ApiService.apiService.searchManga(mangaName)
-                                    if (manga.isEmpty())
-                                        manga = listOf(Manga(null, mangaName, null))
-
-                                    database.MangaDao().insert(manga[0])
-                                    manga = database.MangaDao().search(mangaName)
+                                    manga = arrayListOf(Manga(null, mangaName, null))
+                                    mangaRepository.insert(manga[0])
+                                    manga = mangaRepository.search(mangaName)
                                 }
-
                                 val chapters = getChapters(it)
                                 chapters.forEach {
                                     val chapterName = formatName(it.name)
@@ -100,7 +99,7 @@ class ScanManga : CoroutineScope {
                                     if (chapterTitle.isNullOrBlank())
                                         chapterTitle = null
 
-                                    val chapterExists = database.ChapterDao()
+                                    val chapterExists = chapterRepository
                                         .search(manga[0].identifier, chapterNum)
 
                                     if (chapterExists == null) {
@@ -118,7 +117,7 @@ class ScanManga : CoroutineScope {
                                             reason = null,
                                             visible = true
                                         )
-                                        database.ChapterDao().insert(chapter)
+                                        chapterRepository.insert(chapter)
                                     } else {
                                         if (M2kApplication.debug)
                                             Log.d(
@@ -144,7 +143,7 @@ class ScanManga : CoroutineScope {
                                             if (M2kApplication.debug)
                                                 Log.d(TAG, formatName("Chapter uri rewrited."))
 
-                                            database.ChapterDao().update(chapterExists)
+                                            chapterRepository.update(chapterExists)
                                         }
                                     }
                                 }

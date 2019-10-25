@@ -8,6 +8,7 @@ import androidx.core.app.JobIntentService
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,10 +37,10 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
     override fun onHandleWork(intent: Intent) {
         Log.d(TAG, "Service ScanRemovedChaptersIntentService started.")
         job = Job()
-        val database = M2kDatabase.invoke(this)
+        val chapterRepository = ChapterRepository.invoke(this)
 
         launch {
-            database.ChapterDao().getNoUploadedChapters().also {
+            chapterRepository.getNoUploadedChapters().also {
                 it.forEach {
                     val docFile = DocumentFile.fromSingleUri(
                         this@ScanRemovedChaptersIntentService,
@@ -54,7 +55,7 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
                                         " - " + it.title
                             )
 
-                        database.ChapterDao().delete(it)
+                        chapterRepository.delete(it)
                     }
                 }
             }

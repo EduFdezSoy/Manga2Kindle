@@ -63,7 +63,7 @@ interface ChapterDao {
     /**
      * "Delete" a chapter, it only hide it as we cant remove them, if we do that the service would pick it again
      */
-    @Query("UPDATE chapter SET visible = 0 WHERE id = :chapter_id")
+    @Query("UPDATE chapter SET visible = 0 WHERE identifier = :chapter_id")
     suspend fun hide(chapter_id: Int)
 
     @Delete

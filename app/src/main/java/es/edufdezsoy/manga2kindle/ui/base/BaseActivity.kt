@@ -19,7 +19,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.ui.main.MainController
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
 import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
 import es.edufdezsoy.manga2kindle.ui.settings.SettingsController
@@ -45,7 +44,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         router = Conductor.attachRouter(this, controller_container, savedInstanceState)
 
         if (!router.hasRootController())
-            router.setRoot(RouterTransaction.with(MainController()))
+            router.setRoot(RouterTransaction.with(NewChaptersController()))
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()

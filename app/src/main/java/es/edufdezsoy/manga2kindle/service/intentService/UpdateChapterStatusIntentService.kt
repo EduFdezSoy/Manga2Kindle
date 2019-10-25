@@ -6,8 +6,8 @@ import android.os.Handler
 import android.util.Log
 import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +26,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
     private val handler = Handler()
-    private val database = M2kDatabase.invoke(this)
+    private val chapterRepository = ChapterRepository.invoke(this)
     private val pendingFailChapters = ArrayList<Chapter>()
 
     companion object {
@@ -46,7 +46,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
         val apiService = ApiService.apiService
 
         launch {
-            database.ChapterDao().getUploadedChapters().also {
+            chapterRepository.getUploadedChapters().also {
                 it.forEach { chapter ->
                     val cal = Calendar.getInstance()
                     cal.add(Calendar.HOUR, -1)
@@ -65,7 +65,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
                                             TAG,
                                             "Manga." + it[0].manga_id + " Ch." + it[0].chapter + " Title: " + it[0].title
                                         )
-                                        database.ChapterDao().update(chapter)
+                                        chapterRepository.update(chapter)
                                     }
                                 } else {
                                     registerToCheckIfFailed(chapter)
@@ -94,7 +94,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
         if (!pendingFailChapters.contains(chapter)) {
             if (chapter.status == 3) {
                 chapter.status = 4
-                database.ChapterDao().update(chapter)
+                chapterRepository.update(chapter)
                 pendingFailChapters.remove(chapter)
             } else {
                 pendingFailChapters.add(chapter)
@@ -105,10 +105,10 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
 
     private fun checkLocalFail(chapter_id: Int) {
         launch {
-            database.ChapterDao().getChapter(chapter_id).also {
+            chapterRepository.getChapter(chapter_id).also {
                 if (it.status != 4 && it.status != 3) {
                     it.status = 4
-                    database.ChapterDao().update(it)
+                    chapterRepository.update(it)
                 }
                 pendingFailChapters.remove(it)
             }

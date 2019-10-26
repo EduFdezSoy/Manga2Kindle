@@ -105,10 +105,12 @@ class MangaRepository {
                     mangaList.add(mangaSynced)
                     database.MangaDao().insert(mangaSynced)
                 } else {
-                    mangaList.forEach {
-                        if (it.identifier == mangaSynced.identifier) {
-                            mangaList.remove(it)
-                            return@forEach
+                    with(mangaList.iterator()) {
+                        forEach {
+                            if (it.identifier == mangaSynced.identifier) {
+                                remove()
+                                return@forEach
+                            }
                         }
                     }
                     mangaList.add(mangaSynced)

@@ -2,7 +2,6 @@ package es.edufdezsoy.manga2kindle.service.intentService
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
@@ -15,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 
@@ -25,9 +23,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
-    private val handler = Handler()
     private val chapterRepository = ChapterRepository.invoke(this)
-    private val pendingFailChapters = ArrayList<Chapter>()
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
@@ -44,75 +40,82 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
         Log.d(TAG, "Service UpdateChapterStatusIntentService started.")
         job = Job()
         val apiService = ApiService.apiService
+        // TODO: move all apiService to the repositories
 
         launch {
             chapterRepository.getUploadedChapters().also {
                 it.forEach { chapter ->
-                    val cal = Calendar.getInstance()
-                    cal.add(Calendar.HOUR, -1)
-                    val compareDate = cal.time
-                    if (!chapter.delivered && !chapter.error && chapter.upload_date!!.after(compareDate)) {
+                    if (mayCheckStatus(chapter)) {
                         try {
                             Log.d(TAG, chapter.toString())
                             apiService.getStatus(chapter.id!!).also {
                                 if (it.isNotEmpty()) {
-                                    if (it[0].delivered || it[0].error) {
-                                        chapter.status = 3
-                                        chapter.delivered = it[0].delivered
-                                        chapter.error = it[0].error
+                                    chapter.status = 3
+                                    chapter.delivered = it[0].delivered
+                                    chapter.error = it[0].error
 
-                                        Log.d(
-                                            TAG,
-                                            "Manga." + it[0].manga_id + " Ch." + it[0].chapter + " Title: " + it[0].title
-                                        )
-                                        chapterRepository.update(chapter)
-                                    }
+                                    Log.d(
+                                        TAG,
+                                        "Manga." + it[0].manga_id + " Ch." + it[0].chapter + " Title: " + it[0].title
+                                    )
                                 } else {
-                                    registerToCheckIfFailed(chapter)
+                                    checkLocalFail(chapter)
 
                                     if (M2kApplication.debug)
                                         Log.w(TAG, "CHAPTER STATUS EMPTY")
                                 }
                             }
                         } catch (e: Exception) {
-                            registerToCheckIfFailed(chapter)
+                            checkLocalFail(chapter)
 
                             Log.e(TAG, "ERROR RETRIEVING THE CHAPTER STATUS")
                             if (M2kApplication.debug)
                                 e.printStackTrace()
+                        } finally {
+                            chapterRepository.update(chapter)
                         }
                     }
                 }
 
+                // TODO: changing repo lists to observable lists we can remove those broadcasts
                 sendBroadcast(broadcastIntent)
             }
         }
     }
 
+    /**
+     * If the chapter keep waiting in the local storage, mark as local error,
+     * always return the same chapter
+     */
+    private fun checkLocalFail(chapter: Chapter): Chapter {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.MINUTE, -1)
+        val compareDate = cal.time
 
-    private suspend fun registerToCheckIfFailed(chapter: Chapter) {
-        if (!pendingFailChapters.contains(chapter)) {
-            if (chapter.status == 3) {
-                chapter.status = 4
-                chapterRepository.update(chapter)
-                pendingFailChapters.remove(chapter)
-            } else {
-                pendingFailChapters.add(chapter)
-                handler.postDelayed({ checkLocalFail(chapter.identifier) }, 60000)
-            }
-        }
+        if (chapter.upload_date != null)
+            if (chapter.upload_date!!.before(compareDate))
+                if (chapter.status != 4 && chapter.status != 3)
+                    chapter.status = 4
+
+        return chapter
     }
 
-    private fun checkLocalFail(chapter_id: Int) {
-        launch {
-            chapterRepository.getChapter(chapter_id).also {
-                if (it.status != 4 && it.status != 3) {
-                    it.status = 4
-                    chapterRepository.update(it)
-                }
-                pendingFailChapters.remove(it)
-            }
-        }
+    /**
+     * Checks the chapter only when it hasn't been delivered AND it has no errors
+     * AND it was uploaded between an hour ago and now OR the chapter status is
+     * between 4 and 0 (1, 2 or 3).
+     */
+    private fun mayCheckStatus(chapter: Chapter): Boolean {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.HOUR, -1)
+        val compareDate = cal.time
+
+        if (!chapter.delivered)
+            if (!chapter.error)
+                if (chapter.upload_date!!.after(compareDate) || (chapter.status < 4 && chapter.status != 0))
+                    return true
+
+        return false
     }
 
     override fun onDestroy() {

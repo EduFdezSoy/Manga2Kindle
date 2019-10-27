@@ -40,10 +40,7 @@ class SettingsController : PreferenceController() {
     @SuppressLint("ApplySharedPref")
     private fun checkResetChapters(sharedPreferences: SharedPreferences, key: String) {
         if (key == "etPrefResetChapters") {
-            if (sharedPreferences.getString(
-                    key,
-                    ""
-                )!!.toLowerCase(Locale.ENGLISH) == "yes, please"
+            if (sharedPreferences.getString(key, "")!!.toLowerCase(Locale.ENGLISH) == "yes, please"
             ) {
                 GlobalScope.launch(Dispatchers.IO) {
                     M2kDatabase.invoke(activity!!).ChapterDao().clearNotSended().also {

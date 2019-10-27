@@ -33,6 +33,8 @@
     <string name="view_new_chapters_view_title">Observed Folders View</string>
     <string name="observed_folders_view_title">Observed Folders View</string>
     <string name="view_uploaded_chapters_title">Uploaded Chapters View</string>
+    <string name="view_hidden_chapters_title">Hidden Chapters</string>
+    <string name="view_hidden_chapters_section_title">Hidden Chapters View</string>
     <string name="view_chapter_form_add_author">Add</string>
     <string name="view_chapter_form_email_hint">Kindle email address</string>
     <string name="main_view_tv1_text">loading…</string>

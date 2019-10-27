@@ -85,6 +85,23 @@ class ChapterRepository {
         return coincidences
     }
 
+    suspend fun getHiddenChapters(): ArrayList<Chapter> {
+        val coincidences = ArrayList<Chapter>()
+        if (chapterList.isEmpty())
+            getAll()
+
+        if (chapterList.isNotEmpty()) {
+            chapterList.forEach {
+                if (!it.visible)
+                    coincidences.add(it)
+            }
+        } else {
+            coincidences.addAll(database.ChapterDao().getHiddenChapters())
+        }
+
+        return coincidences
+    }
+
     suspend fun search(manga_id: Int, chapter: Float): Chapter? {
         if (chapterList.isEmpty())
             chapterList.addAll(database.ChapterDao().getAll())

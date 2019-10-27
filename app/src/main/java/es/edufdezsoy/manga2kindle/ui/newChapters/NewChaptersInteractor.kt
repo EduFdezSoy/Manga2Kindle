@@ -42,6 +42,20 @@ class NewChaptersInteractor(val controller: Controller, context: Context) {
         ScanRemovedChaptersIntentService.enqueueWork(context, intent)
     }
 
+    suspend fun hideChapter(chapter: NewChapter) {
+        chapterRepository.hide(chapter.local_id).also {
+            controller.updateList()
+        }
+    }
+
+    suspend fun showChapter(chapter: NewChapter) {
+        val chap = chapterRepository.getChapter(chapter.local_id)
+        chap.visible = true
+        chapterRepository.update(chap).also {
+            controller.updateList()
+        }
+    }
+
     fun close(context: Context) {
         context.unregisterReceiver(receiver)
     }
@@ -50,26 +64,28 @@ class NewChaptersInteractor(val controller: Controller, context: Context) {
         chapterRepository.getNoUploadedChapters().also {
             val newChapters = ArrayList<NewChapter>()
             it.forEach {
-                val manga = mangaRepository.getMangaById(it.manga_id)
+                if (it.visible) {
+                    val manga = mangaRepository.getMangaById(it.manga_id)
 
-                var author = ""
-                if (manga.author_id != null) {
-                    val au = authorRepository.getAuthor(manga.author_id)
-                    if (au != null)
-                        author = au.toString()
-                }
+                    var author = ""
+                    if (manga.author_id != null) {
+                        val au = authorRepository.getAuthor(manga.author_id)
+                        if (au != null)
+                            author = au.toString()
+                    }
 
-                newChapters.add(
-                    NewChapter(
-                        local_id = it.identifier,
-                        chapter = it.toString(),
-                        manga_id = manga.id,
-                        manga_local_id = manga.identifier,
-                        manga_title = manga.title,
-                        author_id = manga.author_id,
-                        author = author
+                    newChapters.add(
+                        NewChapter(
+                            local_id = it.identifier,
+                            chapter = it.toString(),
+                            manga_id = manga.id,
+                            manga_local_id = manga.identifier,
+                            manga_title = manga.title,
+                            author_id = manga.author_id,
+                            author = author
+                        )
                     )
-                )
+                }
             }
 
             return newChapters

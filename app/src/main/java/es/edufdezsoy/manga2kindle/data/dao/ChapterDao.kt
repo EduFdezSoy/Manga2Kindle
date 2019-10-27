@@ -39,6 +39,14 @@ interface ChapterDao {
     suspend fun getUploadedChapters(): List<Chapter>
 
     /**
+     * Get a list with the hidden chapters from the database
+     *
+     * @return this list can be empty
+     */
+    @Query("SELECT * FROM chapter WHERE visible == 0")
+    suspend fun getHiddenChapters(): List<Chapter>
+
+    /**
      * Search authors that contains a certain string
      *
      * @param manga_id the id from the manga of the chapter we want

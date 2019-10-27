@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.uploadedChapters
 
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.R
@@ -39,13 +38,11 @@ class UploadedChaptersView(val view: View, val controller: UploadedChaptersContr
                 })
 
                 adapter.setOnLongClickListener(View.OnLongClickListener {
-                    Toast.makeText(
-                        view.context,
-                        "TODO: hide entry",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    controller.hideChapter(
+                        adapter.chapters.get(view.rvUploadedChapters.getChildAdapterPosition(it))
+                    )
 
-                    return@OnLongClickListener false
+                    return@OnLongClickListener true
                 })
                 view.rvUploadedChapters.layoutManager = LinearLayoutManager(controller.context)
                 view.rvUploadedChapters.itemAnimator = DefaultItemAnimator()

@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
+import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class UploadedChaptersController : Controller(), CoroutineScope,
@@ -71,7 +70,20 @@ class UploadedChaptersController : Controller(), CoroutineScope,
     }
 
     override fun hideChapter(chapter: UploadedChapter) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        launch {
+            interactor.hideChapter(chapter)
+        }
+
+        (activity as BaseActivity).showSnackbar(
+            "Chapter hidden",
+            Snackbar.LENGTH_SHORT,
+            "UNDO",
+            View.OnClickListener {
+                GlobalScope.launch(Dispatchers.IO) {
+                    interactor.showChapter(chapter)
+                }
+            }
+        )
     }
 
     override fun setNewChapters(chapters: List<UploadedChapter>) {

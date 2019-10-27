@@ -7,17 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
-import com.bluelinelabs.conductor.RouterTransaction
+import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormActivity
-import es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.ChapterFormController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.Controller,
@@ -85,7 +80,20 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
     }
 
     override fun hideChapter(chapter: NewChapter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        launch {
+            interactor.hideChapter(chapter)
+        }
+
+        (activity as BaseActivity).showSnackbar(
+            "Chapter hidden",
+            Snackbar.LENGTH_SHORT,
+            "UNDO",
+            View.OnClickListener {
+                GlobalScope.launch(Dispatchers.IO) {
+                    interactor.showChapter(chapter)
+                }
+            }
+        )
     }
 
     override fun setNewChapters(chapters: List<NewChapter>) {

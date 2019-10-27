@@ -2,11 +2,10 @@ package es.edufdezsoy.manga2kindle.ui.newChapters
 
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.ui.adapter.NewChapterAdapter
 import kotlinx.android.synthetic.main.view_new_chapters.view.*
@@ -42,13 +41,10 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
                 })
 
                 adapter.setOnLongClickListener(View.OnLongClickListener {
-                    Toast.makeText(
-                        view.context,
-                        "TODO: hide entry",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    return@OnLongClickListener false
+                    controller.hideChapter(
+                        adapter.chapters.get(view.rvNewChapters.getChildAdapterPosition(it))
+                    )
+                    return@OnLongClickListener true
                 })
                 view.rvNewChapters.layoutManager = LinearLayoutManager(controller.context)
                 view.rvNewChapters.itemAnimator = DefaultItemAnimator()

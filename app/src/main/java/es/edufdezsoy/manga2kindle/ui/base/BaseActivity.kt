@@ -111,10 +111,13 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         // Create the AccountHeader
         val headerResult = AccountHeaderBuilder()
             .withActivity(this)
-//            .withHeaderBackground(R.drawable.header)
+            .withHeaderBackground(R.drawable.ic_dotted)
             .addProfiles(
-                ProfileDrawerItem().withName("Manga2kindle").withEmail("test_mail@example.com").withIcon(
-                    getDrawable(R.drawable.btn_radio_on_mtrl)
+                ProfileDrawerItem()
+                    .withName("Manga2kindle")
+                    .withEmail("test_mail@example.com")
+                    .withIcon(
+                    getDrawable(R.mipmap.ic_launcher)
                 )
             )
             .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {

@@ -44,34 +44,33 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
 
         launch {
             chapterRepository.getUploadedChapters().also {
-                it.forEach { chapter ->
+                it.forEach { chapIn ->
+                    var chapter = chapIn
                     if (mayCheckStatus(chapter)) {
                         try {
                             Log.d(TAG, chapter.toString())
                             apiService.getStatus(chapter.id!!).also {
                                 if (it.isNotEmpty()) {
-                                    chapter.status = 3
+                                    chapter.status = Chapter.STATUS_UPLOADED
                                     chapter.delivered = it[0].delivered
                                     chapter.error = it[0].error
+                                    chapter.reason = it[0].reason
 
                                     Log.d(
                                         TAG,
                                         "Manga." + it[0].manga_id + " Ch." + it[0].chapter + " Title: " + it[0].title
                                     )
                                 } else {
-                                    checkLocalFail(chapter)
-
                                     if (M2kApplication.debug)
                                         Log.w(TAG, "CHAPTER STATUS EMPTY")
                                 }
                             }
                         } catch (e: Exception) {
-                            checkLocalFail(chapter)
-
                             Log.e(TAG, "ERROR RETRIEVING THE CHAPTER STATUS")
                             if (M2kApplication.debug)
                                 e.printStackTrace()
                         } finally {
+                            chapter = checkLocalFail(chapter)
                             chapterRepository.update(chapter)
                         }
                     }
@@ -94,25 +93,25 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
 
         if (chapter.upload_date != null)
             if (chapter.upload_date!!.before(compareDate))
-                if (chapter.status != 4 && chapter.status != 3)
-                    chapter.status = 4
+                if (chapter.status != Chapter.STATUS_LOCAL_ERROR && chapter.status != Chapter.STATUS_UPLOADED)
+                    chapter.status = Chapter.STATUS_LOCAL_ERROR
 
         return chapter
     }
 
-    /**
-     * Checks the chapter only when it hasn't been delivered AND it has no errors
-     * AND it was uploaded between an hour ago and now OR the chapter status is
-     * between 4 and 0 (1, 2 or 3).
-     */
     private fun mayCheckStatus(chapter: Chapter): Boolean {
         val cal = Calendar.getInstance()
         cal.add(Calendar.HOUR, -1)
         val compareDate = cal.time
 
+        if (chapter.upload_date!!.after(compareDate)) {
+            if (!chapter.delivered)
+                return true
+        }
+
         if (!chapter.delivered)
             if (!chapter.error)
-                if (chapter.upload_date!!.after(compareDate) || (chapter.status < 4 && chapter.status != 0))
+                if (chapter.status != Chapter.STATUS_LOCAL_ERROR && chapter.status != Chapter.STATUS_DEFAULT)
                     return true
 
         return false

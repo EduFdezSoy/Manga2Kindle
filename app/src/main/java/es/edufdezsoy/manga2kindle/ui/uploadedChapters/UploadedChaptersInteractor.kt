@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.viewObject.UploadedChapter
 import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
@@ -60,37 +61,40 @@ class UploadedChaptersInteractor(val controller: Controller, context: Context) {
                         author = au.toString()
                 }
 
-                val status: String
-                val status_color: Int
+                var status: String = ""
+                var status_color: Int = 0
                 var reason = ""
-                if (!it.error) {
-                    if (!it.delivered) {
-                        when (it.status) {
-                            1 -> {
-                                status = "compressing"
-                                status_color = R.color.colorCompressing
-                            }
-                            2 -> {
-                                status = "uploading"
-                                status_color = R.color.colorUploading
-                            }
-                            3 -> {
-                                status = "processing"
-                                status_color = R.color.colorProcessing
-                            }
-                            else -> {
-                                status = "failed at home"
-                                status_color = R.color.colorFailed
-                            }
-                        }
-                    } else {
-                        status = "success"
-                        status_color = R.color.colorSuccess
+
+                when (it.status) {
+                    Chapter.STATUS_ENQUEUE -> {
+                        status = "enqueue"
+                        status_color = R.color.colorEnqueue
                     }
-                } else {
+                    Chapter.STATUS_PROCESSING -> {
+                        status = "compressing"
+                        status_color = R.color.colorCompressing
+                    }
+                    Chapter.STATUS_UPLOADING -> {
+                        status = "uploading"
+                        status_color = R.color.colorUploading
+                    }
+                    Chapter.STATUS_UPLOADED -> {
+                        status = "processing"
+                        status_color = R.color.colorProcessing
+                    }
+                    Chapter.STATUS_LOCAL_ERROR -> {
+                        status = "failed at home"
+                        status_color = R.color.colorFailed
+                    }
+                }
+
+                if (it.error) {
                     status = "failed"
                     status_color = R.color.colorFailed
                     reason = it.reason.toString()
+                } else if (it.delivered) {
+                    status = "success"
+                    status_color = R.color.colorSuccess
                 }
 
                 uploadedChapters.add(

@@ -23,17 +23,19 @@ data class Chapter(
     var reason: String?,
     var visible: Boolean
 ) {
+    companion object {
+        const val STATUS_DEFAULT = 0
+        const val STATUS_ENQUEUE = 1
+        const val STATUS_PROCESSING = 2
+        const val STATUS_UPLOADING = 3
+        const val STATUS_UPLOADED = 4
+        const val STATUS_LOCAL_ERROR = 5
+    }
+
     @PrimaryKey(autoGenerate = true)
     var identifier: Int = 0
 
-    /**
-     * 0 = default
-     * 1 = processing
-     * 2 = uploading
-     * 3 = uploaded
-     * 4 = local error
-     */
-    var status: Int = 0
+    var status: Int = STATUS_DEFAULT
     var upload_date: Date? = null
 
     override fun toString(): String {

@@ -7,6 +7,7 @@
     <!-- STATUSES -->
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorFailed">#F44336</color>
+    <color name="colorEnqueue">#80CBC4</color>
     <color name="colorProcessing">#FFC107</color>
     <color name="colorCompressing">#69F0AE</color>
     <color name="colorUploading">#40C4FF</color>

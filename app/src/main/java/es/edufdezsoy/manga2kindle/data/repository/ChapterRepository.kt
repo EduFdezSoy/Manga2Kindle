@@ -58,7 +58,7 @@ class ChapterRepository {
 
         if (chapterList.isNotEmpty()) {
             chapterList.forEach {
-                if (it.status == 0)
+                if (it.status == Chapter.STATUS_DEFAULT)
                     coincidences.add(it)
             }
         } else {
@@ -75,7 +75,7 @@ class ChapterRepository {
 
         if (chapterList.isNotEmpty()) {
             chapterList.forEach {
-                if (it.status != 0)
+                if (it.status != Chapter.STATUS_DEFAULT)
                     coincidences.add(it)
             }
         } else {
@@ -119,10 +119,10 @@ class ChapterRepository {
                     return@forEach
                 }
             }
+        }.also {
+            chapterList.add(chapter)
+            database.ChapterDao().update(chapter)
         }
-
-        chapterList.add(chapter)
-        database.ChapterDao().update(chapter)
     }
 
     suspend fun hide(chapter: Chapter) = hide(chapter.identifier)
@@ -141,7 +141,7 @@ class ChapterRepository {
 
     suspend fun clearNotSended() {
         chapterList.forEach {
-            if (it.status != 3) {
+            if (it.status != Chapter.STATUS_UPLOADED) {
                 chapterList.remove(it)
             }
         }

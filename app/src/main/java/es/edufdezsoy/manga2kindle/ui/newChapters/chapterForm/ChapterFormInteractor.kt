@@ -85,6 +85,11 @@ class ChapterFormInteractor(val controller: Controller, context: Context) {
     }
 
     suspend fun sendChapter(chapter_id: Int, mail: String, context: Context) {
+        val chap = chapterRepository.getChapter(chapter_id)
+        chap.status = Chapter.STATUS_ENQUEUE
+        chapterRepository.update(chap)
+
+        // TODO: ↓ this may be done by the repository ↓
         val intent = Intent()
         intent.putExtra(UploadChapter.CHAPTER_ID_KEY, chapter_id)
         intent.putExtra(UploadChapter.MAIL_KEY, mail)

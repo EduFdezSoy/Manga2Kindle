@@ -6,6 +6,7 @@ import android.provider.OpenableColumns
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
@@ -72,7 +73,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
 
             // set chapter to processing
             chapter.id = chapter_id
-            chapter.status = 1
+            chapter.status = Chapter.STATUS_PROCESSING
             chapter.upload_date = Calendar.getInstance().time
             chapterRepository.update(chapter)
 
@@ -124,7 +125,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
             try {
                 // set chapter to uploading
                 chapter.id = chapter_id
-                chapter.status = 2
+                chapter.status = Chapter.STATUS_UPLOADING
                 chapterRepository.update(chapter)
 
                 val fileBody = ProgressRequestBody(chapFile, uploadCallBacks)
@@ -142,7 +143,7 @@ class UploadChapter(val context: Context) : CoroutineScope {
                     file = part
                 ).also {
                     chapter.id = it[0].id
-                    chapter.status = 3
+                    chapter.status = Chapter.STATUS_UPLOADED
                     chapterRepository.update(chapter)
                 }
             } catch (e: Exception) {

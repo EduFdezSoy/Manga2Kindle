@@ -27,7 +27,7 @@ interface ChapterDao {
      *
      * @return this list can be empty
      */
-    @Query("SELECT * FROM chapter WHERE status = 0")
+    @Query("SELECT * FROM chapter WHERE status = ${Chapter.STATUS_DEFAULT}")
     suspend fun getNoUploadedChapters(): List<Chapter>
 
     /**
@@ -35,7 +35,7 @@ interface ChapterDao {
      *
      * @return this list can be empty
      */
-    @Query("SELECT * FROM chapter WHERE status != 0")
+    @Query("SELECT * FROM chapter WHERE status != ${Chapter.STATUS_DEFAULT}")
     suspend fun getUploadedChapters(): List<Chapter>
 
     /**
@@ -72,6 +72,6 @@ interface ChapterDao {
     /**
      * Delete the chapters that hasn't been sent to the server
      */
-    @Query("DELETE FROM chapter WHERE status != 3")
+    @Query("DELETE FROM chapter WHERE status != ${Chapter.STATUS_UPLOADED}")
     suspend fun clearNotSended()
 }

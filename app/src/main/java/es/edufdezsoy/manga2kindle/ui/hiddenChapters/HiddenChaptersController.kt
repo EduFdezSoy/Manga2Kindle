@@ -62,7 +62,7 @@ class HiddenChaptersController : Controller(), CoroutineScope, HiddenChaptersCon
      * Called from the view
      */
     override fun openChapterDetails(chapter: HiddenChapter) {
-        if (chapter.server_id != null) {
+        if (chapter.server_id == null) {
             val intent = Intent(context, ChapterFormActivity::class.java)
 
             intent.putExtra(ChapterFormActivity.CHAPTER_KEY, chapter.local_id)

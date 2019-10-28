@@ -81,6 +81,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.about.AboutActivity">
+            <intent-filter>
+                <action android:name="es.edufdezsoy.manga2kindle.ui.about.AboutActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
         <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
     </application>

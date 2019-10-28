@@ -1,5 +1,6 @@
 <?xml version ="1.0" encoding ="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="General Settings">
 
@@ -26,4 +27,12 @@
                 android:summary='Only the ones not uploaded yet (write "yes, please")'
                 android:title="Reset list of new detected chapters" />
     </PreferenceCategory>
+
+    <PreferenceScreen
+            android:key="about"
+            android:title="About us"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true">
+        <intent android:action="es.edufdezsoy.manga2kindle.ui.about.AboutActivity" />
+    </PreferenceScreen>
 </PreferenceScreen>

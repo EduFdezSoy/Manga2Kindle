@@ -42,4 +42,5 @@
     <string name="status_processing">processing</string>
     <string name="status_success">success</string>
     <string name="status_failed">failed</string>
+    <string name="view_about_title">About</string>
 </resources>

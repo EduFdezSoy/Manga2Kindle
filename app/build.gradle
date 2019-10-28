@@ -123,6 +123,9 @@ dependencies {
     implementation 'com.mikepenz:materialize:1.2.1'
     implementation 'com.google.android.material:material:1.1.0-beta01'
 
+    // ABOUT PAGE
+    implementation 'com.github.medyo:android-about-page:1.2.5'
+
     // CONDUCTOR (https://github.com/bluelinelabs/Conductor)
     implementation 'com.bluelinelabs:conductor:2.1.5'
 

@@ -120,6 +120,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                     getDrawable(R.mipmap.ic_launcher)
                 )
             )
+            .withSelectionListEnabledForSingleProfile(false)
             .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {
                 override fun onProfileChanged(
                     view: View?,

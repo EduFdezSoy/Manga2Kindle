@@ -34,4 +34,21 @@ class UploadedChapter(
     override fun hashCode(): Int {
         return server_id.hashCode() + local_id.hashCode() + status_id.hashCode()
     }
+
+    class Sort : Comparator<UploadedChapter> {
+        override fun compare(p0: UploadedChapter, p1: UploadedChapter): Int {
+            if (p0.upload_date == null && p1.upload_date == null)
+                return p0.local_id.compareTo(p1.local_id)
+
+            if (p0.upload_date == null)
+                return 1
+            if (p1.upload_date == null)
+                return -1
+
+            if (p0.upload_date == p1.upload_date)
+                return 0
+
+            return p0.upload_date.compareTo(p1.upload_date)
+        }
+    }
 }

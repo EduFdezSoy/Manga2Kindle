@@ -88,7 +88,7 @@ class UploadedChaptersController : Controller(), CoroutineScope,
 
     override fun setNewChapters(chapters: List<UploadedChapter>) {
         val ar = chapters as ArrayList
-        ar.sortWith(compareBy({ it.upload_date }, { it.server_id }))
+        ar.sortWith(UploadedChapter.Sort())
         ar.reverse()
 
         launch(Dispatchers.Main) {

@@ -7,6 +7,7 @@ import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
 import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
+import es.edufdezsoy.manga2kindle.service.intentService.ScanMangaIntentService
 import es.edufdezsoy.manga2kindle.service.intentService.ScanRemovedChaptersIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
@@ -40,6 +41,7 @@ class NewChaptersInteractor(val controller: Controller, context: Context) {
     suspend fun updateChapters(context: Context) {
         val intent = Intent()
         ScanRemovedChaptersIntentService.enqueueWork(context, intent)
+        ScanMangaIntentService.enqueueWork(context, intent)
     }
 
     suspend fun hideChapter(chapter: NewChapter) {

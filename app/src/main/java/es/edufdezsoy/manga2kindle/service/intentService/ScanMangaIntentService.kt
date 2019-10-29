@@ -2,7 +2,6 @@ package es.edufdezsoy.manga2kindle.service.intentService
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
@@ -12,11 +11,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class ScanMangaIntentService : JobIntentService() {
     private val broadcastIntent = Intent()
-    private val running = AtomicBoolean(false)
 
     companion object {
+        private val running = AtomicBoolean(false)
+
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, ScanMangaIntentService::class.java, 0, intent)
+            if (!running.get())
+                enqueueWork(context, ScanMangaIntentService::class.java, 0, intent)
         }
     }
 

@@ -27,12 +27,11 @@ interface LanguageDao {
 
     /**
      * Search languages that contains a certain string
-     * TODO: the params in 'LIKE' maye be in between %, search how to edit the var before performing the query
      *
      * @param search the string we will search for in codes or names
      * @return this list can be empty
      */
-    @Query("SELECT * FROM language WHERE code LIKE :search OR name LIKE :search")
+    @Query("SELECT * FROM language WHERE instr(code, :search) OR instr(name, :search)")
     suspend fun search(search: String): List<Language>
 
     /**

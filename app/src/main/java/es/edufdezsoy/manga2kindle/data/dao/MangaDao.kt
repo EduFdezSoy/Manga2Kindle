@@ -41,12 +41,11 @@ interface MangaDao {
 
     /**
      * Search mangas that contains a certain string
-     * TODO: the params in 'LIKE' maye be in between %, search how to edit the var before performing the query
      *
      * @param search the string we will search for in titles
      * @return this list can be empty
      */
-    @Query("SELECT * FROM manga WHERE title LIKE :search")
+    @Query("SELECT * FROM manga WHERE instr(title, :search)")
     suspend fun search(search: String): List<Manga>
 
     /**

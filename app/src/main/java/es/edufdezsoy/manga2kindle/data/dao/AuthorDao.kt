@@ -24,12 +24,11 @@ interface AuthorDao {
 
     /**
      * Search authors that contains a certain string
-     * TODO: the params in 'LIKE' maye be in between %, search how to edit the var before performing the query
      *
      * @param search the string we will search for in names, surnames or nicknames
      * @return this list can be empty
      */
-    @Query("SELECT * FROM author WHERE name LIKE :search OR surname LIKE :search OR nickname LIKE :search")
+    @Query("SELECT * FROM author WHERE instr(name, :search) OR instr(surname, :search) OR instr(nickname, :search)")
     suspend fun search(search: String): List<Author>
 
     /**

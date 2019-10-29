@@ -112,6 +112,9 @@ class UploadedChaptersInteractor(val controller: Controller, context: Context) {
                         status_color = R.color.colorSuccess
                     }
 
+                    if (it.id == null)
+                        it.id = 0
+
                     uploadedChapters.add(
                         UploadedChapter(
                             it.id!!,

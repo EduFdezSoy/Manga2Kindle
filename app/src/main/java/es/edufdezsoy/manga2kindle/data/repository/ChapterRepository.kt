@@ -144,9 +144,13 @@ class ChapterRepository {
 
     suspend fun hide(chapter: Chapter) = hide(chapter.identifier)
     suspend fun hide(identifier: Int) {
-        chapterList.forEach {
-            if (it.identifier == identifier)
-                it.visible = false
+        with(chapterList.iterator()) {
+            forEach {
+                if (it.identifier == identifier) {
+                    it.visible = false
+                    return@forEach
+                }
+            }
         }
         database.ChapterDao().hide(identifier)
     }
@@ -157,9 +161,11 @@ class ChapterRepository {
     }
 
     suspend fun clearNotSended() {
-        chapterList.forEach {
-            if (it.status != Chapter.STATUS_UPLOADED) {
-                chapterList.remove(it)
+        with(chapterList.iterator()) {
+            forEach {
+                if (it.status != Chapter.STATUS_UPLOADED) {
+                    remove()
+                }
             }
         }
         database.ChapterDao().clearNotSended()

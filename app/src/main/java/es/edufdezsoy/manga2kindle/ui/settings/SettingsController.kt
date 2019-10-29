@@ -8,7 +8,7 @@ import androidx.preference.PreferenceController
 import androidx.preference.PreferenceManager
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -43,7 +43,7 @@ class SettingsController : PreferenceController() {
             if (sharedPreferences.getString(key, "")!!.toLowerCase(Locale.ENGLISH) == "yes, please"
             ) {
                 GlobalScope.launch(Dispatchers.IO) {
-                    M2kDatabase.invoke(activity!!).ChapterDao().clearNotSended().also {
+                    ChapterRepository.invoke(activity!!).clearNotSended().also {
                         if (M2kApplication.debug)
                             Log.d(
                                 M2kApplication.TAG,
@@ -51,9 +51,9 @@ class SettingsController : PreferenceController() {
                             )
                     }
                 }
-                // yes, we want it to be immediately write to disk
-                sharedPreferences.edit().putString(key, "dont").commit()
             }
+            // yes, we want it to be immediately write to disk
+            sharedPreferences.edit().putString(key, "dont").commit()
         }
     }
 }

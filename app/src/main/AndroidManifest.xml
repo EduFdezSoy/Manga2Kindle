@@ -55,7 +55,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.base.BaseActivity">
+        <activity
+                android:name=".ui.splash.SplashActivity"
+                android:theme="@style/SplashTheme">
             <tools:validation testUrl="https://manga2kindle.com/app" />
 
             <intent-filter>
@@ -75,6 +77,7 @@
                         android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.base.BaseActivity" />
         <activity android:name=".ui.hiddenChapters.HiddenChaptersActivity">
             <intent-filter>
                 <action android:name="es.edufdezsoy.manga2kindle.ui.hiddenChapters.HiddenChaptersActivity" />

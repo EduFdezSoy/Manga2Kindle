@@ -104,6 +104,9 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
         cal.add(Calendar.HOUR, -1)
         val compareDate = cal.time
 
+        if (chapter.upload_date == null)
+            return false
+
         if (chapter.upload_date!!.after(compareDate)) {
             if (!chapter.delivered)
                 return true

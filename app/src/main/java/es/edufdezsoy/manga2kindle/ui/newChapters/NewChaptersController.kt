@@ -108,7 +108,7 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
         launch {
             interactor.loadChapters()
             handler.removeCallbacksAndMessages(null)
-            handler.postDelayed({ loadChapters() }, 60000)
+            handler.postDelayed({ loadChapters() }, 5 * 60 * 1000)
         }
     }
 

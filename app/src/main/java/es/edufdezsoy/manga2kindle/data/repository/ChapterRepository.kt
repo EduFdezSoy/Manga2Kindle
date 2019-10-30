@@ -57,9 +57,12 @@ class ChapterRepository {
             getAll()
 
         if (chapterList.isNotEmpty()) {
-            chapterList.forEach {
-                if (it.status == Chapter.STATUS_DEFAULT)
-                    coincidences.add(it)
+            with(chapterList.iterator()) {
+                forEach {
+                    if (it.status == Chapter.STATUS_DEFAULT) {
+                        coincidences.add(it)
+                    }
+                }
             }
         } else {
             coincidences.addAll(database.ChapterDao().getNoUploadedChapters())

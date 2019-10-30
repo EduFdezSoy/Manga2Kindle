@@ -140,4 +140,7 @@ dependencies {
 
     // CRASHLYTICS
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    // SWEET ALERT DIALOGS
+    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
 }

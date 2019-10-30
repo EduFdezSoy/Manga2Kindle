@@ -1,18 +1,21 @@
 package es.edufdezsoy.manga2kindle.ui.settings
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import androidx.preference.Preference
 import androidx.preference.PreferenceController
 import androidx.preference.PreferenceManager
+import cn.pedant.SweetAlert.SweetAlertDialog
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.ui.about.AboutActivity
+import es.edufdezsoy.manga2kindle.ui.hiddenChapters.HiddenChaptersActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 class SettingsController : PreferenceController() {
     lateinit var prefs: SharedPreferences
@@ -22,11 +25,32 @@ class SettingsController : PreferenceController() {
 
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, s ->
             checkDebug(sharedPreferences, s)
-            checkResetChapters(sharedPreferences, s)
         }
 
         prefs.registerOnSharedPreferenceChangeListener(listener)
         addPreferencesFromResource(R.xml.settings)
+
+        setClickListeners()
+    }
+
+    private fun setClickListeners() {
+        val prefHiddenList = findPreference("hiddenChapters")
+        prefHiddenList?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            showHiddenList()
+            return@OnPreferenceClickListener true
+        }
+
+        val prefResetChapter = findPreference("resetChapters")
+        prefResetChapter?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            resetChapters()
+            return@OnPreferenceClickListener true
+        }
+
+        val prefAbout = findPreference("about")
+        prefAbout?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            startAbout()
+            return@OnPreferenceClickListener true
+        }
     }
 
     private fun checkDebug(sharedPreferences: SharedPreferences, key: String) {
@@ -37,11 +61,13 @@ class SettingsController : PreferenceController() {
         }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun checkResetChapters(sharedPreferences: SharedPreferences, key: String) {
-        if (key == "etPrefResetChapters") {
-            if (sharedPreferences.getString(key, "")!!.toLowerCase(Locale.ENGLISH) == "yes, please"
-            ) {
+    private fun resetChapters() {
+        val dialog = SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+        dialog
+            .setTitleText("Are you sure?")
+            .setContentText("This will delete all the chapters not uploaded")
+            .setCancelButton("Cancel", null)
+            .setConfirmButton("OK") {
                 GlobalScope.launch(Dispatchers.IO) {
                     ChapterRepository.invoke(activity!!).clearNotSended().also {
                         if (M2kApplication.debug)
@@ -50,10 +76,26 @@ class SettingsController : PreferenceController() {
                                 "Non uploaded chapters removed from the database."
                             )
                     }
+                }.also {
+                    dialog
+                        .setTitleText("Database cleared!")
+                        .setContentText("All not uploaded chapters deleted")
+                        .setConfirmText("OK")
+                        .setConfirmClickListener(null)
+                        .showCancelButton(false)
+                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
                 }
             }
-            // yes, we want it to be immediately write to disk
-            sharedPreferences.edit().putString(key, "dont").commit()
-        }
+            .show()
+    }
+
+    private fun showHiddenList() {
+        val intent = Intent(activity, HiddenChaptersActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startAbout() {
+        val intent = Intent(activity, AboutActivity::class.java)
+        startActivity(intent)
     }
 }

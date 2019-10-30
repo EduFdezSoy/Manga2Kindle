@@ -78,20 +78,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.base.BaseActivity" />
-        <activity android:name=".ui.hiddenChapters.HiddenChaptersActivity">
-            <intent-filter>
-                <action android:name="es.edufdezsoy.manga2kindle.ui.hiddenChapters.HiddenChaptersActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.about.AboutActivity">
-            <intent-filter>
-                <action android:name="es.edufdezsoy.manga2kindle.ui.about.AboutActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
         <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
+        <activity android:name=".ui.hiddenChapters.HiddenChaptersActivity" />
+        <activity android:name=".ui.about.AboutActivity" />
     </application>
 
 </manifest>

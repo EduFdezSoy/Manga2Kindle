@@ -128,6 +128,7 @@ class UploadedChaptersInteractor(val controller: Controller, context: Context) {
                             status,
                             status_color,
                             reason,
+                            it.enqueue_date,
                             it.upload_date
                         )
                     )

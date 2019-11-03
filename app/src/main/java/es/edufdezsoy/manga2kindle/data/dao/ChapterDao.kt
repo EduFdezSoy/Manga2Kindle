@@ -39,6 +39,14 @@ interface ChapterDao {
     suspend fun getUploadedChapters(): List<Chapter>
 
     /**
+     * Get the enqueued chapters from the database
+     *
+     * @return this list can be empty
+     */
+    @Query("SELECT * FROM chapter WHERE enqueue_date != null AND upload_date = null")
+    suspend fun getEnqueuedChapters(): List<Chapter>
+
+    /**
      * Get a list with the hidden chapters from the database
      *
      * @return this list can be empty

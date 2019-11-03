@@ -13,9 +13,9 @@ import es.edufdezsoy.manga2kindle.data.model.Manga
 import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
-import es.edufdezsoy.manga2kindle.service.UploadChapter
 import es.edufdezsoy.manga2kindle.service.intentService.UploadChapterIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
+import java.util.*
 
 class ChapterFormInteractor(val controller: Controller, context: Context) {
     interface Controller {
@@ -86,15 +86,12 @@ class ChapterFormInteractor(val controller: Controller, context: Context) {
 
     suspend fun sendChapter(chapter_id: Int, mail: String, context: Context) {
         val chap = chapterRepository.getChapter(chapter_id)
+        chap.enqueue_date = Calendar.getInstance().time
         chap.status = Chapter.STATUS_ENQUEUE
         chapterRepository.update(chap)
 
-        // TODO: ↓ this may be done by the repository ↓
-        val intent = Intent()
-        intent.putExtra(UploadChapter.CHAPTER_ID_KEY, chapter_id)
-        intent.putExtra(UploadChapter.MAIL_KEY, mail)
-
-        UploadChapterIntentService.enqueueWork(context, intent)
+        // TODO: ↓ this may be done by the repository ↓ ??
+        UploadChapterIntentService.enqueueWork(context, Intent())
 
         if (!::receiver.isInitialized) {
             val filter = IntentFilter(BroadcastReceiver.ACTION_UPLOADED_CHAPTER)

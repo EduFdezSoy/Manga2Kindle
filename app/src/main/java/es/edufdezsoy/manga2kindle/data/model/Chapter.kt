@@ -36,6 +36,7 @@ data class Chapter(
     var identifier: Int = 0
 
     var status: Int = STATUS_DEFAULT
+    var enqueue_date: Date? = null
     var upload_date: Date? = null
 
     override fun toString(): String {

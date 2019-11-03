@@ -19,6 +19,7 @@ class UploadedChapter(
     val status_color: Int,
     val reason: String,
 
+    val enqueue_date: Date?,
     val upload_date: Date?
 ) {
     override fun equals(other: Any?): Boolean {
@@ -26,8 +27,7 @@ class UploadedChapter(
             if (server_id == other.server_id)
                 if (local_id == other.local_id)
                     if (status_id == other.status_id)
-                        if (status == other.status)
-                            return true
+                        return true
         return false
     }
 
@@ -38,17 +38,22 @@ class UploadedChapter(
     class Sort : Comparator<UploadedChapter> {
         override fun compare(p0: UploadedChapter, p1: UploadedChapter): Int {
             if (p0.upload_date == null && p1.upload_date == null)
-                return p0.local_id.compareTo(p1.local_id)
-
-            if (p0.upload_date == null)
-                return 1
-            if (p1.upload_date == null)
-                return -1
-
-            if (p0.upload_date == p1.upload_date)
-                return 0
-
-            return p0.upload_date.compareTo(p1.upload_date)
+                if (p0.enqueue_date == null && p1.enqueue_date == null)
+                    return p0.local_id.compareTo(p1.local_id)
+                else
+                    if (p0.enqueue_date == null)
+                        return 1
+                    else if (p1.enqueue_date == null)
+                        return -1
+                    else
+                        return p0.enqueue_date.compareTo(p1.enqueue_date)
+            else
+                if (p0.upload_date == null)
+                    return 1
+                else if (p1.upload_date == null)
+                    return -1
+                else
+                    return p0.upload_date.compareTo(p1.upload_date)
         }
     }
 }

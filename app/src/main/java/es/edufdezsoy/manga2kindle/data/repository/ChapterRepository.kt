@@ -1,10 +1,14 @@
 package es.edufdezsoy.manga2kindle.data.repository
 
 import android.content.Context
+import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.network.ApiService
+import okhttp3.MultipartBody
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChapterRepository {
     private val TAG = M2kApplication.TAG + "_ChapRepo"
@@ -105,6 +109,23 @@ class ChapterRepository {
         return coincidences
     }
 
+    suspend fun getEnqueuedChapters(): ArrayList<Chapter> {
+        val coincidences = ArrayList<Chapter>()
+        if (chapterList.isEmpty())
+            getAll()
+
+        if (chapterList.isNotEmpty()) {
+            chapterList.forEach {
+                if (it.enqueue_date != null && it.upload_date == null)
+                    coincidences.add(it)
+            }
+        } else {
+            coincidences.addAll(database.ChapterDao().getEnqueuedChapters())
+        }
+
+        return coincidences
+    }
+
     suspend fun search(manga_id: Int, chapter: Float): Chapter? {
         if (chapterList.isEmpty())
             chapterList.addAll(database.ChapterDao().getAll())
@@ -142,6 +163,61 @@ class ChapterRepository {
         }.also {
             chapterList.add(chapter)
             database.ChapterDao().update(chapter)
+        }
+    }
+
+    suspend fun enqueueUpload(chapter: Chapter) {
+        chapter.enqueue_date = Calendar.getInstance().time
+        chapter.status = Chapter.STATUS_ENQUEUE
+
+        if (chapterList.isEmpty())
+            chapterList.addAll(database.ChapterDao().getAll())
+
+        with(chapterList.iterator()) {
+            forEach {
+                if (it.identifier == chapter.identifier) {
+                    remove()
+                    return@forEach
+                }
+            }
+        }.also {
+            chapterList.add(chapter)
+            database.ChapterDao().update(chapter)
+        }
+    }
+
+    suspend fun sendChapter(
+        manga_id: Int,
+        lang_id: Int,
+        title: String,
+        chapter: Float,
+        volume: Int?,
+        checksum: String,
+        mail: String,
+        file: MultipartBody.Part
+    ): Chapter? {
+        try {
+            val list = apiService.sendChapter(
+                manga_id,
+                lang_id,
+                title,
+                chapter,
+                volume,
+                checksum,
+                mail,
+                file
+            )
+
+            if (list.isNotEmpty())
+                return list[0]
+            else
+                return null
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Something's bad with the upload!")
+            e.printStackTrace()
+
+            return null
         }
     }
 

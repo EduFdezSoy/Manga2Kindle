@@ -95,6 +95,34 @@ class MangaRepository {
     }
 
     suspend fun insert(manga: Manga) {
+        var m = manga
+
+        // if its not sync
+        if (!manga.synchronized) {
+            if (manga.author_id != null) {
+                try {
+                    m = apiService.addManga(manga.title, manga.author_id)[0]
+                    m.identifier = manga.identifier
+                    m.synchronized = true
+                } catch (e: Exception) {
+                    printError("cant add the manga to the server", e)
+                }
+            }
+        }
+
+        // add to local repo and db
+        val search = search(m.title)
+
+        if (search.isEmpty()) {
+            database.MangaDao().insert(m)
+            val res = database.MangaDao().search(m.title)
+            mangaList.add(res[0])
+        } else {
+            update(m)
+        }
+    }
+
+    suspend fun OLD_insert(manga: Manga) {
         if (manga.author_id != null && !manga.synchronized) {
             try {
                 val mangaSynced = apiService.addManga(manga.title, manga.author_id)[0]
@@ -102,7 +130,6 @@ class MangaRepository {
                 mangaSynced.synchronized = true
 
                 if (mangaSynced.identifier == 0) {
-                    mangaList.add(mangaSynced)
                     database.MangaDao().insert(mangaSynced)
                 } else {
                     with(mangaList.iterator()) {

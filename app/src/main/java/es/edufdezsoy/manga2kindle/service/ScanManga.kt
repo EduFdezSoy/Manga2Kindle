@@ -120,13 +120,17 @@ class ScanManga : CoroutineScope {
                                         chapterRepository.insert(chapter)
                                     } else {
                                         if (M2kApplication.debug)
-                                            Log.d(
-                                                TAG,
-                                                formatName(
-                                                    "Looks like " + manga[0].identifier
-                                                            + " Ch. " + chapterNum + " already exists."
+                                            launch {
+                                                val manga2 =
+                                                    mangaRepository.getMangaById(manga[0].identifier)
+                                                Log.d(
+                                                    TAG,
+                                                    formatName(
+                                                        "Looks like " + manga2.title
+                                                                + " Ch. " + chapterNum + " already exists."
+                                                    )
                                                 )
-                                            )
+                                            }
 
                                         // if exists check the uri and rewrite it if needed
                                         if (Uri.parse(chapterExists.file_path) != it.uri) {

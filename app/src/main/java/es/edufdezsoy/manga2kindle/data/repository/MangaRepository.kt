@@ -84,10 +84,35 @@ class MangaRepository {
 
         if (coincidences.isEmpty()) {
             try {
-                coincidences.addAll(apiService.searchManga(search))
-                mangaList.addAll(coincidences)
+                apiService.searchManga(search).forEach { insert(it) }
+
+                with(mangaList.iterator()) {
+                    forEach {
+                        if (it.title.contains(search, true)) {
+                            it.synchronized = true
+                            coincidences.add(it)
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 printError("cant search the mangas in the server", e)
+            }
+        }
+
+        return coincidences
+    }
+
+    suspend fun searchLocal(search: String): ArrayList<Manga> {
+        val coincidences = ArrayList<Manga>()
+
+        if (mangaList.isEmpty())
+            mangaList.addAll(database.MangaDao().getAll())
+
+        with(mangaList.iterator()) {
+            forEach {
+                if (it.title.contains(search, true)) {
+                    coincidences.add(it)
+                }
             }
         }
 
@@ -111,7 +136,7 @@ class MangaRepository {
         }
 
         // add to local repo and db
-        val search = search(m.title)
+        val search = searchLocal(m.title)
 
         if (search.isEmpty()) {
             database.MangaDao().insert(m)

@@ -142,6 +142,15 @@ class ChapterFormController : Controller, CoroutineScope,
     /**
      * Called from the view
      */
+    override fun searchAuthors(str: String) {
+        launch {
+            interactor.getAuthors(str)
+        }
+    }
+
+    /**
+     * Called from the view
+     */
     override fun openAuthorForm() {
         val intent = Intent(context, AuthorFormActivity::class.java)
         intent.putExtra(AuthorFormActivity.CHAPTER_KEY, chapter_id)

@@ -28,7 +28,7 @@ interface AuthorDao {
      * @param search the string we will search for in names, surnames or nicknames
      * @return this list can be empty
      */
-    @Query("SELECT * FROM author WHERE instr(name, :search) OR instr(surname, :search) OR instr(nickname, :search)")
+    @Query("SELECT * FROM author WHERE instr(UPPER(name), UPPER(:search)) OR instr(UPPER(surname), UPPER(:search)) OR instr(UPPER(nickname), UPPER(:search))")
     suspend fun search(search: String): List<Author>
 
     /**

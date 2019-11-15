@@ -1,10 +1,9 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import es.edufdezsoy.manga2kindle.M2kApplication
+import androidx.core.widget.doOnTextChanged
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
@@ -36,6 +35,10 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // TODO: if something is edited disable the upload button until changes are saved
 
         //#endregion
+
+        view.actvAuthor.doOnTextChanged { text, start, count, after ->
+            controller.searchAuthors(text.toString())
+        }
     }
 
     //#region private functions

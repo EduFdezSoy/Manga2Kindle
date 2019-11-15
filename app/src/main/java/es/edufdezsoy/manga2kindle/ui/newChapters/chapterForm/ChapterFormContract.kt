@@ -9,6 +9,7 @@ interface ChapterFormContract {
         fun saveData(chapter: Chapter, manga: Manga, mail: String?)
         fun actionSaveData()
         fun sendChapter(chapter: Chapter, mail: String)
+        fun searchAuthors(str: String)
         fun openAuthorForm()
         fun cancelEdit()
     }

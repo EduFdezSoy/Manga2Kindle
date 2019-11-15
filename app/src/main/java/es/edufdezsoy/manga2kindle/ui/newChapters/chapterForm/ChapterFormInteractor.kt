@@ -61,6 +61,10 @@ class ChapterFormInteractor(val controller: Controller, context: Context) {
         authorRepository.getAll().also { controller.setAuthors(it) }
     }
 
+    suspend fun getAuthors(str: String) {
+        authorRepository.search(str).also { controller.setAuthors(it) }
+    }
+
     suspend fun saveAuthor(author: Author) {
         if (authorRepository.getAuthor(author.id) == null) {
             authorRepository.insert(author)

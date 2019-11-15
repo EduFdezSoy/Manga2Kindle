@@ -45,7 +45,7 @@ interface MangaDao {
      * @param search the string we will search for in titles
      * @return this list can be empty
      */
-    @Query("SELECT * FROM manga WHERE instr(title, :search)")
+    @Query("SELECT * FROM manga WHERE instr(UPPER(title), UPPER(:search))")
     suspend fun search(search: String): List<Manga>
 
     /**

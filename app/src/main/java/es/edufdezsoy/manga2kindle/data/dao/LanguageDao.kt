@@ -31,7 +31,7 @@ interface LanguageDao {
      * @param search the string we will search for in codes or names
      * @return this list can be empty
      */
-    @Query("SELECT * FROM language WHERE instr(code, :search) OR instr(name, :search)")
+    @Query("SELECT * FROM language WHERE instr(UPPER(code), UPPER(:search)) OR instr(UPPER(name), UPPER(:search))")
     suspend fun search(search: String): List<Language>
 
     /**

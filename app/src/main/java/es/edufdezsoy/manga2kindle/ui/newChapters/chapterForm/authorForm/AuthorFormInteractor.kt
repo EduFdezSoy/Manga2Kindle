@@ -1,52 +1,52 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm
 
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import android.content.Context
 import es.edufdezsoy.manga2kindle.data.model.Author
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 
 
-class AuthorFormInteractor(val controller: Controller, val database: M2kDatabase) {
+class AuthorFormInteractor(val controller: Controller, context: Context) {
     interface Controller {
         fun setAuthorList(authors: List<Author>)
         fun setAuthor(author: Author)
         fun setManga(manga: Manga)
+        fun setChapter(chapter: Chapter)
         fun done()
     }
 
+    private val chapterRepository = ChapterRepository.invoke(context)
+    private val mangaRepository = MangaRepository.invoke(context)
+    private val authorRepository = AuthorRepository.invoke(context)
+
     suspend fun getAuthors(str: String) {
-        var author = database.AuthorDao().search(str)
-
-        if (author.isEmpty()) {
-            author = ApiService.apiService.searchAuthor(str)
-            database.AuthorDao().insert(*author.toTypedArray())
-        }
-
-        controller.setAuthorList(author)
+        authorRepository.search(str).also { controller.setAuthorList(it) }
     }
 
     suspend fun getAuthor(id: Int) {
-        var author = database.AuthorDao().getAuthor(id)
-
-        if (author == null) {
-            author = ApiService.apiService.getAuthor(id)[0]
-            database.AuthorDao().insert(author)
+        authorRepository.getAuthor(id).also {
+            if (it != null)
+                controller.setAuthor(it)
         }
-
-        controller.setAuthor(author)
     }
 
     suspend fun saveAuthor(name: String, surname: String, nickname: String) {
-        ApiService.apiService.addAuthor(name, surname, nickname).also {
-            database.AuthorDao().insert(it[0])
-        }
-
+        authorRepository.insert(name, surname, nickname)
         controller.done()
     }
 
     suspend fun getManga(id: Int) {
-        database.MangaDao().getMangaById(id).also {
+        mangaRepository.getMangaById(id).also {
             controller.setManga(it)
+        }
+    }
+
+    suspend fun getChapter(id: Int) {
+        chapterRepository.getChapter(id).also {
+            controller.setChapter(it)
         }
     }
 }

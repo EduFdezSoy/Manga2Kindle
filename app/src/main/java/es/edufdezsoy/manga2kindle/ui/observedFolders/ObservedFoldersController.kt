@@ -7,7 +7,6 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm.FolderFormController
@@ -33,7 +32,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_observed_folders, container, false)
 
-        interactor = ObservedFoldersInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = ObservedFoldersInteractor(this, v.context)
 
         job = Job()
         view = ObservedFoldersView(view = v, controller = this)

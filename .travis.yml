@@ -1,0 +1,15 @@
+language: android
+dist: trusty
+android:
+  components:
+    - android-29
+    - build-tools-29.0.0
+
+env:
+  global:
+    # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
+
+# Run assemble and unit tests
+script:
+  - ./gradlew clean build -Pbuild=devCI

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude files being processed -->
+    <exclude domain="root" path="./files"/>
+    <!-- Exclude specific shared preferences that contain GCM registration Id -->
+    <exclude domain="sharedpref" path="com.google.android.gms.appid.xml"/>
+    <exclude domain="sharedpref" path="com.google.android.gms.measurement.prefs.xml"/>
+</full-backup-content>

@@ -31,7 +31,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, UploadChapterIntentService::class.java, 0, intent)
+            enqueueWork(context, UploadChapterIntentService::class.java, 4, intent)
         }
     }
 

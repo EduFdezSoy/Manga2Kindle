@@ -27,7 +27,7 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, UpdateChapterStatusIntentService::class.java, 0, intent)
+            enqueueWork(context, UpdateChapterStatusIntentService::class.java, 3, intent)
         }
     }
 

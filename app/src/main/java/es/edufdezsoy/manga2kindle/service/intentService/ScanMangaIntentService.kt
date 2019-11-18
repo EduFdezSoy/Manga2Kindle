@@ -17,7 +17,7 @@ class ScanMangaIntentService : JobIntentService() {
 
         fun enqueueWork(context: Context, intent: Intent) {
             if (!running.get())
-                enqueueWork(context, ScanMangaIntentService::class.java, 0, intent)
+                enqueueWork(context, ScanMangaIntentService::class.java, 1, intent)
         }
     }
 

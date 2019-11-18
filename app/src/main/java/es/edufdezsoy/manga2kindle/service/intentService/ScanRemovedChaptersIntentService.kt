@@ -25,7 +25,7 @@ class ScanRemovedChaptersIntentService : JobIntentService(), CoroutineScope {
 
     companion object {
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, ScanRemovedChaptersIntentService::class.java, 0, intent)
+            enqueueWork(context, ScanRemovedChaptersIntentService::class.java, 2, intent)
         }
     }
 

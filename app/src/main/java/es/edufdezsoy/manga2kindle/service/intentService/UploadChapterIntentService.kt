@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
@@ -77,7 +78,14 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
 
                     // get the checksum (md5)
                     val chapFile = File(context.filesDir, zipName)
-                    it.checksum = UploadChapterUtils.calculateMD5(FileInputStream(chapFile))
+                    try {
+                        it.checksum = UploadChapterUtils.calculateMD5(FileInputStream(chapFile))
+                    } catch (e: FileNotFoundException) {
+                        e.printStackTrace()
+                        it.status = Chapter.STATUS_LOCAL_ERROR
+                        it.reason = "Looks like this file is too big!"
+                        chapterRepository.update(it)
+                    }
 
                     // prepare other fields
                     var title = it.title

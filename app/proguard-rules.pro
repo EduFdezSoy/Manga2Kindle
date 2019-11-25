@@ -24,3 +24,6 @@
  -keep class cn.pedant.SweetAlert.Rotate3dAnimation {
     public <init>(...);
  }
+
+# Looks like Gson does not work without it
+-keep class es.edufdezsoy.manga2kindle.data.model.** { *; }

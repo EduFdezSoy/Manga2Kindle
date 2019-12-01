@@ -11,7 +11,8 @@ import es.edufdezsoy.manga2kindle.ui.adapter.NewChapterAdapter
 import kotlinx.android.synthetic.main.view_new_chapters.view.*
 
 class NewChaptersView(val view: View, val controller: NewChaptersController) :
-    NewChaptersContract.View {
+    NewChaptersContract.View, NewChapterAdapter.OnClickListener,
+    NewChapterAdapter.OnLongClickListener {
     private lateinit var adapter: NewChapterAdapter
 
     init {
@@ -32,20 +33,8 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
                 adapter.setData(chapters)
             } else {
                 adapter = NewChapterAdapter(chapters)
-                adapter.setOnClickListener(View.OnClickListener { v ->
-                    controller.openChapterDetails(
-                        adapter.chapters.get(
-                            view.rvNewChapters.getChildAdapterPosition(v)
-                        )
-                    )
-                })
-
-                adapter.setOnLongClickListener(View.OnLongClickListener {
-                    controller.hideChapter(
-                        adapter.chapters.get(view.rvNewChapters.getChildAdapterPosition(it))
-                    )
-                    return@OnLongClickListener true
-                })
+                adapter.setOnClickListener(this)
+                adapter.setOnLongClickListener(this)
                 view.rvNewChapters.layoutManager = LinearLayoutManager(controller.context)
                 view.rvNewChapters.itemAnimator = DefaultItemAnimator()
                 view.rvNewChapters.adapter = adapter
@@ -56,5 +45,13 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
         }
 
         view.swipeRefresh.isRefreshing = false
+    }
+
+    override fun onItemClicked(chapter: NewChapter) {
+        controller.openChapterDetails(chapter)
+    }
+
+    override fun onItemLongClicked(chapter: NewChapter) {
+        controller.hideChapter(chapter)
     }
 }

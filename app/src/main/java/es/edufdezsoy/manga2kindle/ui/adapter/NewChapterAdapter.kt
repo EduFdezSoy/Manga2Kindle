@@ -20,9 +20,17 @@ import kotlin.coroutines.CoroutineContext
 class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     RecyclerView.Adapter<NewChapterAdapter.ViewHolder>(), CoroutineScope {
 
+    interface OnClickListener {
+        fun onItemClicked(chapter: NewChapter)
+    }
+
+    interface OnLongClickListener {
+        fun onItemLongClicked(chapter: NewChapter)
+    }
+
     private lateinit var context: Context
-    private var onClickListener: View.OnClickListener? = null
-    private var onLongClickListener: View.OnLongClickListener? = null
+    private var onClickListener: OnClickListener? = null
+    private var onLongClickListener: OnLongClickListener? = null
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -41,17 +49,23 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
+            val chapter = chapters[position]
             setBackgroundColor(holder, position)
             holder.lang.text = ""
 
-            holder.manga.text = chapters[position].manga_title
-            holder.chapter.text = chapters[position].chapter
-            holder.author.text = chapters[position].author
+            holder.manga.text = chapter.manga_title
+            holder.chapter.text = chapter.chapter
+            holder.author.text = chapter.author
 
             if (onClickListener != null)
-                holder.setOnClickListener(onClickListener!!)
+                holder.setOnClickListener(View.OnClickListener {
+                    onClickListener!!.onItemClicked(chapter)
+                })
             if (onLongClickListener != null)
-                holder.setOnLongClickListener(onLongClickListener!!)
+                holder.setOnLongClickListener(View.OnLongClickListener {
+                    onLongClickListener!!.onItemLongClicked(chapter)
+                    return@OnLongClickListener true
+                })
         }
     }
 
@@ -74,11 +88,11 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
         diffRes.dispatchUpdatesTo(this)
     }
 
-    fun setOnClickListener(listener: View.OnClickListener) {
+    fun setOnClickListener(listener: OnClickListener) {
         onClickListener = listener
     }
 
-    fun setOnLongClickListener(listener: View.OnLongClickListener) {
+    fun setOnLongClickListener(listener: OnLongClickListener) {
         onLongClickListener = listener
     }
 

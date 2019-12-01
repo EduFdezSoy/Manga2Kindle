@@ -1,6 +1,7 @@
 package es.edufdezsoy.manga2kindle.ui.adapter
 
 import android.content.Context
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,8 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+    private var lastClickTime: Long = 0
+
     constructor(chapters: List<NewChapter>) : this(chapters as ArrayList<NewChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,6 +62,11 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
 
             if (onClickListener != null)
                 holder.setOnClickListener(View.OnClickListener {
+                    // these three lines prevent mis-clicking
+                    if (SystemClock.elapsedRealtime() - lastClickTime < 1000)
+                        return@OnClickListener
+                    lastClickTime = SystemClock.elapsedRealtime()
+
                     onClickListener!!.onItemClicked(chapter)
                 })
             if (onLongClickListener != null)

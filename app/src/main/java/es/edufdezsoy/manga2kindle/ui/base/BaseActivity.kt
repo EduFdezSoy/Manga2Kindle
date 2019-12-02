@@ -49,7 +49,11 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         router = Conductor.attachRouter(this, controller_container, savedInstanceState)
 
         if (!router.hasRootController())
-            router.setRoot(RouterTransaction.with(NewChaptersController()))
+            router.setRoot(
+                RouterTransaction.with(NewChaptersController())
+                    .popChangeHandler(HorizontalChangeHandler())
+                    .pushChangeHandler(HorizontalChangeHandler())
+            )
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()
@@ -146,14 +150,14 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                     when (drawerItem) {
                         newChapters -> router.setRoot(RouterTransaction.with(NewChaptersController()))
                         uploadedChapters -> router.setRoot(
-                            RouterTransaction.with(
-                                UploadedChaptersController()
-                            )
+                            RouterTransaction.with(UploadedChaptersController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
                         observedFolders -> router.setRoot(
-                            RouterTransaction.with(
-                                ObservedFoldersController()
-                            )
+                            RouterTransaction.with(ObservedFoldersController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
                         settings -> router.pushController(
                             RouterTransaction.with(SettingsController())

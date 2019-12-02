@@ -14,6 +14,14 @@ interface FolderDao {
     suspend fun getAll(): List<Folder>
 
     /**
+     * Get a folder by its id
+     *
+     * @return a folder
+     */
+    @Query("SELECT * FROM folder WHERE id = :id")
+    suspend fun getFolderById(id: Int): Folder
+
+    /**
      * Get the last folder id inserted in the database
      *
      * @return the last id or null if the database is empty

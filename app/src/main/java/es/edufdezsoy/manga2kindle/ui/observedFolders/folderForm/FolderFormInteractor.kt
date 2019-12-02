@@ -7,9 +7,14 @@ import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
 class FolderFormInteractor(val controller: Controller, context: Context) {
     interface Controller {
         fun done()
+        fun setFolder(folder: Folder)
     }
 
     private val foldereRepository = FolderRepository.invoke(context)
+
+    suspend fun getFolder(folder_id: Int) {
+        foldereRepository.get(folder_id).also { controller.setFolder(it) }
+    }
 
     suspend fun addFolder(folder: Folder) {
         var i = foldereRepository.getLastIndex()

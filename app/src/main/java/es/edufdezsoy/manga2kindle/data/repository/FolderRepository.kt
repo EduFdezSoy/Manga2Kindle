@@ -29,6 +29,10 @@ class FolderRepository {
     //#endregion
     //#region public methods
 
+    suspend fun get(id: Int): Folder {
+        return database.FolderDao().getFolderById(id)
+    }
+
     suspend fun getAll(): ArrayList<Folder> {
         if (folderList.isEmpty())
             folderList.addAll(database.FolderDao().getAll())
@@ -61,8 +65,9 @@ class FolderRepository {
     }
 
     suspend fun delete(folder: Folder) {
-        folderList.remove(folder)
         database.FolderDao().delete(folder)
+        folderList.clear()
+        folderList.addAll(database.FolderDao().getAll())
     }
 
     //#endregion

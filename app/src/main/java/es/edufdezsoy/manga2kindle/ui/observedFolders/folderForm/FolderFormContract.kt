@@ -13,5 +13,7 @@ interface FolderFormContract {
     interface View {
         fun setFolder(folder: Folder)
         fun setPath(path: String)
+        fun saveFolder()
+        fun deleteFolder()
     }
 }

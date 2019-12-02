@@ -11,13 +11,6 @@ class FolderFormView(val view: View, val controller: FolderFormContract.Controll
 
     init {
         view.btnPath.setOnClickListener { controller.openFolderPicker() }
-        view.btnReturn.setOnClickListener { controller.cancelEdit() }
-        view.btnSave.setOnClickListener {
-            folder.name = view.etName.text.toString()
-            folder.path = folder.path
-            controller.saveFolder(folder)
-        }
-        view.btnDelete.visibility = View.INVISIBLE
     }
 
     override fun setFolder(folder: Folder) {
@@ -25,12 +18,6 @@ class FolderFormView(val view: View, val controller: FolderFormContract.Controll
 
         view.etName.setText(folder.name)
         view.tvPath.text = Uri.parse(folder.path).path
-
-
-        if (folder.id != 0) {
-            view.btnDelete.setOnClickListener { controller.deleteFolder(folder) }
-            view.btnDelete.visibility = View.VISIBLE
-        }
     }
 
     override fun setPath(path: String) {
@@ -41,5 +28,15 @@ class FolderFormView(val view: View, val controller: FolderFormContract.Controll
         if (view.etName.text.isNullOrBlank()) {
             view.etName.setText(readablePath.substring(readablePath.lastIndexOf('/') + 1))
         }
+    }
+
+    override fun saveFolder() {
+        folder.name = view.etName.text.toString()
+        folder.path = folder.path
+        controller.saveFolder(folder)
+    }
+
+    override fun deleteFolder() {
+        controller.deleteFolder(folder)
     }
 }

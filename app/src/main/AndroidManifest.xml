@@ -80,6 +80,7 @@
         <activity android:name=".ui.base.BaseActivity" />
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
         <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
+        <activity android:name=".ui.observedFolders.folderForm.FolderFormActivity" />
         <activity android:name=".ui.hiddenChapters.HiddenChaptersActivity" />
         <activity android:name=".ui.about.AboutActivity" />
     </application>

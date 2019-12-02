@@ -51,86 +51,95 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
             val mangaRepository = MangaRepository.invoke(context)
             val authorRepository = AuthorRepository.invoke(context)
 
-            val sharedPref = context.getSharedPreferences("manga2kindle", Context.MODE_PRIVATE)
-            val mail = sharedPref.getString("mail", null)
-                ?: throw IllegalArgumentException("mail cant be null")
+            val sharedPref = context.getSharedPreferences(
+                "es.edufdezsoy.manga2kindle_preferences",
+                Context.MODE_PRIVATE
+            )
+            val mail = sharedPref.getString("kindle_mail", null)
+            if (mail.isNullOrBlank()) {
+                chapterRepository.getEnqueuedChapters().forEach {
+                    it.status = Chapter.STATUS_LOCAL_ERROR
+                    it.reason = "There is no mail set to send it!"
+                }
+            } else
+                do {
+                    val chapterQueue = chapterRepository.getEnqueuedChapters()
+                    chapterQueue.sortBy { it.enqueue_date }
 
-            do {
-                val chapterQueue = chapterRepository.getEnqueuedChapters()
-                chapterQueue.sortBy { it.enqueue_date }
-
-                chapterQueue.forEach {
-                    // start processing the chapter!
-                    it.status = Chapter.STATUS_PROCESSING
-                    chapterRepository.update(it)
-
-                    var manga = mangaRepository.getMangaById(it.manga_id)
-                    manga = UploadChapterUtils.syncManga(manga, context)
-
-                    // manga exists now and is in sync with the server and all that crap.
-                    // check other chapter stuff
-                    if (it.lang_id == null) {
-                        // TODO("launch an exception") // for now it will be EN always
-                        it.lang_id = 1 // 1 EN, 2 ES == https://manga2kindle.com/languages
-                    }
-
-                    if (it.file_path == null) {
-                        throw IllegalArgumentException("There is no path to this chapter, probably it was deleted from the disk")
-                    }
-
-                    // lets compress the chapter files
-                    val zipName = UploadChapterUtils.cleanTextContent(manga.title) + " Ch." +
-                            UploadChapterUtils.trimTrailingZero(it.chapter.toString()) + ".zip"
-                    UploadChapterUtils.zip(Uri.parse(it.file_path), zipName, context)
-
-                    // get the checksum (md5)
-                    val chapFile = File(context.filesDir, zipName)
-                    try {
-                        it.checksum = UploadChapterUtils.calculateMD5(FileInputStream(chapFile))
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
-                        it.status = Chapter.STATUS_LOCAL_ERROR
-                        it.reason = "Looks like this file is too big!"
+                    chapterQueue.forEach {
+                        // start processing the chapter!
+                        it.status = Chapter.STATUS_PROCESSING
                         chapterRepository.update(it)
-                    }
 
-                    // prepare other fields
-                    var title = it.title
-                    if (title == null)
-                        title = ""
+                        var manga = mangaRepository.getMangaById(it.manga_id)
+                        manga = UploadChapterUtils.syncManga(manga, context)
 
-                    // set chapter to uploading
-                    it.status = Chapter.STATUS_UPLOADING
-                    it.upload_date = Calendar.getInstance().time
-                    chapterRepository.update(it)
+                        // manga exists now and is in sync with the server and all that crap.
+                        // check other chapter stuff
+                        if (it.lang_id == null) {
+                            // TODO("launch an exception") // for now it will be EN always
+                            it.lang_id = 1 // 1 EN, 2 ES == https://manga2kindle.com/languages
+                        }
 
-                    val fileBody = ProgressRequestBody(chapFile, this@UploadChapterIntentService)
-                    val part = MultipartBody.Part.createFormData("file", chapFile.name, fileBody)
+                        if (it.file_path == null) {
+                            throw IllegalArgumentException("There is no path to this chapter, probably it was deleted from the disk")
+                        }
 
-                    chapterRepository.sendChapter(
-                        manga.id!!,
-                        it.lang_id!!,
-                        title,
-                        it.chapter,
-                        it.volume,
-                        it.checksum!!,
-                        mail,
-                        part
-                    ).also { chapSrv ->
-                        if (chapSrv != null) {
-                            it.id = chapSrv.id
-                            it.status = Chapter.STATUS_UPLOADED
-                            chapterRepository.update(it)
-                        } else {
+                        // lets compress the chapter files
+                        val zipName = UploadChapterUtils.cleanTextContent(manga.title) + " Ch." +
+                                UploadChapterUtils.trimTrailingZero(it.chapter.toString()) + ".zip"
+                        UploadChapterUtils.zip(Uri.parse(it.file_path), zipName, context)
+
+                        // get the checksum (md5)
+                        val chapFile = File(context.filesDir, zipName)
+                        try {
+                            it.checksum = UploadChapterUtils.calculateMD5(FileInputStream(chapFile))
+                        } catch (e: FileNotFoundException) {
+                            e.printStackTrace()
                             it.status = Chapter.STATUS_LOCAL_ERROR
-                            it.reason = "Upload failed"
+                            it.reason = "Looks like this file is too big!"
                             chapterRepository.update(it)
                         }
-                        // remove the chapter
-                        chapFile.delete()
+
+                        // prepare other fields
+                        var title = it.title
+                        if (title == null)
+                            title = ""
+
+                        // set chapter to uploading
+                        it.status = Chapter.STATUS_UPLOADING
+                        it.upload_date = Calendar.getInstance().time
+                        chapterRepository.update(it)
+
+                        val fileBody =
+                            ProgressRequestBody(chapFile, this@UploadChapterIntentService)
+                        val part =
+                            MultipartBody.Part.createFormData("file", chapFile.name, fileBody)
+
+                        chapterRepository.sendChapter(
+                            manga.id!!,
+                            it.lang_id!!,
+                            title,
+                            it.chapter,
+                            it.volume,
+                            it.checksum!!,
+                            mail,
+                            part
+                        ).also { chapSrv ->
+                            if (chapSrv != null) {
+                                it.id = chapSrv.id
+                                it.status = Chapter.STATUS_UPLOADED
+                                chapterRepository.update(it)
+                            } else {
+                                it.status = Chapter.STATUS_LOCAL_ERROR
+                                it.reason = "Upload failed"
+                                chapterRepository.update(it)
+                            }
+                            // remove the chapter
+                            chapFile.delete()
+                        }
                     }
-                }
-            } while (chapterQueue.isNotEmpty())
+                } while (chapterQueue.isNotEmpty())
 
             // Launch broadcast
             sendBroadcast(broadcastIntent)

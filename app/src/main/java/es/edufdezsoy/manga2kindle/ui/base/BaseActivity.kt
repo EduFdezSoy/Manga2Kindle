@@ -2,8 +2,11 @@ package es.edufdezsoy.manga2kindle.ui.base
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -24,6 +27,7 @@ import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
 import es.edufdezsoy.manga2kindle.ui.settings.SettingsController
 import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersController
 import kotlinx.android.synthetic.main.activity_base.*
+
 
 open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
@@ -48,6 +52,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()
+        checkEmail()
     }
 
     override fun onBackPressed() {
@@ -112,35 +117,11 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         val observedFolders = PrimaryDrawerItem().withIdentifier(3).withName("Observed Folders")
         val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
 
-        // Create the AccountHeader
-        val headerResult = AccountHeaderBuilder()
-            .withActivity(this)
-            .withHeaderBackground(R.drawable.ic_dotted)
-            .addProfiles(
-                ProfileDrawerItem()
-                    .withName("Manga2kindle")
-                    .withEmail(interactor.getMail(this))
-                    .withIcon(
-                    getDrawable(R.mipmap.ic_launcher)
-                )
-            )
-            .withSelectionListEnabledForSingleProfile(false)
-            .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {
-                override fun onProfileChanged(
-                    view: View?,
-                    profile: IProfile<*>,
-                    current: Boolean
-                ): Boolean {
-                    return false
-                }
-            })
-            .build()
-
         //create the drawer and remember the `Drawer` result object
         drawer = DrawerBuilder()
             .withActivity(this)
             .withToolbar(baseToolbar)
-            .withAccountHeader(headerResult)
+            .withAccountHeader(mountHeader())
             .addDrawerItems(
                 newChapters,
                 uploadedChapters,
@@ -181,6 +162,68 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                 }
             })
             .build()
+    }
+
+    private fun mountHeader(): AccountHeader {
+        // Create the AccountHeader (and return it)
+        return AccountHeaderBuilder()
+            .withActivity(this)
+            .withHeaderBackground(R.drawable.ic_dotted)
+            .addProfiles(
+                ProfileDrawerItem()
+                    .withName("Manga2kindle")
+                    .withEmail(interactor.getMail(this))
+                    .withIcon(
+                        getDrawable(R.mipmap.ic_launcher)
+                    )
+            )
+            .withSelectionListEnabledForSingleProfile(false)
+            .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {
+                override fun onProfileChanged(
+                    view: View?,
+                    profile: IProfile<*>,
+                    current: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+            .build()
+    }
+
+    private fun checkEmail() {
+        var mail = interactor.getMail(this)
+
+        if (mail.isBlank()) {
+            // prompt a modal to retrieve the email
+
+            // custom view for the modal
+            val etMail = EditText(this)
+            etMail.hint = "my_device@kindle.com"
+            val linearLayout = LinearLayout(applicationContext)
+            linearLayout.orientation = LinearLayout.VERTICAL
+            linearLayout.addView(etMail)
+
+            val dialog = SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Add your Kindle email")
+            dialog.setCancelable(false)
+            dialog.setCustomView(linearLayout)
+            dialog.setConfirmClickListener {
+                mail = etMail.text.toString()
+
+                if (mail.isBlank())
+                    etMail.error = "Please write an email!"
+                else {
+                    // set mail in the preferences
+                    interactor.setMail(this, mail)
+                    // rewrite drawer to set mail
+                    drawer.setHeader(mountHeader().view, true)
+
+                    // close dialog
+                    dialog.cancel()
+                }
+            }
+            dialog.show()
+        }
     }
 
     //#endregion

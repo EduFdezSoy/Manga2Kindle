@@ -1,12 +1,10 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
@@ -23,7 +21,6 @@ class ChapterFormInteractor(val controller: Controller, context: Context) {
         fun setManga(manga: Manga)
         fun setAuthor(author: Author)
         fun setAuthors(authors: List<Author>)
-        fun setMail(mail: String?)
         fun done()
     }
 
@@ -78,17 +75,7 @@ class ChapterFormInteractor(val controller: Controller, context: Context) {
         }
     }
 
-    suspend fun getMail(activity: Activity) {
-        M2kSharedPref.invoke(activity).getString("mail", null).also {
-            controller.setMail(it)
-        }
-    }
-
-    suspend fun saveMail(activity: Activity, mail: String) {
-        M2kSharedPref.invoke(activity).edit().putString("mail", mail).apply()
-    }
-
-    suspend fun sendChapter(chapter_id: Int, mail: String, context: Context) {
+    suspend fun sendChapter(chapter_id: Int, context: Context) {
         val chap = chapterRepository.getChapter(chapter_id)
         chap.enqueue_date = Calendar.getInstance().time
         chap.status = Chapter.STATUS_ENQUEUE

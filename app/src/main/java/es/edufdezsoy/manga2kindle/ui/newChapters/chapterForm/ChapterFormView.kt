@@ -16,7 +16,6 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     ChapterFormContract.View {
     private lateinit var chapter: Chapter
     private lateinit var manga: Manga
-    private lateinit var mail: String
     private lateinit var author: Author
     private lateinit var authors: List<Author>
     private var authorArray = arrayOf("")
@@ -28,8 +27,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         view.btnUpload.setOnClickListener {
             disableAllButtons()
             saveData()
-            mail = view.tietEmail.text.toString()
-            controller.sendChapter(chapter, mail)
+            controller.sendChapter(chapter)
         }
 
         //#endregion
@@ -107,8 +105,6 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     //#region override functions
 
     override fun saveData() {
-        mail = view.tietEmail.text.toString()
-
         try {
             chapter.volume = view.etVolume.text.toString().toInt()
         } catch (e: Exception) {
@@ -124,9 +120,9 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             newManga.synchronized = manga.synchronized
             newManga.identifier = manga.identifier
 
-            controller.saveData(chapter, newManga, mail)
+            controller.saveData(chapter, newManga)
         } else {
-            controller.saveData(chapter, manga, mail)
+            controller.saveData(chapter, manga)
         }
     }
 
@@ -161,11 +157,6 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         this.authors = authors
         authorArray = setAuthorTextList(authors)
         notifyAuthorAdapter()
-    }
-
-    override fun setMail(mail: String) {
-        this.mail = mail
-        view.tietEmail.setText(mail)
     }
 
     //#endregion

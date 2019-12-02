@@ -64,8 +64,6 @@ class ChapterFormController : Controller, CoroutineScope,
                 interactor.getAuthor(author_id)
             else
                 interactor.getAuthors()
-
-            interactor.getMail(activity!!)
         }
 
         return v
@@ -99,43 +97,30 @@ class ChapterFormController : Controller, CoroutineScope,
     /**
      * Called from the view
      */
-    override fun saveData(chapter: Chapter, manga: Manga, mail: String?) {
-        val done = arrayOf(false, false, false)
+    override fun saveData(chapter: Chapter, manga: Manga) {
+        val done = arrayOf(false, false)
         launch {
             interactor.saveChapter(chapter).also {
                 done[0] = true
-                if (done[0] && done[1] && done[2])
+                if (done[0] && done[1])
                     doneSaving()
             }
         }
         launch {
             interactor.saveManga(manga).also {
                 done[1] = true
-                if (done[0] && done[1] && done[2])
+                if (done[0] && done[1])
                     doneSaving()
             }
-        }
-        if (mail != null)
-            launch {
-                interactor.saveMail(activity!!, mail).also {
-                    done[2] = true
-                    if (done[0] && done[1] && done[2])
-                        doneSaving()
-                }
-            }
-        else {
-            done[2] = true
-            if (done[0] && done[1] && done[2])
-                doneSaving()
         }
     }
 
     /**
      * Called from the view
      */
-    override fun sendChapter(chapter: Chapter, mail: String) {
+    override fun sendChapter(chapter: Chapter) {
         launch {
-            interactor.sendChapter(chapter.identifier, mail, context)
+            interactor.sendChapter(chapter.identifier, context)
         }
     }
 
@@ -192,14 +177,6 @@ class ChapterFormController : Controller, CoroutineScope,
      */
     override fun setAuthors(authors: List<Author>) {
         view.setAuthors(authors)
-    }
-
-    /**
-     * Called from the interactor
-     */
-    override fun setMail(mail: String?) {
-        if (mail != null)
-            view.setMail(mail)
     }
 
     /**

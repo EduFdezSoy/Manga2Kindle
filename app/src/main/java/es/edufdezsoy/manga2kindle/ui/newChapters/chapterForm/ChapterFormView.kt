@@ -3,11 +3,14 @@ package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
+
 
 class ChapterFormView(val view: View, val controller: ChapterFormContract.Controller) :
     ChapterFormContract.View {
@@ -146,6 +149,12 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
     override fun setAuthor(author: Author) {
         view.actvAuthor.inputType = InputType.TYPE_NULL
         view.actvAuthor.setText(author.toString())
+
+        // disable the button
+        view.btnAddAuthor.isEnabled = false
+        // change the color
+        view.btnAddAuthor.background.alpha = 50
+        view.btnAddAuthor.setTextColor(ContextCompat.getColor(view.context, R.color.btnDisabled))
     }
 
     override fun setAuthors(authors: List<Author>) {

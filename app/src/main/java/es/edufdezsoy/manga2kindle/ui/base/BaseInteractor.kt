@@ -37,7 +37,10 @@ class BaseInteractor(val controller: Controller) {
                 broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
                 context.sendBroadcast(broadcastIntent)
 
-                handler.postDelayed({ scanMangas(context) }, 1000 * 60) // every minute after finished
+                handler.postDelayed(
+                    { scanMangas(context) },
+                    1000 * 60
+                ) // every minute after finished
             }
             context.registerReceiver(scanMangaReceiver, filter)
         }
@@ -55,7 +58,10 @@ class BaseInteractor(val controller: Controller) {
             uploadChapterReceiver = BroadcastReceiver(BroadcastReceiver.ACTION_UPLOADED_CHAPTER) {
                 uploading.set(false)
 
-                handler.postDelayed({ uploadChapter(context) }, 1000 * 60) // every minute after finished
+                handler.postDelayed(
+                    { uploadChapter(context) },
+                    1000 * 60
+                ) // every minute after finished
             }
             context.registerReceiver(uploadChapterReceiver, filter)
         }
@@ -73,5 +79,10 @@ class BaseInteractor(val controller: Controller) {
 
     fun isScanning(): Boolean {
         return scanning.get()
+    }
+
+    fun getMail(context: Context): String {
+        return context.getSharedPreferences("es.edufdezsoy.manga2kindle_preferences", Context.MODE_PRIVATE)
+            .getString("kindle_mail", "")!!
     }
 }

@@ -119,7 +119,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
             .addProfiles(
                 ProfileDrawerItem()
                     .withName("Manga2kindle")
-                    .withEmail("hello@manga2kindle.com")
+                    .withEmail(interactor.getMail(this))
                     .withIcon(
                     getDrawable(R.mipmap.ic_launcher)
                 )

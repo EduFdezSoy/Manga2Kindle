@@ -12,6 +12,7 @@ import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.ui.about.AboutActivity
+import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.hiddenChapters.HiddenChaptersActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,6 +32,11 @@ class SettingsController : PreferenceController() {
         addPreferencesFromResource(R.xml.settings)
 
         setClickListeners()
+    }
+
+    override fun handleBack(): Boolean {
+        (activity as BaseActivity).getMenu()!!.setSelection(1)
+        return true
     }
 
     private fun setClickListeners() {

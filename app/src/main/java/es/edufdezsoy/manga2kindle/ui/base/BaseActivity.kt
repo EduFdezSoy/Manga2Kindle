@@ -10,6 +10,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -106,6 +107,13 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         snackbar.show()
     }
 
+    fun getMenu(): Drawer? {
+        if (::drawer.isInitialized)
+            return drawer
+        else
+            return null
+    }
+
     //#endregion
     //#region private functions
 
@@ -147,10 +155,10 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                                 ObservedFoldersController()
                             )
                         )
-                        settings -> router.setRoot(
-                            RouterTransaction.with(
-                                SettingsController()
-                            )
+                        settings -> router.pushController(
+                            RouterTransaction.with(SettingsController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
                         else -> Toast.makeText(
                             this@BaseActivity,

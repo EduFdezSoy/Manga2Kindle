@@ -12,6 +12,7 @@ import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.network.ProgressRequestBody
 import es.edufdezsoy.manga2kindle.service.UploadChapterUtils
+import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,6 +27,7 @@ import kotlin.coroutines.CoroutineContext
 class UploadChapterIntentService : JobIntentService(), CoroutineScope,
     ProgressRequestBody.UploadCallbacks {
     private val TAG = M2kApplication.TAG + "_UpChapISrv"
+    private val broadcastIntent = Intent()
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
@@ -34,6 +36,11 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, UploadChapterIntentService::class.java, 4, intent)
         }
+    }
+
+    init {
+        broadcastIntent.action = BroadcastReceiver.ACTION_UPLOADED_CHAPTER
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
     }
 
     override fun onHandleWork(intent: Intent) {
@@ -124,6 +131,9 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                     }
                 }
             } while (chapterQueue.isNotEmpty())
+
+            // Launch broadcast
+            sendBroadcast(broadcastIntent)
         }
     }
 

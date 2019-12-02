@@ -71,6 +71,10 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
         return interactor.isScanning()
     }
 
+    fun uploadChapters() {
+        interactor.uploadChapter(this)
+    }
+
     fun showSnackbar(msg: String) {
         showSnackbar(msg, null, null, null)
     }

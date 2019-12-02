@@ -40,6 +40,7 @@ class NewChaptersController : Controller(), CoroutineScope, NewChaptersContract.
         context = v.context
         view = NewChaptersView(view = v, controller = this)
         (activity as BaseActivity).scanMangas()
+        (activity as BaseActivity).uploadChapters()
 
         return v
     }

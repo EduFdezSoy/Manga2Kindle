@@ -39,6 +39,10 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         view.actvAuthor.doOnTextChanged { text, start, count, after ->
             controller.searchAuthors(text.toString())
         }
+
+        // TODO: mangas cant be edited by now
+        // this disables the manga text field
+        view.tietManga.inputType = InputType.TYPE_NULL
     }
 
     //#region private functions

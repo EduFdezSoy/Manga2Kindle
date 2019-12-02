@@ -51,9 +51,12 @@ class MangaRepository {
     }
 
     suspend fun getMangaById(identifier: Int): Manga {
-        mangaList.forEach {
-            if (it.identifier == identifier)
-                return it
+        with(mangaList.iterator()) {
+            forEach {
+                if (it.identifier == identifier) {
+                    return@getMangaById it
+                }
+            }
         }
 
         val manga = database.MangaDao().getMangaById(identifier)

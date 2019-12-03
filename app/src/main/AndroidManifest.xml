@@ -17,9 +17,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <meta-data
-                android:name="com.google.android.actions"
-                android:resource="@xml/settings" />
+<!--        At the moment this is useless. Google Play will complain -->
+<!--        <meta-data-->
+<!--                android:name="com.google.android.actions"-->
+<!--                android:resource="@xml/settings" />-->
 
         <service
                 android:name=".service.service.ScanMangaJobService"

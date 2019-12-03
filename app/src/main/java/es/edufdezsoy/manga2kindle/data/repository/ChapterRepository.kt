@@ -145,8 +145,10 @@ class ChapterRepository {
         if (chapterList.isEmpty())
             chapterList.addAll(database.ChapterDao().getAll())
 
+        val id = database.ChapterDao().insert(chapter)
+        chapter.identifier = id.toInt()
+
         chapterList.add(chapter)
-        database.ChapterDao().insert(chapter)
     }
 
     suspend fun update(chapter: Chapter) {

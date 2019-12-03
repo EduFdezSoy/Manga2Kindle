@@ -66,9 +66,11 @@ interface ChapterDao {
 
     /**
      * Insert a chapter
+     *
+     * @return the id of the inserted chapter
      */
     @Insert
-    suspend fun insert(chapter: Chapter)
+    suspend fun insert(chapter: Chapter): Long
 
     /**
      * Update a chapter

@@ -7,6 +7,12 @@
                 app:singleLine="true"
                 app:summary="Email where the mangas will be sent to"
                 app:title="Kindle email" />
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="delete_chapters"
+                app:summaryOff="Chapters won't be deleted"
+                app:summaryOn="Chapters will be deleted"
+                app:title="Delete chapters after upload" />
         <Preference
                 app:key="hiddenChapters"
                 app:summary="Open a list with all the hidden chapters"

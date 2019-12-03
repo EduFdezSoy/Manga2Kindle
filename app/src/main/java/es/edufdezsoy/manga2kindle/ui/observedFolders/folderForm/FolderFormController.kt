@@ -125,6 +125,19 @@ class FolderFormController : Controller, CoroutineScope,
             folder.path = data.data?.toString()!!
             view.setPath(folder.path)
 
+            // persistable and prefix (to read contents)
+            activity!!.grantUriPermission(
+                activity!!.packageName,
+                data.data,
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+            )
+            activity!!.grantUriPermission(
+                activity!!.packageName,
+                data.data,
+                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+            )
+
+            // read permissions
             activity!!.grantUriPermission(
                 activity!!.packageName,
                 data.data,
@@ -133,6 +146,17 @@ class FolderFormController : Controller, CoroutineScope,
             activity!!.contentResolver.takePersistableUriPermission(
                 data.data!!,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
+            // write permissions
+            activity!!.grantUriPermission(
+                activity!!.packageName,
+                data.data,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            activity!!.contentResolver.takePersistableUriPermission(
+                data.data!!,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
     }

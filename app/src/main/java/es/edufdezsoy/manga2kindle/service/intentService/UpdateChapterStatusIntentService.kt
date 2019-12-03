@@ -2,12 +2,15 @@ package es.edufdezsoy.manga2kindle.service.intentService
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.core.app.JobIntentService
+import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
+import es.edufdezsoy.manga2kindle.service.UploadChapterUtils
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +42,10 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     override fun onHandleWork(workIntent: Intent) {
         Log.d(TAG, "Service UpdateChapterStatusIntentService started.")
         job = Job()
+        val deleteAfterUpload = getSharedPreferences(
+            "es.edufdezsoy.manga2kindle_preferences",
+            Context.MODE_PRIVATE
+        ).getBoolean("delete_chapters", false)
         val apiService = ApiService.apiService
         // TODO: move all apiService to the repositories
 
@@ -60,6 +67,28 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
                                         TAG,
                                         "Manga." + it[0].manga_id + " Ch." + it[0].chapter + " Title: " + it[0].title
                                     )
+
+                                    // delete the files if the option is active and the chapter was correct
+                                    if (deleteAfterUpload) {
+                                        if (chapter.delivered && !chapter.error) {
+                                            val uri = Uri.parse(chapter.file_path)
+                                            val docfile = DocumentFile.fromTreeUri(
+                                                this@UpdateChapterStatusIntentService,
+                                                uri
+                                            )
+                                            if (docfile != null && docfile.isDirectory && docfile.canRead()) {
+                                                // WORKAROUND
+                                                val rightDockFile =
+                                                    UploadChapterUtils.getTheRightDocFile(
+                                                        docfile,
+                                                        uri
+                                                    )
+                                                val deleted = rightDockFile?.delete()
+                                                if (deleted != null && deleted)
+                                                    chapter.file_path = null
+                                            }
+                                        }
+                                    }
                                 } else {
                                     if (M2kApplication.debug)
                                         Log.w(TAG, "CHAPTER STATUS EMPTY")

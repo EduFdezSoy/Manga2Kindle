@@ -149,8 +149,8 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // disable the button
         view.btnAddAuthor.isEnabled = false
         // change the color
-        view.btnAddAuthor.background.alpha = 50
-        view.btnAddAuthor.setTextColor(ContextCompat.getColor(view.context, R.color.btnDisabled))
+        view.btnAddAuthor.background.setTint(ContextCompat.getColor(view.context, R.color.btnNormalDisabled))
+        // view.btnAddAuthor.setTextColor(ContextCompat.getColor(view.context, R.color.btnDisabled))
     }
 
     override fun setAuthors(authors: List<Author>) {

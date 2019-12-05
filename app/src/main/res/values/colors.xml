@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#263238</color>
-    <color name="colorPrimaryDark">#000a12</color>
-    <color name="colorAccent">#4f5b62</color>
+    <color name="colorPrimary">#382F32</color>
+    <color name="colorPrimaryDark">#221C1D</color>
+    <color name="colorAccent">#F1396D</color>
+    <color name="colorAccentDark">#D63260</color>
+    <color name="colorAccentLight">#FFEAF2</color>
+    <color name="colorAccentExtraLight">#80FFEAF2</color>
 
     <!-- STATUSES -->
     <color name="colorSuccess">#4CAF50</color>
@@ -12,15 +15,24 @@
     <color name="colorCompressing">#69F0AE</color>
     <color name="colorUploading">#40C4FF</color>
 
-    <color name="btnUpload">#2196F3</color>
+    <color name="btnText">#FFF</color>
+    <color name="btnUpload">@color/colorAccent</color>
+    <color name="btnUploadPressed">@color/colorAccentDark</color>
+    <color name="btnUploadDisabled">@color/colorAccentLight</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="btnNormal">#FAACC4</color>
+    <color name="btnNormalPressed">#DF95AC</color>
+    <color name="btnNormalDisabled">@color/colorAccentLight</color>
     <color name="btnDisabled">#80263238</color>
 
     <!-- LIST BACKGROUNDS -->
-    <color name="listBG_1">#00000000</color>
-    <color name="listBG_2">#05000000</color>
+    <color name="listBG_1">@color/transparent</color>
+    <color name="listBG_2">@color/colorAccentExtraLight</color>
 
     <!-- TEXT COLOR -->
     <color name="textImportant">#404040</color>
     <color name="textRegular">#808080</color>
+
+    <!-- MATERIAL DRAWER -->
+    <color name="material_drawer_selected">@color/colorAccentLight</color>
 </resources>

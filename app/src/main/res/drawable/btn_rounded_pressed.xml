@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="rectangle">
-    <solid android:color="@color/transparent" />
-    <stroke
-            android:width="2dp"
-            android:color="@color/btnUpload" />
+    <solid android:color="@color/btnNormalPressed" />
     <corners android:radius="50dp" />
 </shape>

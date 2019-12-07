@@ -5,7 +5,6 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Folder
@@ -29,7 +28,7 @@ class FolderAdapter(var folders: List<Folder>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        setBackgroundColor(holder, position)
+        AdapterUtils.setBackgroundColor(holder, position, context)
 
         holder.name?.text = folders[position].name
         holder.path?.text = Uri.parse(folders[position].path).path
@@ -42,13 +41,6 @@ class FolderAdapter(var folders: List<Folder>) :
 
     override fun getItemCount(): Int {
         return folders.size
-    }
-
-    private fun setBackgroundColor(holder: ViewHolder, position: Int) {
-        if (position % 2 == 1)
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_1))
-        else
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_2))
     }
 
     fun addAll(folders: List<Folder>) {

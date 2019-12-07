@@ -41,14 +41,18 @@ class HiddenChapterAdapter(var chapters: ArrayList<HiddenChapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
-            setBackgroundColor(holder, position)
+            AdapterUtils.setBackgroundColor(holder, position, context)
 
             holder.manga.text = chapters[position].manga_title
             holder.chapter.text = chapters[position].chapter
-            holder.author.text = chapters[position].author
             holder.lang.text = ""
             holder.status.text = chapters[position].status
             holder.reason.text = chapters[position].reason
+
+            if (chapters[position].author.isNotBlank())
+                holder.author.text = chapters[position].author
+            else
+                holder.author.text = AdapterUtils.randAuthorFace()
 
             if (chapters[position].status_color != null)
                 holder.status.setTextColor(
@@ -68,13 +72,6 @@ class HiddenChapterAdapter(var chapters: ArrayList<HiddenChapter>) :
 
     override fun getItemCount(): Int {
         return chapters.size
-    }
-
-    private fun setBackgroundColor(holder: ViewHolder, position: Int) {
-        if (position % 2 == 1)
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_1))
-        else
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.listBG_2))
     }
 
     fun setData(chapters: List<HiddenChapter>) {

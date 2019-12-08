@@ -44,6 +44,10 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // TODO: mangas cant be edited by now
         // this disables the manga text field
         view.tietManga.inputType = InputType.TYPE_NULL
+
+        // we are supposing chapters are always correct, we are not allowing edits
+        view.etChapter.inputType = InputType.TYPE_NULL
+        view.etChapter.background = null
     }
 
     //#region private functions
@@ -140,12 +144,15 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         this.manga = manga
 
         view.tietManga.setText(manga.title)
+        view.tietManga.background = null
     }
 
     override fun setAuthor(author: Author) {
         view.actvAuthor.inputType = InputType.TYPE_NULL
         view.actvAuthor.setText(author.toString())
 
+        // remove editText line
+        view.actvAuthor.background = null
         // disable the button
         view.btnAddAuthor.isEnabled = false
         // change the color

@@ -124,10 +124,10 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
     private fun buildDrawer() {
         DrawerBuilder().withActivity(this).build()
 
-        val newChapters = PrimaryDrawerItem().withIdentifier(1).withName("New Chapters")
-        val uploadedChapters = PrimaryDrawerItem().withIdentifier(2).withName("Uploaded Chapters")
-        val observedFolders = PrimaryDrawerItem().withIdentifier(3).withName("Observed Folders")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
+        val newChapters = PrimaryDrawerItem().withIdentifier(1).withName(getString(R.string.drawer_newChapters))
+        val uploadedChapters = PrimaryDrawerItem().withIdentifier(2).withName(getString(R.string.drawer_uploadedChapters))
+        val observedFolders = PrimaryDrawerItem().withIdentifier(3).withName(getString(R.string.drawer_observedFolders))
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName(getString(R.string.drawer_settings))
 
         //create the drawer and remember the `Drawer` result object
         drawer = DrawerBuilder()
@@ -166,7 +166,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                         )
                         else -> Toast.makeText(
                             this@BaseActivity,
-                            "henlo! :D",
+                            getString(R.string.drawer_cuteHello),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -183,7 +183,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
             .withHeaderBackground(R.drawable.ic_dotted)
             .addProfiles(
                 ProfileDrawerItem()
-                    .withName("Manga2kindle")
+                    .withName(getString(R.string.drawer_header_tittle))
                     .withEmail(interactor.getMail(this))
                     .withIcon(
                         getDrawable(R.mipmap.ic_launcher)
@@ -210,20 +210,20 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
             // custom view for the modal
             val etMail = EditText(this)
-            etMail.hint = "my_device@kindle.com"
+            etMail.hint = getString(R.string.tuto_email_hint)
             val linearLayout = LinearLayout(applicationContext)
             linearLayout.orientation = LinearLayout.VERTICAL
             linearLayout.addView(etMail)
 
             val dialog = SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText("Add your Kindle email")
+                .setTitleText(getString(R.string.tuto_email_title))
             dialog.setCancelable(false)
             dialog.setCustomView(linearLayout)
             dialog.setConfirmClickListener {
                 mail = etMail.text.toString()
 
                 if (mail.isBlank())
-                    etMail.error = "Please write an email!"
+                    etMail.error = getString(R.string.tuto_email_error)
                 else {
                     // set mail in the preferences
                     interactor.setMail(this, mail)

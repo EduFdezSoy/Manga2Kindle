@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/view_folder_form_name"
+            android:text="@string/folder_form_name"
             app:layout_constraintBottom_toBottomOf="@+id/etName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etName" />
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/view_folder_form_path"
+            android:text="@string/folder_form_path"
             app:layout_constraintBottom_toBottomOf="@+id/tvPath"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvPath" />
@@ -55,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="@string/view_folder_form_no_path_selected"
+            android:text="@string/folder_form_no_path_selected"
             app:layout_constraintBottom_toBottomOf="@+id/btnPath"
             app:layout_constraintEnd_toStartOf="@+id/btnPath"
             app:layout_constraintStart_toStartOf="@+id/etName"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/btn_rounded"
-            android:text="@string/button_search"
+            android:text="@string/action_search"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="@+id/etName"
             app:layout_constraintTop_toBottomOf="@+id/etName" />

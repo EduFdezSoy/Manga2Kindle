@@ -70,10 +70,10 @@ class SettingsController : PreferenceController() {
     private fun resetChapters() {
         val dialog = SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
         dialog
-            .setTitleText("Are you sure?")
-            .setContentText("This will delete all the chapters not uploaded")
-            .setCancelButton("Cancel", null)
-            .setConfirmButton("OK") {
+            .setTitleText(activity!!.getString(R.string.reset_chapters_confirm_title))
+            .setContentText(activity!!.getString(R.string.reset_chapters_confirm_msg))
+            .setCancelButton(activity!!.getString(R.string.reset_chapters_negative_btn), null)
+            .setConfirmButton(activity!!.getString(R.string.reset_chapters_positive_btn)) {
                 GlobalScope.launch(Dispatchers.IO) {
                     ChapterRepository.invoke(activity!!).clearNotSended().also {
                         if (M2kApplication.debug)
@@ -84,9 +84,9 @@ class SettingsController : PreferenceController() {
                     }
                 }.also {
                     dialog
-                        .setTitleText("Database cleared!")
-                        .setContentText("All not uploaded chapters deleted")
-                        .setConfirmText("OK")
+                        .setTitleText(activity!!.getString(R.string.reset_chapters_done_title))
+                        .setContentText(activity!!.getString(R.string.reset_chapters_done_msg))
+                        .setConfirmText(activity!!.getString(R.string.reset_chapters_done_btn))
                         .setConfirmClickListener(null)
                         .showCancelButton(false)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)

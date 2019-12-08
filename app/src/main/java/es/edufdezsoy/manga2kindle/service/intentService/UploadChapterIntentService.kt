@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
@@ -59,7 +60,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
             if (mail.isNullOrBlank()) {
                 chapterRepository.getEnqueuedChapters().forEach {
                     it.status = Chapter.STATUS_LOCAL_ERROR
-                    it.reason = "There is no mail set to send it!"
+                    it.reason = getString(R.string.error_no_mail_set)
                 }
             } else
                 do {
@@ -97,7 +98,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                         } catch (e: FileNotFoundException) {
                             e.printStackTrace()
                             it.status = Chapter.STATUS_LOCAL_ERROR
-                            it.reason = "Looks like this file is too big!"
+                            it.reason = getString(R.string.error_file_too_big)
                             chapterRepository.update(it)
                         }
 
@@ -132,7 +133,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                                 chapterRepository.update(it)
                             } else {
                                 it.status = Chapter.STATUS_LOCAL_ERROR
-                                it.reason = "Upload failed"
+                                it.reason = getString(R.string.error_upload_failed)
                                 chapterRepository.update(it)
                             }
                             // remove the chapter

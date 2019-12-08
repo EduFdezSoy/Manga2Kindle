@@ -17,7 +17,7 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
 
     init {
         view.rvNewChapters.layoutManager = LinearLayoutManager(controller.activity)
-        view.tvViewTitle.text = view.context.getString(R.string.new_chapters_view_title)
+        view.tvViewTitle.text = view.context.getString(R.string.action_loading)
 
         controller.loadChapters()
 
@@ -41,7 +41,7 @@ class NewChaptersView(val view: View, val controller: NewChaptersController) :
                 view.flBackground.visibility = View.GONE
             }
         } else {
-            view.tvViewTitle.text = "Looks like this list is empty!"
+            view.tvViewTitle.text = view.context.getString(R.string.new_chapters_empty_list)
         }
 
         view.swipeRefresh.isRefreshing = false

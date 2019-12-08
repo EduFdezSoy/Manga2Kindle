@@ -38,7 +38,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/view_uploaded_chapters_title" />
+                    android:text="@string/uploaded_chapters_title" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

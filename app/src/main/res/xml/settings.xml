@@ -5,35 +5,35 @@
         <EditTextPreference
                 app:key="kindle_mail"
                 app:singleLine="true"
-                app:summary="Email where the mangas will be sent to"
-                app:title="Kindle email" />
+                app:summary="@string/preference_kindle_mail_description"
+                app:title="@string/preference_kindle_mail_title" />
         <SwitchPreference
                 app:defaultValue="false"
                 app:key="delete_chapters"
-                app:summaryOff="Chapters won't be deleted"
-                app:summaryOn="Chapters will be deleted"
-                app:title="Delete chapters after upload" />
+                app:summaryOff="@string/preference_delete_chapters_description_negative"
+                app:summaryOn="@string/preference_delete_chapters_description_positive"
+                app:title="@string/preference_delete_chapters_title" />
         <Preference
                 app:key="hiddenChapters"
-                app:summary="Open a list with all the hidden chapters"
-                app:title="Hidden List" />
+                app:summary="@string/preference_hiddenChapters_description"
+                app:title="@string/preference_hiddenChapters_title" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Dev Settings">
         <SwitchPreference
                 app:defaultValue="false"
                 app:key="switchDebug"
-                app:summary="Can make the app slower"
-                app:title="Enable Debug" />
+                app:summary="@string/preference_switchDebug_description"
+                app:title="@string/preference_switchDebug_title" />
         <Preference
                 app:key="resetChapters"
-                app:summary="Only the ones not uploaded yet"
-                app:title="Reset list of new detected chapters" />
+                app:summary="@string/preference_resetChapters_description"
+                app:title="@string/preference_resetChapters_title" />
     </PreferenceCategory>
 
     <Preference
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
             app:key="about"
-            app:title="About us" />
+            app:title="@string/preference_about_title" />
 </PreferenceScreen>

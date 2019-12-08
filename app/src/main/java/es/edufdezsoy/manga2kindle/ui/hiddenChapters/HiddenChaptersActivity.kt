@@ -40,7 +40,7 @@ class HiddenChaptersActivity : AppCompatActivity(), BaseInteractor.Controller {
     //#region toolbar functions
 
     private fun setToolbar() {
-        baseToolbar.setTitle(R.string.view_hidden_chapters_title)
+        baseToolbar.setTitle(R.string.hidden_chapters_title)
         setSupportActionBar(baseToolbar)
         baseToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         baseToolbar.setNavigationOnClickListener { onBackPressed() }

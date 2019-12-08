@@ -80,8 +80,8 @@ class HiddenChaptersController : Controller(), CoroutineScope, HiddenChaptersCon
      * Called from the view
      */
     override fun showChapter(chapter: HiddenChapter) {
-        Snackbar.make(v, "Chapter returned", Snackbar.LENGTH_SHORT)
-            .setAction("UNDO") { hideChapter(chapter) }
+        Snackbar.make(v, context.getString(R.string.hidden_chapters_chapter_returned), Snackbar.LENGTH_SHORT)
+            .setAction(context.getString(R.string.action_undo)) { hideChapter(chapter) }
             .show()
         GlobalScope.launch(Dispatchers.IO) {
             interactor.showChapter(chapter)

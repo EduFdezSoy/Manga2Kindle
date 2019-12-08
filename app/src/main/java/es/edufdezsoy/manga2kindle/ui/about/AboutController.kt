@@ -20,19 +20,33 @@ class AboutController : Controller() {
         val view = AboutPage(context)
             .isRTL(false)
             .setImage(R.drawable.profile_icon)
-            .setDescription(
-                "Hi! my name is Eduardo and I like to make things. \n " +
-                        "Feel free to email me, I'll be happy to hear you! \n " +
-                        "If you liked the app leave me some stars on the Play Store! ╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ"
+            .setDescription(context.getString(R.string.about_description))
+            .addGroup(context.getString(R.string.about_first_group))
+            .addEmail(
+                context.getString(R.string.about_email),
+                context.getString(R.string.about_email)
             )
-            .addGroup("Manga2Kindle info")
-            .addEmail("hello@manga2kindle.com", "hello@manga2kindle.com")
-            .addWebsite("https://manga2kindle.com/", "manga2kindle.com")
-            .addPlayStore("es.edufdezsoy.manga2kindle", "Play Store")
-            .addGroup("Follow me!")
-            .addGitHub("EduFdezSoy", "GitHub")
-            .addTwitter("EduFdezSoy", "Twitter")
-            .addInstagram("EduFdezSoy", "Instagram")
+            .addWebsite(
+                context.getString(R.string.about_website),
+                context.getString(R.string.about_website_title)
+            )
+            .addPlayStore(
+                context.getString(R.string.about_play_store_url),
+                context.getString(R.string.about_play_store_title)
+            )
+            .addGroup(context.getString(R.string.about_second_group))
+            .addGitHub(
+                context.getString(R.string.about_username),
+                context.getString(R.string.about_github_title)
+            )
+            .addTwitter(
+                context.getString(R.string.about_username),
+                context.getString(R.string.about_twitter_title)
+            )
+            .addInstagram(
+                context.getString(R.string.about_username),
+                context.getString(R.string.about_instagram_title)
+            )
             .addItem(formVersionElement())
             .create()
 
@@ -43,7 +57,7 @@ class AboutController : Controller() {
         val versionElement = Element()
 
         val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
-        versionElement.title = "Manga2Kindle v$versionName - Eduardo Fernandez"
+        versionElement.title = context.getString(R.string.about_version, versionName)
         versionElement.setGravity(Gravity.CENTER)
         return versionElement
     }

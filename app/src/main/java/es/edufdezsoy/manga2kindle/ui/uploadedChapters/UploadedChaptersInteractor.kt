@@ -12,7 +12,7 @@ import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import es.edufdezsoy.manga2kindle.service.intentService.UpdateChapterStatusIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
 
-class UploadedChaptersInteractor(val controller: Controller, context: Context) {
+class UploadedChaptersInteractor(val controller: Controller, val context: Context) {
     interface Controller {
         fun setNewChapters(chapters: List<UploadedChapter>)
         fun updateList()
@@ -82,33 +82,33 @@ class UploadedChaptersInteractor(val controller: Controller, context: Context) {
 
                     when (it.status) {
                         Chapter.STATUS_ENQUEUE -> {
-                            status = "enqueue"
+                            status = context.getString(R.string.chapter_status_enqueue)
                             status_color = R.color.colorEnqueue
                         }
                         Chapter.STATUS_PROCESSING -> {
-                            status = "compressing"
+                            status = context.getString(R.string.chapter_status_compressing)
                             status_color = R.color.colorCompressing
                         }
                         Chapter.STATUS_UPLOADING -> {
-                            status = "uploading"
+                            status = context.getString(R.string.chapter_status_uploading)
                             status_color = R.color.colorUploading
                         }
                         Chapter.STATUS_UPLOADED -> {
-                            status = "processing"
+                            status = context.getString(R.string.chapter_status_processing)
                             status_color = R.color.colorProcessing
                         }
                         Chapter.STATUS_LOCAL_ERROR -> {
-                            status = "failed at home"
+                            status = context.getString(R.string.chapter_status_failed_local)
                             status_color = R.color.colorFailed
                         }
                     }
 
                     if (it.error) {
-                        status = "failed"
+                        status = context.getString(R.string.chapter_status_failed)
                         status_color = R.color.colorFailed
                         reason = it.reason.toString()
                     } else if (it.delivered) {
-                        status = "success"
+                        status = context.getString(R.string.chapter_status_success)
                         status_color = R.color.colorSuccess
                     }
 

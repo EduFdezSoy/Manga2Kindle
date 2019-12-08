@@ -75,9 +75,9 @@ class UploadedChaptersController : Controller(), CoroutineScope,
         }
 
         (activity as BaseActivity).showSnackbar(
-            "Chapter hidden",
+            context.getString(R.string.uploaded_chapters_chapter_hidden),
             Snackbar.LENGTH_SHORT,
-            "UNDO",
+            context.getString(R.string.action_undo),
             View.OnClickListener {
                 GlobalScope.launch(Dispatchers.IO) {
                     interactor.showChapter(chapter)

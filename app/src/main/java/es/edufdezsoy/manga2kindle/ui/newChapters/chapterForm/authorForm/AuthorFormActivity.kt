@@ -50,7 +50,7 @@ class AuthorFormActivity : AppCompatActivity(), BaseInteractor.Controller {
 
     private fun setToolbar() {
         setSupportActionBar(baseToolbar)
-        baseToolbar.setTitle(R.string.app_name)
+        baseToolbar.setTitle(getString(R.string.author_form_title))
         baseToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         baseToolbar.setNavigationOnClickListener { onBackPressed() }
     }

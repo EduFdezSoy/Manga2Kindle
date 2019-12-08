@@ -1,46 +1,120 @@
 <resources>
-    <string name="app_name">Manga2Kindle</string>
+    <string name="app_name" translatable="false">Manga2Kindle</string>
 
     <!-- Services -->
-    <string name="service_description">Search for new manga chapters</string>
     <string name="service_ScanManga_description">Search for new manga chapters</string>
     <string name="service_UpdateChapterStatus_description">Update uploaded chapters statuses</string>
     <string name="service_ScanRemovedChapters_description">Remove from database the new chapters removed from the device</string>
     <string name="service_UploadChapter_description">Upload the chapters to the server</string>
 
     <!-- Views -->
+    <string name="new_chapters_view_title">New Chapters View</string>
+    <string name="new_chapters_chapter_hidden">Chapter hidden</string>
+    <string name="new_chapters_empty_list">Looks like this list is empty!</string>
+
+    <string name="uploaded_chapters_title">Uploaded Chapters View</string>
     <string name="uploaded_chapters_empty_list">Looks like this list is empty!</string>
-    <string name="uploaded_chapters_todo_hide_entry">TODO: hide entry</string>
+    <string name="uploaded_chapters_todo_hide_entry" translatable="false">TODO: hide entry</string>
+    <string name="uploaded_chapters_chapter_hidden">Chapter hidden</string>
+
+    <string name="author_form_title">New Author</string>
     <string name="author_form_name_input_hint">Name</string>
     <string name="author_form_surname_input_hint">Surname</string>
     <string name="author_form_nickname_input_hint">Nickname</string>
     <string name="author_form_naming_warning">Hey! \nRemember, in Japanese names and surnames are reversed so in "Kamoshida Hajime" the name is "Hajime"! \nTry not to mess this up!</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="button_save">Save</string>
+
+    <string name="chapter_form_title">Upload Chapter</string>
     <string name="chapter_form_manga_hint">Manga</string>
     <string name="chapter_form_chapter">Chapter</string>
     <string name="chapter_form_volume">Volume</string>
     <string name="chapter_form_title_hint">Title</string>
     <string name="chapter_form_author_hint">Author</string>
     <string name="chapter_form_lang_hint">Lang</string>
-    <string name="button_upload">Upload</string>
-    <string name="view_folder_form_name">Name</string>
-    <string name="view_folder_form_path">Path</string>
-    <string name="button_return">Return</string>
-    <string name="view_folder_form_no_path_selected">no path selected</string>
-    <string name="button_search">Search</string>
-    <string name="button_delete">Delete</string>
-    <string name="view_new_chapters_view_title">Observed Folders View</string>
+    <string name="chapter_form_add_author">Add</string>
+
     <string name="observed_folders_view_title">Observed Folders View</string>
-    <string name="view_uploaded_chapters_title">Uploaded Chapters View</string>
-    <string name="view_hidden_chapters_title">Hidden Chapters</string>
-    <string name="view_hidden_chapters_section_title">Hidden Chapters View</string>
-    <string name="view_chapter_form_add_author">Add</string>
-    <string name="view_chapter_form_email_hint">Kindle email address</string>
-    <string name="main_view_tv1_text">loading…</string>
-    <string name="new_chapters_view_title">loading list…</string>
-    <string name="status_processing">processing</string>
-    <string name="status_success">success</string>
-    <string name="status_failed">failed</string>
-    <string name="view_about_title">About</string>
+
+    <string name="folder_form_title">Add Folder</string>
+    <string name="folder_form_name">Name</string>
+    <string name="folder_form_path">Path</string>
+    <string name="folder_form_no_path_selected">no path selected</string>
+    <string name="folder_form_empty_path_error">The path can\'t be empty!</string>
+    <string name="folder_form_folder_deleted">Folder v%1$s deleted</string>
+
+    <string name="hidden_chapters_title">Hidden Chapters</string>
+    <string name="hidden_chapters_section_title">Hidden Chapters View</string>
+    <string name="hidden_chapters_chapter_returned">Chapter returned</string>
+
+    <!-- Settings -->
+    <string name="preference_kindle_mail_title">Kindle email</string>
+    <string name="preference_kindle_mail_description">Email where the mangas will be sent to</string>
+    <string name="preference_delete_chapters_title">Delete chapters after upload</string>
+    <string name="preference_delete_chapters_description_positive">Chapters will be deleted</string>
+    <string name="preference_delete_chapters_description_negative">Chapters won\'t be deleted</string>
+    <string name="preference_hiddenChapters_title">Hidden List</string>
+    <string name="preference_hiddenChapters_description">Open a list with all the hidden chapters</string>
+    <string name="preference_switchDebug_title">Enable Debug</string>
+    <string name="preference_switchDebug_description">Can make the app slower</string>
+    <string name="preference_resetChapters_title">Reset list of new detected chapters</string>
+    <string name="preference_resetChapters_description">Only the ones not uploaded yet</string>
+    <string name="preference_about_title">About us</string>
+
+    <string name="reset_chapters_confirm_title">Are you sure?</string>
+    <string name="reset_chapters_confirm_msg">This will delete all the chapters not uploaded</string>
+    <string name="reset_chapters_negative_btn">Cancel</string>
+    <string name="reset_chapters_positive_btn">OK</string>
+    <string name="reset_chapters_done_title">Database cleared!</string>
+    <string name="reset_chapters_done_msg">All not uploaded chapters deleted</string>
+    <string name="reset_chapters_done_btn">OK</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_first_group">Manga2Kindle info</string>
+    <string name="about_second_group">Follow me!</string>
+    <string name="about_description">Hi! my name is Eduardo and I like to make things. Feel free to email me, I\'ll be happy to hear you! If you liked the app leave me some stars on the Play Store! ╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ</string>
+    <string name="about_username" translatable="false">EduFdezSoy</string>
+    <string name="about_email" translatable="false">hello@manga2kindle.com</string>
+    <string name="about_website" translatable="false">https://manga2kindle.com/</string>
+    <string name="about_website_title" translatable="false">manga2kindle.com</string>
+    <string name="about_play_store_url" translatable="false">es.edufdezsoy.manga2kindle</string>
+    <string name="about_play_store_title" translatable="false">Play Store</string>
+    <string name="about_github_title" translatable="false">GitHub</string>
+    <string name="about_twitter_title" translatable="false">Twitter</string>
+    <string name="about_instagram_title" translatable="false">Instagram</string>
+    <string name="about_version" translatable="false">Manga2Kindle v%1$s - Eduardo Fernandez</string>
+
+    <!-- Drawer -->
+    <string name="drawer_newChapters">New Chapters</string>
+    <string name="drawer_uploadedChapters">Uploaded Chapters</string>
+    <string name="drawer_observedFolders">Observed Folders</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_cuteHello">henlo! :D</string>
+    <string name="drawer_header_tittle" translatable="false">Manga2kindle</string>
+
+    <!-- Tutorial -->
+    <string name="tuto_email_hint" translatable="false">my_device@kindle.com</string>
+    <string name="tuto_email_title">Add your Kindle email</string>
+    <string name="tuto_email_error">Please write an email!</string>
+
+    <!-- Chapter Status -->
+    <string name="chapter_status_enqueue">enqueue</string>
+    <string name="chapter_status_compressing">compressing</string>
+    <string name="chapter_status_uploading">uploading</string>
+    <string name="chapter_status_processing">processing</string>
+    <string name="chapter_status_failed">failed</string>
+    <string name="chapter_status_failed_local">failed at home</string>
+    <string name="chapter_status_success">success</string>
+
+    <!-- Actions -->
+    <string name="action_undo">UNDO</string>
+    <string name="action_loading">loading…</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_search">Search</string>
+
+    <!-- Errors -->
+    <string name="error_file_too_big">Looks like this file is too big!</string>
+    <string name="error_upload_failed">Upload failed</string>
+    <string name="error_no_mail_set">There is no mail set to send it!</string>
 </resources>

@@ -14,7 +14,7 @@ class UploadedChaptersView(val view: View, val controller: UploadedChaptersContr
 
     init {
         view.rvUploadedChapters.layoutManager = LinearLayoutManager(controller.activity)
-        view.tvViewTitle.text = view.context.getString(R.string.view_uploaded_chapters_title)
+        view.tvViewTitle.text = view.context.getString(R.string.uploaded_chapters_title)
 
         controller.loadChapters()
 

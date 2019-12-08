@@ -40,7 +40,7 @@ class AboutActivity : AppCompatActivity(), BaseInteractor.Controller {
     //#region toolbar functions
 
     private fun setToolbar() {
-        baseToolbar.setTitle(R.string.view_about_title)
+        baseToolbar.setTitle(R.string.about_title)
         setSupportActionBar(baseToolbar)
         baseToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
         baseToolbar.setNavigationOnClickListener { onBackPressed() }

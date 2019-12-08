@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -23,6 +24,7 @@ class FolderFormController : Controller, CoroutineScope,
     private val READ_REQUEST_CODE = 1
     private lateinit var interactor: FolderFormInteractor
     private lateinit var view: FolderFormView
+    private lateinit var context: Context
     private var folder = Folder(0, "", "")
     private var folder_id = 0
     lateinit var job: Job
@@ -49,6 +51,7 @@ class FolderFormController : Controller, CoroutineScope,
         val v = inflater.inflate(R.layout.view_folder_form, container, false)
         interactor = FolderFormInteractor(this, v.context)
 
+        context = v.context
         job = Job()
         view = FolderFormView(view = v, controller = this)
 
@@ -72,7 +75,7 @@ class FolderFormController : Controller, CoroutineScope,
 
     override fun saveFolder(folder: Folder) {
         if (folder.path.isBlank())
-            Snackbar.make(getView()!!, "The path can't be empty!", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(getView()!!, context.getString(R.string.folder_form_empty_path_error), Snackbar.LENGTH_LONG).show()
         else
             if (folder.id == 0)
                 launch { interactor.addFolder(folder) }
@@ -85,7 +88,7 @@ class FolderFormController : Controller, CoroutineScope,
     }
 
     override fun deleteFolder(folder: Folder) {
-        Snackbar.make(getView()!!, "Folder " + folder.name + " deleted", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(getView()!!, context.getString(R.string.folder_form_folder_deleted, folder.name), Snackbar.LENGTH_LONG).show()
         launch { interactor.deleteFoldere(folder) }
     }
 

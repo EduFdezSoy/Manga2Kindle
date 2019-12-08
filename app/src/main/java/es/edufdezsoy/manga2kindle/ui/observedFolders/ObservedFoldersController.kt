@@ -78,7 +78,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
 
     override fun deleteFolder(folder: Folder) {
         launch { interactor.deleteFoldere(folder) }
-        (activity as BaseActivity).showSnackbar("Folder " + folder.name + " deleted",
+        (activity as BaseActivity).showSnackbar(context.getString(R.string.folder_form_folder_deleted, folder.name),
             Snackbar.LENGTH_LONG,
             "Undo",
             View.OnClickListener { launch { interactor.addFolder(folder) } })

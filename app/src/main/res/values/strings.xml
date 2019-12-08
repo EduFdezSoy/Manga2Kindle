@@ -82,6 +82,7 @@
     <string name="about_twitter_title" translatable="false">Twitter</string>
     <string name="about_instagram_title" translatable="false">Instagram</string>
     <string name="about_version" translatable="false">Manga2Kindle v%1$s - Eduardo Fernandez</string>
+    <string name="about_version_easterEgg">What were you thinking? I don\'t have time for that!</string>
 
     <!-- Drawer -->
     <string name="drawer_newChapters">New Chapters</string>

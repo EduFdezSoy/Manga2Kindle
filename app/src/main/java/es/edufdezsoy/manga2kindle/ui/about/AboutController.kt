@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
 import mehdi.sakout.aboutpage.AboutPage
@@ -13,6 +14,7 @@ import mehdi.sakout.aboutpage.Element
 
 class AboutController : Controller() {
     private lateinit var context: Context
+    private var versionEasterEggCounter = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         context = inflater.context
@@ -59,6 +61,16 @@ class AboutController : Controller() {
         val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
         versionElement.title = context.getString(R.string.about_version, versionName)
         versionElement.setGravity(Gravity.CENTER)
+        versionElement.setOnClickListener {
+            if (++versionEasterEggCounter == 5) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.about_version_easterEgg),
+                    Toast.LENGTH_LONG
+                ).show()
+                versionEasterEggCounter = 0
+            }
+        }
         return versionElement
     }
 }

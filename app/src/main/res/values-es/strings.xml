@@ -79,4 +79,5 @@
     <string name="preference_resetChapters_title">Resetear lista de capítulos detectados</string>
     <string name="preference_switchDebug_description">Puede ralentizar la app</string>
     <string name="preference_switchDebug_title">Activar debug</string>
+    <string name="about_version_easterEgg">Pero qué te crees? No tengo tiempo para estas cosas!</string>
 </resources>

@@ -120,7 +120,11 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // TODO: manga title cant actually be edited because to the server it will be a new manga
         // manga.title = view.tietManga.text.toString()
         if (manga.author_id == null) {
-            val newManga = Manga(manga.id, manga.title, author.id)
+            val newManga: Manga
+            if (::author.isInitialized)
+                newManga = Manga(manga.id, manga.title, author.id)
+            else
+                newManga = Manga(manga.id, manga.title, null)
             newManga.synchronized = manga.synchronized
             newManga.identifier = manga.identifier
 

@@ -209,8 +209,16 @@ class MangaRepository {
                     printError("cant add the manga to the server", e)
                 }
             } else {
+                with(mangaList.iterator()) {
+                    forEach {
+                        if (it.identifier == manga.identifier) {
+                            remove()
+                            return@forEach
+                        }
+                    }
+                }
                 mangaList.add(manga)
-                database.MangaDao().insert(manga)
+                database.MangaDao().update(manga)
             }
         }
     }

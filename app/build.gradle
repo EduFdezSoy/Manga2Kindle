@@ -144,7 +144,4 @@ dependencies {
 
     // SWEET ALERT DIALOGS
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
-
-    // FANCY SHOW CASE VIEW (tutorial library)(https://github.com/faruktoptas/FancyShowCaseView)
-    implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.2.1'
 }

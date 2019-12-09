@@ -9,9 +9,9 @@ object M2kSharedPref {
     private var instance: SharedPreferences? = null
     private val LOCK = Any()
 
-    operator fun invoke(activity: Activity) = instance ?: synchronized(LOCK) {
-        instance ?: activity.getSharedPreferences(
-            "manga2kindle",
+    operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
+        instance ?: context.getSharedPreferences(
+            "es.edufdezsoy.manga2kindle_preferences",
             Context.MODE_PRIVATE
         ).also { instance = it }
     }

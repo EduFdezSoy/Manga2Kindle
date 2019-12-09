@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import androidx.core.content.edit
+import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import es.edufdezsoy.manga2kindle.service.intentService.ScanMangaIntentService
 import es.edufdezsoy.manga2kindle.service.intentService.UploadChapterIntentService
 import es.edufdezsoy.manga2kindle.service.util.BroadcastReceiver
@@ -83,12 +84,11 @@ class BaseInteractor(val controller: Controller) {
     }
 
     fun getMail(context: Context): String {
-        return context.getSharedPreferences("es.edufdezsoy.manga2kindle_preferences", Context.MODE_PRIVATE)
-            .getString("kindle_mail", "")!!
+        return M2kSharedPref.invoke(context).getString("kindle_mail", "")!!
     }
 
     fun setMail(context: Context, mail: String) {
-        context.getSharedPreferences("es.edufdezsoy.manga2kindle_preferences", Context.MODE_PRIVATE).edit {
+        M2kSharedPref.invoke(context).edit {
             this.putString("kindle_mail", mail)
             this.commit()
         }

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.M2kApplication
+import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
@@ -42,10 +43,8 @@ class UpdateChapterStatusIntentService : JobIntentService(), CoroutineScope {
     override fun onHandleWork(workIntent: Intent) {
         Log.d(TAG, "Service UpdateChapterStatusIntentService started.")
         job = Job()
-        val deleteAfterUpload = getSharedPreferences(
-            "es.edufdezsoy.manga2kindle_preferences",
-            Context.MODE_PRIVATE
-        ).getBoolean("delete_chapters", false)
+        val deleteAfterUpload = M2kSharedPref.invoke(this).getBoolean("delete_chapters", false)
+
         val apiService = ApiService.apiService
         // TODO: move all apiService to the repositories
 

@@ -1,8 +1,8 @@
 package es.edufdezsoy.manga2kindle
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
+import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -22,10 +22,7 @@ class M2kApplication : Application() {
         // This async work checks if the debug mode is activated
         GlobalScope.launch {
             M2kApplication.debug =
-                getSharedPreferences(
-                    "es.edufdezsoy.manga2kindle_preferences",
-                    Context.MODE_PRIVATE
-                ).getBoolean("switchDebug", false)
+                M2kSharedPref.invoke(this@M2kApplication).getBoolean("switchDebug", false)
 
             if (M2kApplication.debug)
                 Log.i(M2kApplication.TAG, "Debug activated.")

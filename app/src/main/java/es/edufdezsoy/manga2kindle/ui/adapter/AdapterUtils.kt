@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 
 object AdapterUtils {
     fun randAuthorFace(context: Context): String {
-        if (context.getSharedPreferences(
-                "es.edufdezsoy.manga2kindle_preferences",
-                Context.MODE_PRIVATE
-            ).getBoolean("null_author_donger", false)
-        )
+        if (M2kSharedPref.invoke(context).getBoolean("null_author_donger", false))
             return arrayOf(
                 "¯\\_(ツ)_/¯",
                 "¯\\_(ヅ)_/¯",

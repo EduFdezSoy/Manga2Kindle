@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.M2kSharedPref
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.AuthorRepository
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
@@ -52,10 +53,8 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
             val mangaRepository = MangaRepository.invoke(context)
             val authorRepository = AuthorRepository.invoke(context)
 
-            val sharedPref = context.getSharedPreferences(
-                "es.edufdezsoy.manga2kindle_preferences",
-                Context.MODE_PRIVATE
-            )
+            val sharedPref = M2kSharedPref.invoke(context)
+
             val mail = sharedPref.getString("kindle_mail", null)
             if (mail.isNullOrBlank()) {
                 chapterRepository.getEnqueuedChapters().forEach {

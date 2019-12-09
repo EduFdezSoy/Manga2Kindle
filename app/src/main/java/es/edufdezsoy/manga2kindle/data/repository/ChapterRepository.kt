@@ -115,9 +115,11 @@ class ChapterRepository {
             getAll()
 
         if (chapterList.isNotEmpty()) {
-            chapterList.forEach {
-                if (it.enqueue_date != null && it.upload_date == null)
-                    coincidences.add(it)
+            with(chapterList.iterator()) {
+                forEach {
+                    if (it.enqueue_date != null && it.upload_date == null)
+                        coincidences.add(it)
+                }
             }
         } else {
             coincidences.addAll(database.ChapterDao().getEnqueuedChapters())

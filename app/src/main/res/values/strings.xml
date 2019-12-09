@@ -58,6 +58,9 @@
     <string name="preference_resetChapters_title">Reset list of new detected chapters</string>
     <string name="preference_resetChapters_description">Only the ones not uploaded yet</string>
     <string name="preference_about_title">About us</string>
+    <string name="preference_null_author_donger_title">Author donger</string>
+    <string name="preference_null_author_donger_description_positive">Will display dongers when there is no author set</string>
+    <string name="preference_null_author_donger_description_negative">Won\'t display dongers when there is no author set</string>
 
     <string name="reset_chapters_confirm_title">Are you sure?</string>
     <string name="reset_chapters_confirm_msg">This will delete all the chapters not uploaded</string>

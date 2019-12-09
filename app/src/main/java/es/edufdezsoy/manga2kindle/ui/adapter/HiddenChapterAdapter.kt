@@ -52,7 +52,7 @@ class HiddenChapterAdapter(var chapters: ArrayList<HiddenChapter>) :
             if (chapters[position].author.isNotBlank())
                 holder.author.text = chapters[position].author
             else
-                holder.author.text = AdapterUtils.randAuthorFace()
+                holder.author.text = AdapterUtils.randAuthorFace(context)
 
             if (chapters[position].status_color != null)
                 holder.status.setTextColor(

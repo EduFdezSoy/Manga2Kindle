@@ -80,4 +80,7 @@
     <string name="preference_switchDebug_description">Puede ralentizar la app</string>
     <string name="preference_switchDebug_title">Activar debug</string>
     <string name="about_version_easterEgg">Pero qué te crees? No tengo tiempo para estas cosas!</string>
+    <string name="preference_null_author_donger_title">Donger en el autor</string>
+    <string name="preference_null_author_donger_description_positive">Se mostrará un donger cuando no haya autor</string>
+    <string name="preference_null_author_donger_description_negative">No se mostrará un donger cuando no haya autor</string>
 </resources>

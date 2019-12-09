@@ -17,6 +17,12 @@
                 app:key="hiddenChapters"
                 app:summary="@string/preference_hiddenChapters_description"
                 app:title="@string/preference_hiddenChapters_title" />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="null_author_donger"
+                app:summaryOff="@string/preference_null_author_donger_description_negative"
+                app:summaryOn="@string/preference_null_author_donger_description_positive"
+                app:title="@string/preference_null_author_donger_title" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Dev Settings">

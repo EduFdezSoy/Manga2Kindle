@@ -61,7 +61,7 @@ class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
             if (chapter.author.isNotBlank())
                 holder.author.text = chapter.author
             else
-                holder.author.text = AdapterUtils.randAuthorFace()
+                holder.author.text = AdapterUtils.randAuthorFace(context)
 
             if (onClickListener != null)
                 holder.setOnClickListener(View.OnClickListener {

@@ -50,7 +50,7 @@ class UploadedChapterAdapter(var chapters: ArrayList<UploadedChapter>) :
             if (chapters[position].author.isNotBlank())
                 holder.author.text = chapters[position].author
             else
-                holder.author.text = AdapterUtils.randAuthorFace()
+                holder.author.text = AdapterUtils.randAuthorFace(context)
 
             holder.status.setTextColor(
                 ContextCompat.getColor(

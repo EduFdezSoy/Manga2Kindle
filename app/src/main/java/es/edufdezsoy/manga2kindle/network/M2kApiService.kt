@@ -5,7 +5,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface M2kApiService {
-    @GET("/hello")
+    @GET("hello")
     suspend fun serverHello(): Hello
 
     //#region /author
@@ -16,7 +16,7 @@ interface M2kApiService {
      * @param limit how many authors we want to retrieve
      * @return this list can be empty but normally it's size will be equal to the limit set
      */
-    @GET("/author")
+    @GET("author")
     suspend fun getAllAuthors(
         @Query("limit") limit: Int?
     ): List<Author>
@@ -27,7 +27,7 @@ interface M2kApiService {
      * @param author_id id from the requested author
      * @return this list can be empty but it must return only one author
      */
-    @GET("/author")
+    @GET("author")
     suspend fun getAuthor(
         @Query("id") author_id: Int
     ): List<Author>
@@ -38,7 +38,7 @@ interface M2kApiService {
      * @param search the string we are searching for
      * @return this list can be empty, it return all authors with coincidences
      */
-    @GET("/author")
+    @GET("author")
     suspend fun searchAuthor(
         @Query("search") search: String
     ): List<Author>
@@ -52,7 +52,7 @@ interface M2kApiService {
      *
      * @return this list can be empty but it must return one item, the new author
      */
-    @PUT("/author")
+    @PUT("author")
     suspend fun addAuthor(
         @Query("name") name: String?,
         @Query("surname") surname: String?,
@@ -68,7 +68,7 @@ interface M2kApiService {
      *
      * @return this list can be empty but must have all languages in the server
      */
-    @GET("/languages")
+    @GET("languages")
     suspend fun getAllLanguages(): List<Language>
 
     //#endregion
@@ -81,7 +81,7 @@ interface M2kApiService {
      * @param chapter_id the chapter id we want to check
      * @return this list can be null but must have the chapter requested
      */
-    @GET("/status")
+    @GET("status")
     suspend fun getStatus(
         @Query("chapter_id") chapter_id: Int
     ): List<Chapter>
@@ -96,7 +96,7 @@ interface M2kApiService {
      * @param limit how many mangas we want to retrieve
      * @return this list can be empty but normally it's size will be equal to the limit set
      */
-    @GET("/manga")
+    @GET("manga")
     suspend fun getAllMangas(
         @Query("limit") limit: Int?
     ): List<Manga>
@@ -107,7 +107,7 @@ interface M2kApiService {
      * @param search the string we are searching for
      * @return this list can be empty, it return all mangas with coincidences
      */
-    @GET("/manga")
+    @GET("manga")
     suspend fun searchManga(
         @Query("search") search: String
     ): List<Manga>
@@ -120,7 +120,7 @@ interface M2kApiService {
      *
      * @return this list can be empty but it must return one item, the new manga
      */
-    @PUT("/manga")
+    @PUT("manga")
     suspend fun addManga(
         @Query("title") title: String,
         @Query("author_id") author_id: Int
@@ -145,7 +145,7 @@ interface M2kApiService {
      * @return this list can be empty but it must return one item, the new chapter
      */
     @Multipart
-    @POST("/manga/chapter")
+    @POST("manga/chapter")
     suspend fun sendChapter(
         @Part("manga_id") manga_id: Int,
         @Part("lang_id") lang_id: Int,

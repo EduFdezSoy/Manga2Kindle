@@ -110,7 +110,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/btn_rounded"
                 android:text="@string/action_search"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/btnText"
                 app:layout_constraintEnd_toEndOf="@+id/etName"
                 app:layout_constraintTop_toBottomOf="@+id/etName" />
 

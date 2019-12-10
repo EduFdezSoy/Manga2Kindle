@@ -40,6 +40,25 @@
     <string name="folder_form_no_path_selected">no path selected</string>
     <string name="folder_form_empty_path_error">The path can\'t be empty!</string>
     <string name="folder_form_folder_deleted">Folder v%1$s deleted</string>
+    <string name="folder_form_example">Select your mangas folder, you don\'t need to select each manga, just the folder where the mangas are.</string>
+    <string name="folder_form_extructure_example"><![CDATA[
+        MyMangas/\n
+├── 5Toubun no Hanayome\n
+│\t\t\t\t├── Chapter 113\n
+│\t\t\t\t├── Chapter 114\n
+│\t\t\t\t└── Chapter 115\n
+├── Hitoribocchi\n
+│\t\t\t\t├── Chapter 23\n
+│\t\t\t\t├── Chapter 24\n
+│\t\t\t\t└── Chapter 25\n
+├── JoJo\'s Bizarre Adventure\n
+│\t\t\t\t├── Chapter 38\n
+│\t\t\t\t└── Chapter 39\n
+└── Komi-san wa Komyushou Desu.\n
+\t\t\t\t\t└── Chapter 230\n
+    ]]>
+</string>
+    <string name="folder_form_extructure_example_text">Look a this example, here you\'ll select <b>MyMangas</b>:</string>
 
     <string name="hidden_chapters_title">Hidden Chapters</string>
     <string name="hidden_chapters_section_title">Hidden Chapters View</string>
@@ -121,23 +140,6 @@
     <string name="error_file_too_big">Looks like this file is too big!</string>
     <string name="error_upload_failed">Upload failed</string>
     <string name="error_no_mail_set">There is no mail set to send it!</string>
-    <string name="folder_form_extructure_example" translatable="false"><![CDATA[
-        MyMangas/\n
-├── 5Toubun no Hanayome\n
-│   ├── Chapter 113\n
-│   ├── Chapter 114\n
-│   └── Chapter 115\n
-├── Hitoribocchi\n
-│   ├── Chapter 23\n
-│   ├── Chapter 24\n
-│   └── Chapter 25\n
-├── JoJo\'s Bizarre Adventure\n
-│   ├── Chapter 38\n
-│   └── Chapter 39\n
-└── Komi-san wa Komyushou Desu.\n
-    └── Chapter 230\n
-    ]]>
-</string>
 
 
 </resources>

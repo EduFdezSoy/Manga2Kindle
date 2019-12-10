@@ -83,4 +83,23 @@
     <string name="preference_null_author_donger_title">Donger en el autor</string>
     <string name="preference_null_author_donger_description_positive">Se mostrará un donger cuando no haya autor</string>
     <string name="preference_null_author_donger_description_negative">No se mostrará un donger cuando no haya autor</string>
+    <string name="folder_form_example">Selecciona tu carpeta de mangas, no necesitas seleccionar cada manga, solo la carpeta donde se encuentran.</string>
+    <string name="folder_form_extructure_example_text">Mira este ejemplo, aquí seleccionaríamos  <b>MisMangas</b>:</string>
+    <string name="folder_form_extructure_example"><![CDATA[
+        MisMangas/\n
+├── 5Toubun no Hanayome\n
+│\t\t\t\t├── Capítulo 113\n
+│\t\t\t\t├── Capítulo 114\n
+│\t\t\t\t└── Capítulo 115\n
+├── Hitoribocchi\n
+│\t\t\t\t├── Capítulo 23\n
+│\t\t\t\t├── Capítulo 24\n
+│\t\t\t\t└── Capítulo 25\n
+├── JoJo\'s Bizarre Adventure\n
+│\t\t\t\t├── Capítulo 38\n
+│\t\t\t\t└── Capítulo 39\n
+└── Komi-san wa Komyushou Desu.\n
+\t\t\t\t\t└── Capítulo 230\n
+    ]]>
+</string>
 </resources>

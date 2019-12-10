@@ -121,6 +121,23 @@
     <string name="error_file_too_big">Looks like this file is too big!</string>
     <string name="error_upload_failed">Upload failed</string>
     <string name="error_no_mail_set">There is no mail set to send it!</string>
+    <string name="folder_form_extructure_example" translatable="false"><![CDATA[
+        MyMangas/\n
+├── 5Toubun no Hanayome\n
+│   ├── Chapter 113\n
+│   ├── Chapter 114\n
+│   └── Chapter 115\n
+├── Hitoribocchi\n
+│   ├── Chapter 23\n
+│   ├── Chapter 24\n
+│   └── Chapter 25\n
+├── JoJo\'s Bizarre Adventure\n
+│   ├── Chapter 38\n
+│   └── Chapter 39\n
+└── Komi-san wa Komyushou Desu.\n
+    └── Chapter 230\n
+    ]]>
+</string>
 
 
 </resources>

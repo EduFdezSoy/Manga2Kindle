@@ -1,75 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/flBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPath">
+
+        <TextView
+            android:id="@+id/tvViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Select your mangas folder, you don't need to select each manga, just the folder where the mangas are."
+            android:textColor="@color/textImportant"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvViewExample"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Look a this example, here you'll select MyMangas:"
+            android:textColor="@color/textImportant" />
+
+        <TextView
+            android:id="@+id/tvViewExampleTree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/folder_form_extructure_example"
+            android:textColor="@color/textImportant" />
+    </LinearLayout>
 
     <ImageView
-            android:id="@+id/ivFolder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_folder_black" />
+        android:id="@+id/ivFolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_folder_black" />
 
     <EditText
-            android:id="@+id/etName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tvNameText"
-            app:layout_constraintTop_toBottomOf="@+id/ivFolder" />
+        android:id="@+id/etName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvNameText"
+        app:layout_constraintTop_toBottomOf="@+id/ivFolder" />
 
     <TextView
-            android:id="@+id/tvNameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/folder_form_name"
-            app:layout_constraintBottom_toBottomOf="@+id/etName"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/etName" />
+        android:id="@+id/tvNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/folder_form_name"
+        app:layout_constraintBottom_toBottomOf="@+id/etName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etName" />
 
     <TextView
-            android:id="@+id/tvPathText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/folder_form_path"
-            app:layout_constraintBottom_toBottomOf="@+id/tvPath"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvPath" />
+        android:id="@+id/tvPathText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/folder_form_path"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPath"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvPath" />
 
     <TextView
-            android:id="@+id/tvPath"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/folder_form_no_path_selected"
-            app:layout_constraintBottom_toBottomOf="@+id/btnPath"
-            app:layout_constraintEnd_toStartOf="@+id/btnPath"
-            app:layout_constraintStart_toStartOf="@+id/etName"
-            app:layout_constraintTop_toTopOf="@+id/btnPath" />
+        android:id="@+id/tvPath"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/folder_form_no_path_selected"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPath"
+        app:layout_constraintEnd_toStartOf="@+id/btnPath"
+        app:layout_constraintStart_toStartOf="@+id/etName"
+        app:layout_constraintTop_toTopOf="@+id/btnPath" />
 
     <Button
-            android:id="@+id/btnPath"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/btn_rounded"
-            android:text="@string/action_search"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@+id/etName"
-            app:layout_constraintTop_toBottomOf="@+id/etName" />
+        android:id="@+id/btnPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/btn_rounded"
+        android:text="@string/action_search"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/etName"
+        app:layout_constraintTop_toBottomOf="@+id/etName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

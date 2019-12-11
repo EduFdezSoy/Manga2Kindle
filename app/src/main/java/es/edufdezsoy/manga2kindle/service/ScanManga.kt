@@ -67,6 +67,13 @@ class ScanManga : CoroutineScope {
             val folderRepository = FolderRepository.invoke(context)
 
             val folders = folderRepository.getAll()
+
+            if (folders.isEmpty()) {
+                done()
+                Log.i(TAG, "No folders at the moment")
+                Log.i(TAG, "Done scanning mangas")
+            }
+
             folders.forEach {
                 launch {
                     // if the folder path is empty we stop here
@@ -288,7 +295,7 @@ class ScanManga : CoroutineScope {
         var chapter: String = ""
 
         // the chapter name can have numbers, we dont want that numbers so we split it
-        val part = name.split("-")[0]
+        val part = name.split(" - ")[0]
         val matcher = chapterRegex.matcher(part)
 
         while (matcher.find()) {
@@ -312,7 +319,7 @@ class ScanManga : CoroutineScope {
         var volume: String = ""
 
         // the chapter name can have numbers, we dont want that numbers so we split it
-        val part = name.split("-")[0]
+        val part = name.split(" - ")[0]
         var matcher = volumeRegex.matcher(part)
 
         while (matcher.find()) {

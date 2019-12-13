@@ -144,4 +144,7 @@ dependencies {
 
     // SWEET ALERT DIALOGS
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
+
+    // APP INTRO (https://github.com/AppIntro/AppIntro)
+    implementation 'com.github.AppIntro:AppIntro:5.1.0'
 }

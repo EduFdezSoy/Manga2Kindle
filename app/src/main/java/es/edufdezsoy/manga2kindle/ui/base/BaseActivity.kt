@@ -210,7 +210,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
             // custom view for the modal
             val etMail = EditText(this)
-            etMail.hint = getString(R.string.tuto_email_hint)
+            etMail.hint = getString(R.string.slide_3_email_hint)
             val linearLayout = LinearLayout(applicationContext)
             linearLayout.orientation = LinearLayout.VERTICAL
             linearLayout.addView(etMail)
@@ -223,7 +223,7 @@ open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
                 mail = etMail.text.toString()
 
                 if (mail.isBlank())
-                    etMail.error = getString(R.string.tuto_email_error)
+                    etMail.error = getString(R.string.slide_3_email_error)
                 else {
                     // set mail in the preferences
                     interactor.setMail(this, mail)

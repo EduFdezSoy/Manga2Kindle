@@ -79,6 +79,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.base.BaseActivity" />
+        <activity android:name=".ui.appIntro.IntroActivity" />
         <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
         <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
         <activity android:name=".ui.observedFolders.folderForm.FolderFormActivity" />

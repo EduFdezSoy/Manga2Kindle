@@ -114,11 +114,6 @@
     <string name="drawer_cuteHello">henlo! :D</string>
     <string name="drawer_header_tittle" translatable="false">Manga2kindle</string>
 
-    <!-- Tutorial -->
-    <string name="tuto_email_hint" translatable="false">my_device@kindle.com</string>
-    <string name="tuto_email_title">Add your Kindle email</string>
-    <string name="tuto_email_error">Please write an email!</string>
-
     <!-- Chapter Status -->
     <string name="chapter_status_enqueue">enqueue</string>
     <string name="chapter_status_compressing">compressing</string>
@@ -141,5 +136,39 @@
     <string name="error_upload_failed">Upload failed</string>
     <string name="error_no_mail_set">There is no mail set to send it!</string>
 
+    <!-- Tutorial -->
+    <string name="tuto_email_title">Add your Kindle email</string>
+
+    <!-- Slides -->
+    <string name="slide_welcome">Welcome to Manga2Kindle!\nTo use the app we need to configure a few things, so let\'s start!</string>
+    <string-array name="slide_greetings">
+        <item>Ohayo gozaimasu!</item>
+        <item>Konnichiwa!</item>
+        <item>Konbanwa!</item>
+    </string-array>
+    <string name="slide_2_title">First you\'ll need to authorize our server to send you mangas:</string>
+    <string name="slide_2_p1">• You can do that from your Amazon\'s Account, search for \"Manage your Content and Devices\" and go to \"Preferences\"</string>
+    <string name="slide_2_p2">• Scroll to \"Personal Documents Settings\" and click \"Add a new authorized e-mail\" then just write ours one:</string>
+    <string name="slide_2_email" translatable="false">manga2kindle@m2k.wf</string>
+    <string name="slide_2_help">If you need more help, check out our guide:</string>
+    <string name="slide_2_help_url" translatable="false">m2k.wf/h1</string>
+    <string name="slide_3_title">Add your Kindle device email:</string>
+    <string name="slide_3_p1">You can find it in your Kindle\'s settings, under \"Your Account\", right at the bottom.</string>
+    <string name="slide_3_help">If you need help, check out this guide:</string>
+    <string name="slide_3_help_url" translatable="false">m2k.wf/h2</string>
+    <string name="slide_3_email_hint">my_device@kindle.com</string>
+    <string name="slide_3_email_error">Please write an email!</string>
+    <string name="slide_4_title">That\'s all!</string>
+    <string name="slide_4_p1">Now you can add the folders where your mangas are and the chapters will start showing.</string>
+    <string name="slide_4_help">If you need more help, check out our guide:</string>
+    <string name="slide_4_help_url" translatable="false">m2k.wf/h1</string>
+
+    <!-- Descriptions -->
+    <string name="description_logo">Manga2Kindle Logo</string>
+
+    <!-- numbers -->
+    <string name="number_one" translatable="false">1</string>
+    <string name="number_two" translatable="false">2</string>
+    <string name="number_three" translatable="false">3</string>
 
 </resources>

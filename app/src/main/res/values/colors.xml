@@ -25,6 +25,12 @@
     <color name="btnNormalDisabled">@color/colorAccentLight</color>
     <color name="btnDisabled">#80263238</color>
 
+    <!-- SLIDES BACKGROUNDS -->
+    <color name="slide1">@color/colorPrimary</color>
+    <color name="slide2">#4B2D37</color>
+    <color name="slide3">#57313E</color>
+    <color name="slide4">#683848</color>
+
     <!-- LIST BACKGROUNDS -->
     <color name="listBG_1">@color/transparent</color>
     <color name="listBG_2">@color/colorAccentExtraLight</color>
@@ -32,6 +38,8 @@
     <!-- TEXT COLOR -->
     <color name="textImportant">#404040</color>
     <color name="textRegular">#808080</color>
+    <color name="textImportantInverted">#FDFDFD</color>
+    <color name="textRegularInverted">#bfbfbf</color>
 
     <!-- MATERIAL DRAWER -->
     <color name="material_drawer_selected">@color/colorAccentLight</color>

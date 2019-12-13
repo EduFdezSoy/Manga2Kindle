@@ -23,6 +23,10 @@
                 app:summaryOff="@string/preference_null_author_donger_description_negative"
                 app:summaryOn="@string/preference_null_author_donger_description_positive"
                 app:title="@string/preference_null_author_donger_title" />
+        <Preference
+                app:key="showTutorial"
+                app:summary="@string/preference_showTutorial_description"
+                app:title="@string/preference_showTutorial_title" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Dev Settings">

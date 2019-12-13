@@ -80,6 +80,8 @@
     <string name="preference_null_author_donger_title">Author donger</string>
     <string name="preference_null_author_donger_description_positive">Will display dongers when there is no author set</string>
     <string name="preference_null_author_donger_description_negative">Won\'t display dongers when there is no author set</string>
+    <string name="preference_showTutorial_title">Show Tutorial</string>
+    <string name="preference_showTutorial_description">Shows the introduction to the app again</string>
 
     <string name="reset_chapters_confirm_title">Are you sure?</string>
     <string name="reset_chapters_confirm_msg">This will delete all the chapters not uploaded</string>

@@ -12,6 +12,7 @@ import es.edufdezsoy.manga2kindle.M2kApplication
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.ui.about.AboutActivity
+import es.edufdezsoy.manga2kindle.ui.appIntro.IntroActivity
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import es.edufdezsoy.manga2kindle.ui.hiddenChapters.HiddenChaptersActivity
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,12 @@ class SettingsController : PreferenceController() {
         val prefAbout = findPreference("about")
         prefAbout?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             startAbout()
+            return@OnPreferenceClickListener true
+        }
+
+        val prefTuto = findPreference("showTutorial")
+        prefTuto?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            startAppIntro()
             return@OnPreferenceClickListener true
         }
     }
@@ -102,6 +109,11 @@ class SettingsController : PreferenceController() {
 
     private fun startAbout() {
         val intent = Intent(activity, AboutActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startAppIntro() {
+        val intent = Intent(activity, IntroActivity::class.java)
         startActivity(intent)
     }
 }

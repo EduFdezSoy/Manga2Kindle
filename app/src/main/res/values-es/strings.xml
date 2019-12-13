@@ -115,4 +115,6 @@
     <string name="slide_4_p1">Ahora puedes añadir las carpetas donde estén tus mangas y los capitulos empezarán a salir.</string>
     <string name="slide_4_title">Eso es todo!</string>
     <string name="slide_welcome">Bienvenido a Manga2Kindle!\nPara usar la app necesitamos configurar un par de cosas, vamos a ello!</string>
+    <string name="preference_showTutorial_title">Mostrar Tutorial</string>
+    <string name="preference_showTutorial_description">Muestra la introducción a la app de nuevo</string>
 </resources>

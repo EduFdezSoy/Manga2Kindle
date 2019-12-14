@@ -3,6 +3,7 @@ package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import es.edufdezsoy.manga2kindle.R
@@ -25,9 +26,16 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
         view.btnUpload.setOnClickListener {
-            disableAllButtons()
-            saveData()
-            controller.sendChapter(chapter)
+            if (::author.isInitialized) {
+                disableAllButtons()
+                saveData()
+                controller.sendChapter(chapter)
+            } else
+                Toast.makeText(
+                    view.context,
+                    R.string.chapter_form_no_author_toast,
+                    Toast.LENGTH_LONG
+                ).show()
         }
 
         //#endregion
@@ -160,7 +168,12 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // disable the button
         view.btnAddAuthor.isEnabled = false
         // change the color
-        view.btnAddAuthor.background.setTint(ContextCompat.getColor(view.context, R.color.btnNormalDisabled))
+        view.btnAddAuthor.background.setTint(
+            ContextCompat.getColor(
+                view.context,
+                R.color.btnNormalDisabled
+            )
+        )
         // view.btnAddAuthor.setTextColor(ContextCompat.getColor(view.context, R.color.btnDisabled))
     }
 

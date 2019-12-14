@@ -117,4 +117,5 @@
     <string name="slide_welcome">Bienvenido a Manga2Kindle!\nPara usar la app necesitamos configurar un par de cosas, vamos a ello!</string>
     <string name="preference_showTutorial_title">Mostrar Tutorial</string>
     <string name="preference_showTutorial_description">Muestra la introducción a la app de nuevo</string>
+    <string name="chapter_form_no_author_toast">No puedes enviar un capítulo sin autor!\n(Estamos trabajando en ello)</string>
 </resources>

@@ -31,6 +31,7 @@
     <string name="chapter_form_author_hint">Author</string>
     <string name="chapter_form_lang_hint">Lang</string>
     <string name="chapter_form_add_author">Add</string>
+    <string name="chapter_form_no_author_toast">You can\'t upload a chapter without author!\n(we are working on it)</string>
 
     <string name="observed_folders_view_title">Observed Folders View</string>
 

@@ -26,16 +26,19 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
         view.btnUpload.setOnClickListener {
-            if (::author.isInitialized) {
+            // if the no author is set and we are not adding a new one here... toast.
+            if (manga.author_id == null) {
+                if (!::author.isInitialized)
+                    Toast.makeText(
+                        view.context,
+                        R.string.chapter_form_no_author_toast,
+                        Toast.LENGTH_LONG
+                    ).show()
+            } else {
                 disableAllButtons()
                 saveData()
                 controller.sendChapter(chapter)
-            } else
-                Toast.makeText(
-                    view.context,
-                    R.string.chapter_form_no_author_toast,
-                    Toast.LENGTH_LONG
-                ).show()
+            }
         }
 
         //#endregion

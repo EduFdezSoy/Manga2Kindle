@@ -1,35 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         package="es.edufdezsoy.manga2kindle">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
             android:name=".M2kApplication"
             android:allowBackup="true"
+            android:fullBackupContent="@xml/backup_descriptor"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <meta-data
-                android:name="com.google.android.actions"
-                android:resource="@xml/settings" />
+<!--        At the moment this is useless. Google Play will complain -->
+<!--        <meta-data-->
+<!--                android:name="com.google.android.actions"-->
+<!--                android:resource="@xml/settings" />-->
 
         <service
-                android:name=".service.ScanManga"
-                android:description="@string/service_description"
+                android:name=".service.service.ScanMangaJobService"
+                android:description="@string/service_ScanManga_description"
                 android:enabled="true"
-                android:exported="false" />
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".ui.base.BaseActivity">
+        <service
+                android:name=".service.intentService.ScanMangaIntentService"
+                android:description="@string/service_ScanManga_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+                android:name=".service.intentService.UpdateChapterStatusIntentService"
+                android:description="@string/service_UpdateChapterStatus_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+                android:name=".service.intentService.ScanRemovedChaptersIntentService"
+                android:description="@string/service_ScanRemovedChapters_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+                android:name=".service.intentService.UploadChapterIntentService"
+                android:description="@string/service_UploadChapter_description"
+                android:exported="false"
+                android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".service.util.ServiceStartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+                android:name=".ui.splash.SplashActivity"
+                android:theme="@style/SplashTheme">
+            <tools:validation testUrl="https://manga2kindle.com/app" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:host="manga2kindle.com"
+                        android:path="/app"
+                        android:scheme="https" />
+            </intent-filter>
         </activity>
+        <activity android:name=".ui.base.BaseActivity" />
+        <activity android:name=".ui.appIntro.IntroActivity" />
+        <activity android:name=".ui.newChapters.chapterForm.ChapterFormActivity" />
+        <activity android:name=".ui.newChapters.chapterForm.authorForm.AuthorFormActivity" />
+        <activity android:name=".ui.observedFolders.folderForm.FolderFormActivity" />
+        <activity android:name=".ui.hiddenChapters.HiddenChaptersActivity" />
+        <activity android:name=".ui.about.AboutActivity" />
     </application>
 
 </manifest>

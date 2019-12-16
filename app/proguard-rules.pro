@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# This avoid an error somewhere in that library
+ -keep class cn.pedant.SweetAlert.Rotate3dAnimation {
+    public <init>(...);
+ }
+
+# Looks like Gson does not work without it
+-keep class es.edufdezsoy.manga2kindle.data.model.** { *; }

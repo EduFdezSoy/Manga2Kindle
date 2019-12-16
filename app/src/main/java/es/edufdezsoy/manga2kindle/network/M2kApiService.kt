@@ -1,34 +1,58 @@
 package es.edufdezsoy.manga2kindle.network
 
-import es.edufdezsoy.manga2kindle.data.model.Author
-import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.Language
-import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface M2kApiService {
-    @GET("/")
-    suspend fun serverHello(): String
+    @GET("hello")
+    suspend fun serverHello(): Hello
 
     //#region /author
 
-    @GET("/author")
+    /**
+     * Get all the authors from the server, currently limited to 100
+     *
+     * @param limit how many authors we want to retrieve
+     * @return this list can be empty but normally it's size will be equal to the limit set
+     */
+    @GET("author")
     suspend fun getAllAuthors(
         @Query("limit") limit: Int?
     ): List<Author>
 
-    @GET("/author")
+    /**
+     * Get an author by its id
+     *
+     * @param author_id id from the requested author
+     * @return this list can be empty but it must return only one author
+     */
+    @GET("author")
     suspend fun getAuthor(
         @Query("id") author_id: Int
     ): List<Author>
 
-    @GET("/author")
+    /**
+     * Search for an author
+     *
+     * @param search the string we are searching for
+     * @return this list can be empty, it return all authors with coincidences
+     */
+    @GET("author")
     suspend fun searchAuthor(
         @Query("search") search: String
     ): List<Author>
 
-    @PUT("/author")
+    /**
+     * Adds an author to the server database
+     *
+     * @param name the name of the author
+     * @param surname the surname of the author
+     * @param nickname the nickname of the author
+     *
+     * @return this list can be empty but it must return one item, the new author
+     */
+    @PUT("author")
     suspend fun addAuthor(
         @Query("name") name: String?,
         @Query("surname") surname: String?,
@@ -39,14 +63,25 @@ interface M2kApiService {
 
     //#region /languages
 
-    @GET("/languages")
+    /**
+     * Get all languages in the server
+     *
+     * @return this list can be empty but must have all languages in the server
+     */
+    @GET("languages")
     suspend fun getAllLanguages(): List<Language>
 
     //#endregion
 
     //#region /status
 
-    @GET("/status")
+    /**
+     * Get a chapter's status
+     *
+     * @param chapter_id the chapter id we want to check
+     * @return this list can be null but must have the chapter requested
+     */
+    @GET("status")
     suspend fun getStatus(
         @Query("chapter_id") chapter_id: Int
     ): List<Chapter>
@@ -54,17 +89,38 @@ interface M2kApiService {
     //#endregion
 
     //#region /manga
-    @GET("/manga")
+
+    /**
+     * Get all the mangas from the server, currently limited to 100
+     *
+     * @param limit how many mangas we want to retrieve
+     * @return this list can be empty but normally it's size will be equal to the limit set
+     */
+    @GET("manga")
     suspend fun getAllMangas(
         @Query("limit") limit: Int?
     ): List<Manga>
 
-    @GET("/manga")
+    /**
+     * Search for a manga
+     *
+     * @param search the string we are searching for
+     * @return this list can be empty, it return all mangas with coincidences
+     */
+    @GET("manga")
     suspend fun searchManga(
         @Query("search") search: String
     ): List<Manga>
 
-    @PUT("/manga")
+    /**
+     * Add a manga to the server
+     *
+     * @param title title of the manga
+     * @param author_id id from the author of this manga
+     *
+     * @return this list can be empty but it must return one item, the new manga
+     */
+    @PUT("manga")
     suspend fun addManga(
         @Query("title") title: String,
         @Query("author_id") author_id: Int
@@ -74,8 +130,22 @@ interface M2kApiService {
 
     //#region /manga/chapter
 
+    /**
+     * Uploads a new chapter to the server
+     *
+     * @param manga_id id from this chapter's manga
+     * @param lang_id language of this chapter
+     * @param title the chapter's title
+     * @param chapter chapter's number
+     * @param volume volume in witch this chapter is
+     * @param checksum md5 of the zipped file
+     * @param mail mail to be delivered
+     * @param file the zip file that contains the chapter
+     *
+     * @return this list can be empty but it must return one item, the new chapter
+     */
     @Multipart
-    @POST("/manga/chapter")
+    @POST("manga/chapter")
     suspend fun sendChapter(
         @Part("manga_id") manga_id: Int,
         @Part("lang_id") lang_id: Int,

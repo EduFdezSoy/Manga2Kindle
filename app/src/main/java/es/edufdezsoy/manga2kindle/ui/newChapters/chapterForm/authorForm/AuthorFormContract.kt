@@ -14,5 +14,6 @@ interface AuthorFormContract {
         fun setAuthor(author: Author)
         fun setNameList(names: List<String>)
         fun setSurnameList(surnames: List<String>)
+        fun saveAuthor()
     }
 }

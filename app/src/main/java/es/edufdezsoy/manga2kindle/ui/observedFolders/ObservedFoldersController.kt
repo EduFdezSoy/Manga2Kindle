@@ -1,5 +1,8 @@
 package es.edufdezsoy.manga2kindle.ui.observedFolders
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +10,9 @@ import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.snackbar.Snackbar
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
+import es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm.FolderFormActivity
 import es.edufdezsoy.manga2kindle.ui.observedFolders.folderForm.FolderFormController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +26,7 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
 
     private lateinit var interactor: ObservedFoldersInteractor
     private lateinit var view: ObservedFoldersView
+    private lateinit var context: Context
     lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -33,12 +37,18 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_observed_folders, container, false)
 
-        interactor = ObservedFoldersInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = ObservedFoldersInteractor(this, v.context)
 
+        context = v.context
         job = Job()
         view = ObservedFoldersView(view = v, controller = this)
 
         return v
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+        super.onActivityResumed(activity)
+        loadFolders()
     }
 
     override fun onDestroyView(view: View) {
@@ -56,24 +66,19 @@ class ObservedFoldersController : Controller(), CoroutineScope, ObservedFoldersC
     }
 
     override fun openFolderDetails(folder: Folder) {
-        router.pushController(
-            RouterTransaction.with(FolderFormController(folder))
-                .pushChangeHandler(overriddenPushHandler)
-                .popChangeHandler(overriddenPopHandler)
-        )
+        val intent = Intent(context, FolderFormActivity::class.java)
+        intent.putExtra(FolderFormActivity.FOLDER_KEY, folder.id)
+        startActivity(intent)
     }
 
     override fun openFolderForm() {
-        router.pushController(
-            RouterTransaction.with(FolderFormController())
-                .pushChangeHandler(overriddenPushHandler)
-                .popChangeHandler(overriddenPopHandler)
-        )
+        val intent = Intent(context, FolderFormActivity::class.java)
+        startActivity(intent)
     }
 
     override fun deleteFolder(folder: Folder) {
         launch { interactor.deleteFoldere(folder) }
-        (activity as BaseActivity).showSnackbar("Folder " + folder.name + " deleted",
+        (activity as BaseActivity).showSnackbar(context.getString(R.string.folder_form_folder_deleted, folder.name),
             Snackbar.LENGTH_LONG,
             "Undo",
             View.OnClickListener { launch { interactor.addFolder(folder) } })

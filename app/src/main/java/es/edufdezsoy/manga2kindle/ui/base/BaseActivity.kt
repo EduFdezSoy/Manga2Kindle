@@ -1,13 +1,16 @@
 package es.edufdezsoy.manga2kindle.ui.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -20,20 +23,20 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IProfile
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.service.ScanManga
-import es.edufdezsoy.manga2kindle.ui.main.MainController
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersController
 import es.edufdezsoy.manga2kindle.ui.observedFolders.ObservedFoldersController
 import es.edufdezsoy.manga2kindle.ui.settings.SettingsController
 import es.edufdezsoy.manga2kindle.ui.uploadedChapters.UploadedChaptersController
 import kotlinx.android.synthetic.main.activity_base.*
 
-open class BaseActivity : AppCompatActivity() {
+
+open class BaseActivity : AppCompatActivity(), BaseInteractor.Controller {
 
     //#region vars and vals
 
     private lateinit var router: Router
     private lateinit var drawer: Drawer
+    private lateinit var interactor: BaseInteractor
 
     //#endregion
     //#region lifecycle functions
@@ -42,16 +45,19 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
+        interactor = BaseInteractor(this)
         router = Conductor.attachRouter(this, controller_container, savedInstanceState)
 
         if (!router.hasRootController())
-            router.setRoot(RouterTransaction.with(MainController()))
+            router.setRoot(
+                RouterTransaction.with(NewChaptersController())
+                    .popChangeHandler(HorizontalChangeHandler())
+                    .pushChangeHandler(HorizontalChangeHandler())
+            )
 
         baseToolbar.setTitle(R.string.app_name)
         buildDrawer()
-
-        // Start our scanner service
-        startService(Intent(this, ScanManga::class.java))
+        checkEmail()
     }
 
     override fun onBackPressed() {
@@ -59,8 +65,25 @@ open class BaseActivity : AppCompatActivity() {
             super.onBackPressed()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        interactor.close(this)
+    }
+
     //#endregion
     //#region public functions
+
+    fun scanMangas() {
+        interactor.scanMangas(this)
+    }
+
+    fun isScanningMangas(): Boolean {
+        return interactor.isScanning()
+    }
+
+    fun uploadChapters() {
+        interactor.uploadChapter(this)
+    }
 
     fun showSnackbar(msg: String) {
         showSnackbar(msg, null, null, null)
@@ -88,42 +111,29 @@ open class BaseActivity : AppCompatActivity() {
         snackbar.show()
     }
 
+    fun getMenu(): Drawer? {
+        if (::drawer.isInitialized)
+            return drawer
+        else
+            return null
+    }
+
     //#endregion
     //#region private functions
 
     private fun buildDrawer() {
         DrawerBuilder().withActivity(this).build()
 
-        val newChapters = PrimaryDrawerItem().withIdentifier(1).withName("New Chapters")
-        val uploadedChapters = PrimaryDrawerItem().withIdentifier(2).withName("Uploaded Chapters")
-        val observedFolders = PrimaryDrawerItem().withIdentifier(3).withName("Observed Folders")
-        val settings = SecondaryDrawerItem().withIdentifier(4).withName("Settings")
-
-        // Create the AccountHeader
-        val headerResult = AccountHeaderBuilder()
-            .withActivity(this)
-//            .withHeaderBackground(R.drawable.header)
-            .addProfiles(
-                ProfileDrawerItem().withName("Manga2kindle").withEmail("test_mail@example.com").withIcon(
-                    getDrawable(R.drawable.btn_radio_on_mtrl)
-                )
-            )
-            .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {
-                override fun onProfileChanged(
-                    view: View?,
-                    profile: IProfile<*>,
-                    current: Boolean
-                ): Boolean {
-                    return false
-                }
-            })
-            .build()
+        val newChapters = PrimaryDrawerItem().withIdentifier(1).withName(getString(R.string.drawer_newChapters))
+        val uploadedChapters = PrimaryDrawerItem().withIdentifier(2).withName(getString(R.string.drawer_uploadedChapters))
+        val observedFolders = PrimaryDrawerItem().withIdentifier(3).withName(getString(R.string.drawer_observedFolders))
+        val settings = SecondaryDrawerItem().withIdentifier(4).withName(getString(R.string.drawer_settings))
 
         //create the drawer and remember the `Drawer` result object
         drawer = DrawerBuilder()
             .withActivity(this)
             .withToolbar(baseToolbar)
-            .withAccountHeader(headerResult)
+            .withAccountHeader(mountHeader())
             .addDrawerItems(
                 newChapters,
                 uploadedChapters,
@@ -140,23 +150,23 @@ open class BaseActivity : AppCompatActivity() {
                     when (drawerItem) {
                         newChapters -> router.setRoot(RouterTransaction.with(NewChaptersController()))
                         uploadedChapters -> router.setRoot(
-                            RouterTransaction.with(
-                                UploadedChaptersController()
-                            )
+                            RouterTransaction.with(UploadedChaptersController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
                         observedFolders -> router.setRoot(
-                            RouterTransaction.with(
-                                ObservedFoldersController()
-                            )
+                            RouterTransaction.with(ObservedFoldersController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
-                        settings -> router.setRoot(
-                            RouterTransaction.with(
-                                SettingsController()
-                            )
+                        settings -> router.pushController(
+                            RouterTransaction.with(SettingsController())
+                                .popChangeHandler(HorizontalChangeHandler())
+                                .pushChangeHandler(HorizontalChangeHandler())
                         )
                         else -> Toast.makeText(
                             this@BaseActivity,
-                            "henlo! :D",
+                            getString(R.string.drawer_cuteHello),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -164,6 +174,68 @@ open class BaseActivity : AppCompatActivity() {
                 }
             })
             .build()
+    }
+
+    private fun mountHeader(): AccountHeader {
+        // Create the AccountHeader (and return it)
+        return AccountHeaderBuilder()
+            .withActivity(this)
+            .withHeaderBackground(R.drawable.ic_dotted)
+            .addProfiles(
+                ProfileDrawerItem()
+                    .withName(getString(R.string.drawer_header_tittle))
+                    .withEmail(interactor.getMail(this))
+                    .withIcon(
+                        getDrawable(R.mipmap.ic_launcher)
+                    )
+            )
+            .withSelectionListEnabledForSingleProfile(false)
+            .withOnAccountHeaderListener(object : AccountHeader.OnAccountHeaderListener {
+                override fun onProfileChanged(
+                    view: View?,
+                    profile: IProfile<*>,
+                    current: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+            .build()
+    }
+
+    private fun checkEmail() {
+        var mail = interactor.getMail(this)
+
+        if (mail.isBlank()) {
+            // prompt a modal to retrieve the email
+
+            // custom view for the modal
+            val etMail = EditText(this)
+            etMail.hint = getString(R.string.slide_3_email_hint)
+            val linearLayout = LinearLayout(applicationContext)
+            linearLayout.orientation = LinearLayout.VERTICAL
+            linearLayout.addView(etMail)
+
+            val dialog = SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(getString(R.string.tuto_email_title))
+            dialog.setCancelable(false)
+            dialog.setCustomView(linearLayout)
+            dialog.setConfirmClickListener {
+                mail = etMail.text.toString()
+
+                if (mail.isBlank())
+                    etMail.error = getString(R.string.slide_3_email_error)
+                else {
+                    // set mail in the preferences
+                    interactor.setMail(this, mail)
+                    // rewrite drawer to set mail
+                    drawer.setHeader(mountHeader().view, true)
+
+                    // close dialog
+                    dialog.cancel()
+                }
+            }
+            dialog.show()
+        }
     }
 
     //#endregion

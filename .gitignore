@@ -7,3 +7,5 @@
 /captures
 .externalNativeBuild
 /app/release/*
+/app/prod/*
+app/google-services.json

@@ -1,5 +1,7 @@
 package es.edufdezsoy.manga2kindle.ui.adapter
 
+import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +15,11 @@ class FolderAdapter(var folders: List<Folder>) :
 
     private var onClickListener: View.OnClickListener? = null
     private var onLongClickListener: View.OnLongClickListener? = null
+    private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        context = parent.context
+
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_folder, parent, false
@@ -23,8 +28,10 @@ class FolderAdapter(var folders: List<Folder>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        AdapterUtils.setBackgroundColor(holder, position, context)
+
         holder.name?.text = folders[position].name
-        holder.path?.text = folders[position].path
+        holder.path?.text = Uri.parse(folders[position].path).path
 
         if (onClickListener != null)
             holder.setOnClickListener(onClickListener!!)

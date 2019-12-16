@@ -1,21 +1,22 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm
 
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import es.edufdezsoy.manga2kindle.M2kApplication
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
+import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
 import kotlinx.android.synthetic.main.view_chapter_form.view.*
-import java.lang.Exception
+
 
 class ChapterFormView(val view: View, val controller: ChapterFormContract.Controller) :
     ChapterFormContract.View {
     private lateinit var chapter: Chapter
     private lateinit var manga: Manga
-    private lateinit var mail: String
     private lateinit var author: Author
     private lateinit var authors: List<Author>
     private var authorArray = arrayOf("")
@@ -24,17 +25,20 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         //#region clickListeners
 
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
-        view.btnReturn.setOnClickListener { controller.cancelEdit() }
         view.btnUpload.setOnClickListener {
-            disableAllButtons()
-            saveData()
-            mail = view.tietEmail.text.toString()
-            controller.sendChapter(chapter, mail)
-        }
-        view.btnSave.setOnClickListener {
-            disableAllButtons()
-            saveData()
-            onSaveEnableButtons()
+            // if the no author is set and we are not adding a new one here... toast.
+            if (manga.author_id == null) {
+                if (!::author.isInitialized)
+                    Toast.makeText(
+                        view.context,
+                        R.string.chapter_form_no_author_toast,
+                        Toast.LENGTH_LONG
+                    ).show()
+            } else {
+                disableAllButtons()
+                saveData()
+                controller.sendChapter(chapter)
+            }
         }
 
         //#endregion
@@ -43,50 +47,29 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         // TODO: if something is edited disable the upload button until changes are saved
 
         //#endregion
+
+        view.actvAuthor.doOnTextChanged { text, start, count, after ->
+            controller.searchAuthors(text.toString())
+        }
+
+        // TODO: mangas cant be edited by now
+        // this disables the manga text field
+        view.tietManga.inputType = InputType.TYPE_NULL
+
+        // we are supposing chapters are always correct, we are not allowing edits
+        view.etChapter.inputType = InputType.TYPE_NULL
+        view.etChapter.background = null
     }
 
     //#region private functions
 
-    private fun saveData() {
-        mail = view.tietEmail.text.toString()
-
-        try {
-            chapter.volume = view.etVolume.text.toString().toInt()
-        } catch (e: Exception) {
-            if (M2kApplication.debug)
-                Log.e(M2kApplication.TAG, "Yo fucker, the volume thrown an exception in the ChapterForm")
-        }
-        // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
-        chapter.title = view.tietTitle.text.toString()
-
-        // TODO: manga title cant actually be edited because to the server it will be a new manga
-        // manga.title = view.tietManga.text.toString()
-        if (manga.author_id == null) {
-            val newManga = Manga(manga.id, manga.title, author.id)
-            newManga.synchronized = manga.synchronized
-            newManga.identifier = manga.identifier
-
-            controller.saveData(chapter, newManga, mail)
-        } else {
-            controller.saveData(chapter, manga, mail)
-        }
-    }
-
     private fun disableAllButtons() {
         onEditDisableButtons()
-        view.btnSave.isEnabled = false
     }
 
     private fun onEditDisableButtons() {
         view.btnAddAuthor.isEnabled = false
-        view.btnReturn.isEnabled = false
         view.btnUpload.isEnabled = false
-    }
-
-    private fun onSaveEnableButtons() {
-        view.btnAddAuthor.isEnabled = true
-        view.btnReturn.isEnabled = true
-        view.btnUpload.isEnabled = true
     }
 
     private fun trimTrailingZero(value: String?): String? {
@@ -103,28 +86,11 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         }
     }
 
-    private fun formatAuthor(author: Author): String {
-        var authorText = ""
-        if (!author.surname.isNullOrEmpty() || !author.name.isNullOrEmpty()) {
-            if (!author.surname.isNullOrEmpty())
-                authorText += author.surname + " "
-            if (!author.name.isNullOrEmpty())
-                authorText += author.name + " "
-            if (!author.nickname.isNullOrEmpty())
-                authorText += "(AKA " + author.nickname + ")"
-        } else {
-            if (!author.nickname.isNullOrEmpty())
-                authorText += author.nickname
-        }
-
-        return authorText
-    }
-
     private fun setAuthorTextList(authors: List<Author>): Array<String> {
         val authorsStr = ArrayList<String>()
 
         authors.forEach {
-            authorsStr.add(formatAuthor(it))
+            authorsStr.add(it.toString())
         }
 
         return authorsStr.toTypedArray()
@@ -142,7 +108,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
             val authorStr = adapterView.getItemAtPosition(i)
 
             authors.forEach {
-                if (formatAuthor(it) == authorStr) {
+                if (it.toString() == authorStr) {
                     author = it
                     return@setOnItemClickListener
                 }
@@ -152,6 +118,32 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
     //#endregion
     //#region override functions
+
+    override fun saveData() {
+        try {
+            chapter.volume = view.etVolume.text.toString().toInt()
+        } catch (e: Exception) {
+            chapter.volume = null
+        }
+        // chapter.chapter = view.etChapter.text.toString().toFloat() // chapter can not be reassigned, we expect the chapter to be correct
+        chapter.title = view.tietTitle.text.toString()
+
+        // TODO: manga title cant actually be edited because to the server it will be a new manga
+        // manga.title = view.tietManga.text.toString()
+        if (manga.author_id == null) {
+            val newManga: Manga
+            if (::author.isInitialized)
+                newManga = Manga(manga.id, manga.title, author.id)
+            else
+                newManga = Manga(manga.id, manga.title, null)
+            newManga.synchronized = manga.synchronized
+            newManga.identifier = manga.identifier
+
+            controller.saveData(chapter, newManga)
+        } else {
+            controller.saveData(chapter, manga)
+        }
+    }
 
     override fun setChapter(chapter: Chapter) {
         this.chapter = chapter
@@ -167,22 +159,31 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
         this.manga = manga
 
         view.tietManga.setText(manga.title)
+        view.tietManga.background = null
     }
 
     override fun setAuthor(author: Author) {
         view.actvAuthor.inputType = InputType.TYPE_NULL
-        view.actvAuthor.setText(formatAuthor(author))
+        view.actvAuthor.setText(author.toString())
+
+        // remove editText line
+        view.actvAuthor.background = null
+        // disable the button
+        view.btnAddAuthor.isEnabled = false
+        // change the color
+        view.btnAddAuthor.background.setTint(
+            ContextCompat.getColor(
+                view.context,
+                R.color.btnNormalDisabled
+            )
+        )
+        // view.btnAddAuthor.setTextColor(ContextCompat.getColor(view.context, R.color.btnDisabled))
     }
 
     override fun setAuthors(authors: List<Author>) {
         this.authors = authors
         authorArray = setAuthorTextList(authors)
         notifyAuthorAdapter()
-    }
-
-    override fun setMail(mail: String) {
-        this.mail = mail
-        view.tietEmail.setText(mail)
     }
 
     //#endregion

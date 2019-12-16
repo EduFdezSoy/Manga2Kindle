@@ -1,15 +1,14 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters.chapterForm.authorForm
 
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.Controller
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.ui.base.BaseActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +22,7 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
     private lateinit var view: AuthorFormContract.View
 
     private lateinit var chapter: Chapter
+    private var chapter_id = 0
     private var called = ""
 
     lateinit var job: Job
@@ -38,18 +38,27 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
         this.chapter = chapter
     }
 
+    constructor(chapter_id: Int) : super() {
+        this.chapter_id = chapter_id
+    }
+
     //#endregion
     //#region lifecycle methods
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         val v = inflater.inflate(R.layout.view_author_form, container, false)
-        interactor = AuthorFormInteractor(this, M2kDatabase.invoke(v.context))
+        interactor = AuthorFormInteractor(this, v.context)
 
         job = Job()
         view = AuthorFormView(view = v, controller = this)
 
-        launch {
-            interactor.getManga(chapter.manga_id)
+
+        if (::chapter.isInitialized) {
+            setChapter(chapter)
+        } else if (chapter_id != 0) {
+            launch {
+                interactor.getChapter(chapter_id)
+            }
         }
 
         return v
@@ -62,6 +71,17 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
 
     //#endregion
     //#region public methods
+
+    /**
+     * Called from the activity
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_save -> view.saveAuthor()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     /**
      * Called from the view
@@ -89,9 +109,12 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
      * Called from the view
      */
     override fun saveAuthor(name: String, surname: String, nickname: String) {
-        launch {
-            interactor.saveAuthor(name, surname, nickname)
-        }
+        if (name.isNotBlank() || surname.isNotBlank() || nickname.isNotBlank())
+            launch {
+                interactor.saveAuthor(name, surname, nickname)
+            }
+        else
+            done()
     }
 
     /**
@@ -144,11 +167,19 @@ class AuthorFormController : Controller, CoroutineScope, AuthorFormContract.Cont
         }
     }
 
+    override fun setChapter(chapter: Chapter) {
+        launch {
+            interactor.getManga(chapter.manga_id)
+        }
+
+        this.chapter = chapter
+    }
+
+
     /**
      * Called from the interactor
      */
     override fun done() {
-        (activity!! as BaseActivity).showSnackbar("Author saved")
         onBackPressed()
     }
 

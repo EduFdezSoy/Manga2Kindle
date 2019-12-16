@@ -1,13 +1,15 @@
 package es.edufdezsoy.manga2kindle.ui.adapter
 
 import android.content.Context
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapter
+import es.edufdezsoy.manga2kindle.data.model.viewObject.NewChapterDiffCallback
 import kotlinx.android.synthetic.main.item_chapter.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,16 +17,28 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class NewChapterAdapter(var chapters: List<Chapter>) :
+class NewChapterAdapter(var chapters: ArrayList<NewChapter>) :
     RecyclerView.Adapter<NewChapterAdapter.ViewHolder>(), CoroutineScope {
 
+    interface OnClickListener {
+        fun onItemClicked(chapter: NewChapter)
+    }
+
+    interface OnLongClickListener {
+        fun onItemLongClicked(chapter: NewChapter)
+    }
+
     private lateinit var context: Context
-    private var onClickListener: View.OnClickListener? = null
-    private var onLongClickListener: View.OnLongClickListener? = null
+    private var onClickListener: OnClickListener? = null
+    private var onLongClickListener: OnLongClickListener? = null
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
+
+    private var lastClickTime: Long = 0
+
+    constructor(chapters: List<NewChapter>) : this(chapters as ArrayList<NewChapter>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -37,82 +51,58 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         launch {
-            holder.manga?.text = ""
-            holder.author?.text = ""
-
-            val manga = M2kDatabase(context).MangaDao().getMangaById(chapters[position].manga_id)
-            holder.manga?.text = manga.title
-
-            val author = manga.author_id?.let { M2kDatabase(context).AuthorDao().getAuthor(it) }
-
-            var authorText = ""
-            if (!author?.surname.isNullOrEmpty() || !author?.name.isNullOrEmpty()) {
-                if (!author?.surname.isNullOrEmpty())
-                    authorText += author?.surname + " "
-                if (!author?.name.isNullOrEmpty())
-                    authorText += author?.name + " "
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += "(AKA " + author?.nickname + ")"
-            } else {
-                if (!author?.nickname.isNullOrEmpty())
-                    authorText += author?.nickname
-            }
-            holder.author?.text = authorText
-        }
-
-        if (chapters[position].volume == null) {
-            holder.volText?.visibility = View.GONE
-            holder.vol?.visibility = View.GONE
-            holder.spacer?.visibility = View.GONE
-        } else {
-            holder.volText?.visibility = View.VISIBLE
-            holder.vol?.visibility = View.VISIBLE
-            holder.spacer?.visibility = View.VISIBLE
-            holder.vol?.text = chapters[position].volume!!.toString()
-        }
-
-        holder.ch?.text = chapters[position].chapter.toString()
-        holder.title?.text = chapters[position].title
-
-        launch {
+            val chapter = chapters[position]
+            AdapterUtils.setBackgroundColor(holder, position, context)
             holder.lang.text = ""
-            val lang = chapters[position].lang_id?.let {
-                M2kDatabase(context).LanguageDao().getLanguage(it)
-            }
-            if (lang != null)
-                holder.lang.text = lang.code
-        }
 
-        if (onClickListener != null)
-            holder.setOnClickListener(onClickListener!!)
-        if (onLongClickListener != null)
-            holder.setOnLongClickListener(onLongClickListener!!)
+            holder.manga.text = chapter.manga_title
+            holder.chapter.text = chapter.chapter
+
+            if (chapter.author.isNotBlank())
+                holder.author.text = chapter.author
+            else
+                holder.author.text = AdapterUtils.randAuthorFace(context)
+
+            if (onClickListener != null)
+                holder.setOnClickListener(View.OnClickListener {
+                    // these three lines prevent mis-clicking
+                    if (SystemClock.elapsedRealtime() - lastClickTime < 1000)
+                        return@OnClickListener
+                    lastClickTime = SystemClock.elapsedRealtime()
+
+                    onClickListener!!.onItemClicked(chapter)
+                })
+            if (onLongClickListener != null)
+                holder.setOnLongClickListener(View.OnLongClickListener {
+                    onLongClickListener!!.onItemLongClicked(chapter)
+                    return@OnLongClickListener true
+                })
+        }
     }
 
     override fun getItemCount(): Int {
         return chapters.size
     }
 
-    fun addAll(chapters: List<Chapter>) {
-        this.chapters = chapters
+    fun setData(chapters: List<NewChapter>) {
+        val diffCallback = NewChapterDiffCallback(this.chapters, chapters)
+        val diffRes = DiffUtil.calculateDiff(diffCallback)
+        this.chapters.clear()
+        this.chapters.addAll(chapters)
+        diffRes.dispatchUpdatesTo(this)
     }
 
-    fun setOnClickListener(listener: View.OnClickListener) {
+    fun setOnClickListener(listener: OnClickListener) {
         onClickListener = listener
     }
 
-    fun setOnLongClickListener(listener: View.OnLongClickListener) {
+    fun setOnLongClickListener(listener: OnLongClickListener) {
         onLongClickListener = listener
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val manga = view.tvTitle
-        val vol = view.tvVol
-        val volText = view.tvVolText
-        val spacer = view.tvLineText
-        val ch = view.tvCh
-        val chText = view.tvChText
-        val title = view.tvChTitle
+        val chapter = view.tvChapter
         val author = view.tvAuthor
         val lang = view.tvLang
 
@@ -124,5 +114,4 @@ class NewChapterAdapter(var chapters: List<Chapter>) :
             itemView.setOnLongClickListener(onLongClickListener)
         }
     }
-
 }

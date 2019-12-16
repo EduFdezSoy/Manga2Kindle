@@ -1,19 +1,49 @@
 <?xml version ="1.0" encoding ="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="Dev Settings">
-
-        <SwitchPreference
-                android:defaultValue="false"
-                android:key="switchDebug"
-                android:summary="Can make the app slower"
-                android:title="Enable Debug" />
+    <PreferenceCategory app:title="General Settings">
         <EditTextPreference
-                android:defaultValue="dont"
-                android:key="etPrefResetChapters"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:summary='Only the ones not uploaded yet (write "yes, please")'
-                android:title="Reset list of new detected chapters" />
+                app:key="kindle_mail"
+                app:singleLine="true"
+                app:summary="@string/preference_kindle_mail_description"
+                app:title="@string/preference_kindle_mail_title" />
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="delete_chapters"
+                app:summaryOff="@string/preference_delete_chapters_description_negative"
+                app:summaryOn="@string/preference_delete_chapters_description_positive"
+                app:title="@string/preference_delete_chapters_title" />
+        <Preference
+                app:key="hiddenChapters"
+                app:summary="@string/preference_hiddenChapters_description"
+                app:title="@string/preference_hiddenChapters_title" />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="null_author_donger"
+                app:summaryOff="@string/preference_null_author_donger_description_negative"
+                app:summaryOn="@string/preference_null_author_donger_description_positive"
+                app:title="@string/preference_null_author_donger_title" />
+        <Preference
+                app:key="showTutorial"
+                app:summary="@string/preference_showTutorial_description"
+                app:title="@string/preference_showTutorial_title" />
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="Dev Settings">
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="switchDebug"
+                app:summary="@string/preference_switchDebug_description"
+                app:title="@string/preference_switchDebug_title" />
+        <Preference
+                app:key="resetChapters"
+                app:summary="@string/preference_resetChapters_description"
+                app:title="@string/preference_resetChapters_title" />
+    </PreferenceCategory>
+
+    <Preference
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            app:key="about"
+            app:title="@string/preference_about_title" />
 </PreferenceScreen>

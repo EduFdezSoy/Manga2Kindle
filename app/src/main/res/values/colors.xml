@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#382F32</color>
+    <color name="colorPrimaryDark">#221C1D</color>
+    <color name="colorAccent">#F1396D</color>
+    <color name="colorAccentDark">#D63260</color>
+    <color name="colorAccentLight">#FFEAF2</color>
+    <color name="colorAccentExtraLight">#80FFEAF2</color>
+
+    <!-- STATUSES -->
     <color name="colorSuccess">#4CAF50</color>
     <color name="colorFailed">#F44336</color>
+    <color name="colorEnqueue">#80CBC4</color>
     <color name="colorProcessing">#FFC107</color>
+    <color name="colorCompressing">#69F0AE</color>
+    <color name="colorUploading">#40C4FF</color>
+
+    <color name="btnText">#FFF</color>
+    <color name="btnUpload">@color/colorAccent</color>
+    <color name="btnUploadPressed">@color/colorAccentDark</color>
+    <color name="btnUploadDisabled">@color/colorAccentLight</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="btnNormal">#FAACC4</color>
+    <color name="btnNormalPressed">#DF95AC</color>
+    <color name="btnNormalDisabled">@color/colorAccentLight</color>
+    <color name="btnDisabled">#80263238</color>
+
+    <!-- SLIDES BACKGROUNDS -->
+    <color name="slide1">@color/colorPrimary</color>
+    <color name="slide2">#4B2D37</color>
+    <color name="slide3">#57313E</color>
+    <color name="slide4">#683848</color>
+
+    <!-- LIST BACKGROUNDS -->
+    <color name="listBG_1">@color/transparent</color>
+    <color name="listBG_2">@color/colorAccentExtraLight</color>
+
+    <!-- TEXT COLOR -->
+    <color name="textImportant">#404040</color>
+    <color name="textRegular">#808080</color>
+    <color name="textImportantInverted">#FDFDFD</color>
+    <color name="textRegularInverted">#bfbfbf</color>
+
+    <!-- MATERIAL DRAWER -->
+    <color name="material_drawer_selected">@color/colorAccentLight</color>
 </resources>

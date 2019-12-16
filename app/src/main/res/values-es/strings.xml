@@ -39,7 +39,7 @@
     <string name="error_no_mail_set">No hay ningún correo establecido!</string>
     <string name="error_upload_failed">La subida falló</string>
     <string name="folder_form_empty_path_error">La ruta no puede estar vacía!</string>
-    <string name="folder_form_folder_deleted">Carpeta \"v%1$s\" borrada</string>
+    <string name="folder_form_folder_deleted">Carpeta %1$s borrada</string>
     <string name="folder_form_name">Nombre</string>
     <string name="folder_form_no_path_selected">no hay ruta seleccionada</string>
     <string name="folder_form_path">Ruta</string>

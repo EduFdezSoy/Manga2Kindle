@@ -232,9 +232,13 @@ class ScanManga : CoroutineScope {
         mangasAux.forEach {
             var matches = false
             chapterRegex.forEach(fun(regex: Pattern) {
-                if (regex.matcher(it.name!!).matches()) {
-                    matches = true
-                    return
+                try {
+                    if (regex.matcher(it.name!!).matches()) {
+                        matches = true
+                        return
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace();
                 }
             })
 

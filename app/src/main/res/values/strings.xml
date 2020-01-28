@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Manga2Kindle</string>
+    <string name="chapter_title_max_length" translatable="false">100</string>
 
     <!-- Services -->
     <string name="service_ScanManga_description">Search for new manga chapters</string>
@@ -40,7 +41,7 @@
     <string name="folder_form_path">Path</string>
     <string name="folder_form_no_path_selected">no path selected</string>
     <string name="folder_form_empty_path_error">The path can\'t be empty!</string>
-    <string name="folder_form_folder_deleted">Folder v%1$s deleted</string>
+    <string name="folder_form_folder_deleted">Folder %1$s deleted</string>
     <string name="folder_form_example">Select your mangas folder, you don\'t need to select each manga, just the folder where the mangas are.</string>
     <string name="folder_form_extructure_example"><![CDATA[
         MyMangas/\n

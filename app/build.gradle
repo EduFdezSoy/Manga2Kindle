@@ -17,8 +17,8 @@ android {
         applicationId "es.edufdezsoy.manga2kindle"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 15
-        versionName "2.0"
+        versionCode 16
+        versionName "2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {

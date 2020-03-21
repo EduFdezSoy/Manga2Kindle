@@ -294,11 +294,12 @@ class ScanManga : CoroutineScope {
 
     /**
      * Pick the chapter number from the folder name pased
+     * (this fun is public in order to perform tests)
      *
      * @param name a folder name from a chapter
      * @return the chapter number or 0 if none
      */
-    private fun pickChapter(name: String): Float {
+    fun pickChapter(name: String): Float {
         val chapterRegex = Pattern.compile("[+-]?\\d+(?:\\.\\d+)?")
         var chapter: String = ""
 

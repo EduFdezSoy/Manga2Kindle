@@ -42,7 +42,9 @@ class ScanManga : CoroutineScope {
         // NHentai, it only says Chapter
         Pattern.compile("Chapter"),
         // HeavenManga, Chap NN
-        Pattern.compile(".*Chap \\d+.*")
+        Pattern.compile(".*Chap \\d+.*"),
+        // Guya, starts with NN
+        Pattern.compile("\\d+.*")
     )
 
     //#endregion

@@ -7,6 +7,8 @@ import org.junit.Test
 class ScanMangaJobServiceTest {
     @Test
     fun formatNameTest() {
+        println("\nTest: formatNameTest\n")
+
         val scanManga = ScanManga()
 
         // Mock data
@@ -43,6 +45,9 @@ class ScanMangaJobServiceTest {
 
         for (i in names.indices) {
             val res = scanManga.formatName(names[i])
+
+            println("Asserting: " + results[i] + " (Input: " + names[i] + ")")
+            println("with:      " + res)
 
             assertEquals(results[i], res)
         }

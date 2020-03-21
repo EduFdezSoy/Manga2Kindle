@@ -40,7 +40,9 @@ class ScanManga : CoroutineScope {
         // TuMangaOnline, same
         Pattern.compile(".*Capítulo \\d+.*"),
         // NHentai, it only says Chapter
-        Pattern.compile("Chapter")
+        Pattern.compile("Chapter"),
+        // HeavenManga, Chap NN
+        Pattern.compile(".*Chap \\d+.*")
     )
 
     //#endregion

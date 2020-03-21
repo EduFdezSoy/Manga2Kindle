@@ -40,7 +40,11 @@ class ScanManga : CoroutineScope {
         // TuMangaOnline, same
         Pattern.compile(".*Capítulo \\d+.*"),
         // NHentai, it only says Chapter
-        Pattern.compile("Chapter")
+        Pattern.compile("Chapter"),
+        // HeavenManga, Chap NN
+        Pattern.compile(".*Chap \\d+.*"),
+        // Guya, starts with NN
+        Pattern.compile("\\d+.*")
     )
 
     //#endregion
@@ -219,35 +223,23 @@ class ScanManga : CoroutineScope {
      * @return a list of mangas (those folders may have chapters or may not)
      */
     private fun searchForMangas(tree: List<DocumentFile>): List<DocumentFile> {
-        val chapterRegex = chapterRegex
         val mangas = ArrayList<DocumentFile>()
-        val mangasAux = ArrayList<DocumentFile>()
+        val chapters = ArrayList<DocumentFile>()
 
+        // it first goes all in and finds the chapters
         tree.forEach {
-            if (it.isDirectory) {
-                mangasAux.add(it)
-            }
+            if (it.isFile && it.name != ".nomedia")
+                if (it.parentFile!!.name != ".thumb")
+                    chapters.add(it.parentFile!!)
         }
 
-        mangasAux.forEach {
-            var matches = false
-            chapterRegex.forEach(fun(regex: Pattern) {
-                try {
-                    if (regex.matcher(it.name!!).matches()) {
-                        matches = true
-                        return
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace();
-                }
-            })
-
-            if (!matches) {
-                mangas.add(it)
-            }
+        // then it pics their parents
+        chapters.distinct().forEach {
+            mangas.add(it.parentFile!!)
         }
 
-        return mangas
+        // and returns the unique ones (distinct removes duplicates)
+        return mangas.distinct()
     }
 
     /**
@@ -263,25 +255,54 @@ class ScanManga : CoroutineScope {
         val tmpChapterRegex = arrayOf(".*_tmp", ".*_temp")
 
         manga.listFiles().forEach {
+            // it first check if it is a chapter, a folder with files inside (no more folders)
             if (it.isDirectory) {
-                chapterRegex.forEach(fun(regex: Pattern) {
-                    if (regex.matcher(it.name!!).matches()) {
-                        var temporal = false
-                        tmpChapterRegex.forEach(fun(regex: String) {
-                            if (Pattern.compile(regex).matcher(it.name!!).matches()) {
-                                temporal = true
-                                return
-                            }
-                        })
-                        if (!temporal) {
-                            chapters.add(it)
-                        } else {
-                            if (M2kApplication.debug)
-                                Log.d(TAG, "This chapter is not downloaded yet (" + it.name + ")")
-                        }
-                        return
+                var hasFolders = false
+
+                it.listFiles().forEach {
+                    if (it.isDirectory && it.name != ".thumb")
+                        hasFolders = true
+                }
+
+                if (hasFolders) {
+                    it.listFiles().forEach {
+                        chapters.addAll(getChapters(it))
                     }
-                })
+                } else {
+                    // return if it is empty
+                    if (it.listFiles().isEmpty())
+                        return@forEach
+                    // return if it is only .nomedia
+                    if (it.listFiles().size == 1)
+                        if (it.listFiles()[0].name == ".nomedia")
+                            return@forEach
+                    // return if it is .thumb
+                    if (it.name == ".thumb")
+                        return@forEach
+
+                    // then it finds the chapter name and that craps
+                    chapterRegex.forEach(fun(regex: Pattern) {
+                        if (regex.matcher(it.name!!).matches()) {
+                            var temporal = false
+                            tmpChapterRegex.forEach(fun(regex: String) {
+                                if (Pattern.compile(regex).matcher(it.name!!).matches()) {
+                                    temporal = true
+                                    return
+                                }
+                            })
+                            if (!temporal) {
+                                chapters.add(it)
+                            } else {
+                                if (M2kApplication.debug)
+                                    Log.d(
+                                        TAG,
+                                        "This chapter is not downloaded yet (" + it.name + ")"
+                                    )
+                            }
+                            return
+                        }
+                    })
+                }
             }
         }
 
@@ -290,11 +311,12 @@ class ScanManga : CoroutineScope {
 
     /**
      * Pick the chapter number from the folder name pased
+     * (this fun is public in order to perform tests)
      *
      * @param name a folder name from a chapter
      * @return the chapter number or 0 if none
      */
-    private fun pickChapter(name: String): Float {
+    fun pickChapter(name: String): Float {
         val chapterRegex = Pattern.compile("[+-]?\\d+(?:\\.\\d+)?")
         var chapter: String = ""
 

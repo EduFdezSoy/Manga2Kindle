@@ -10,7 +10,7 @@ class ScanMangaTest {
 
     @Test
     fun testGetChapter() {
-        println("\nTest: testGetChapter\n")
+        println("Test: testGetChapter\n")
 
         // Test input data
         val chapterNames = arrayOf(
@@ -92,11 +92,13 @@ class ScanMangaTest {
 
             assertEquals(results[rnd], res)
         }
+
+        println("Done.")
     }
 
     @Test
     fun testPickVolume() {
-        println("\nTest: testPickVolume\n")
+        println("Test: testPickVolume\n")
 
         // Test input data
         val chapterNames = arrayOf(
@@ -178,7 +180,7 @@ class ScanMangaTest {
 
     @Test
     fun formatNameTest() {
-        println("\nTest: formatNameTest\n")
+        println("Test: formatNameTest\n")
 
         // Mock data
         val names = arrayOf(
@@ -215,8 +217,8 @@ class ScanMangaTest {
         for (i in names.indices) {
             val res = scanManga.formatName(names[i])
 
-            println("Asserting: " + results[i] + " (Input: " + names[i] + ")")
-            println("with:      " + res)
+            println("Asserting: '" + results[i] + "' (Input: '" + names[i] + "')")
+            println("with:      '" + res + "'")
 
             assertEquals(results[i], res)
         }

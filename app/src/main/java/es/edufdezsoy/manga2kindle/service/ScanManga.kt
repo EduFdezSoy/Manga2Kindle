@@ -337,12 +337,13 @@ class ScanManga : CoroutineScope {
     }
 
     /**
-     * Pick the volume number from the folder name pased
+     * Pick the volume number from the folder name passed
+     * (this fun is public in order to perform tests)
      *
      * @param name a folder name from a chapter
      * @return the volume number or null if none
      */
-    private fun pickVolume(name: String): Int? {
+    fun pickVolume(name: String): Int? {
         val volumeRegex = Pattern.compile("[V-v][O-o][L-l].[+-]?\\d+(?:\\.\\d+)?")
         var volume: String = ""
 
@@ -360,6 +361,10 @@ class ScanManga : CoroutineScope {
         while (matcher.find()) {
             volume = matcher.group()
         }
+
+        // we are picking chapters as volumes in MangaLife, this solves that
+        if (volume.length > 2)
+            volume = ""
 
         if (volume.isBlank())
             return null

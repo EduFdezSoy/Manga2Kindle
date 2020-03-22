@@ -35,7 +35,9 @@ class ScanMangaTest {
             "177 - Senpai-kun and Kouhai-chan",
             "26.2 - Senpai-kun",
             // Void, Null, just testing, may not happen
-            ""
+            "",
+            // MangaLife
+            "Yancha 0034"
             )
 
         // Test result
@@ -62,7 +64,9 @@ class ScanMangaTest {
             177F,
             26.2F,
             // Void, Null, just testing, may not happen
-            0F
+            0F,
+            // MangaLife
+            34F
         )
 
         for (i in chapterNames.indices) {

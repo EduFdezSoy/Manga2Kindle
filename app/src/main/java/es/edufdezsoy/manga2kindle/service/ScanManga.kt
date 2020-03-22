@@ -44,7 +44,9 @@ class ScanManga : CoroutineScope {
         // HeavenManga, Chap NN
         Pattern.compile(".*Chap \\d+.*"),
         // Guya, starts with NN
-        Pattern.compile("\\d+.*")
+        Pattern.compile("\\d+.*"),
+        // MangaLife, something NNNN
+        Pattern.compile(".*\\d\\d\\d\\d")
     )
 
     //#endregion

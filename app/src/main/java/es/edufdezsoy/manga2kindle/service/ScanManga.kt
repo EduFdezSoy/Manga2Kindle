@@ -125,6 +125,8 @@ class ScanManga : CoroutineScope {
                                             title = chapterTitle,
                                             file_path = it.uri.toString(),
                                             checksum = null,
+                                            style = null,
+                                            split_mode = null,
                                             delivered = false,
                                             error = false,
                                             reason = null,

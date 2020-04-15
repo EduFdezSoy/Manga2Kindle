@@ -26,6 +26,7 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
         view.btnAddAuthor.setOnClickListener { controller.openAuthorForm() }
         view.btnUpload.setOnClickListener {
+            saveData()
             // if the no author is set and we are not adding a new one here... toast.
             if (manga.author_id == null) {
                 if (!::author.isInitialized)
@@ -36,8 +37,20 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
                     ).show()
             } else {
                 disableAllButtons()
-                saveData()
                 controller.sendChapter(chapter)
+            }
+        }
+        view.rgSplitMode.setOnCheckedChangeListener { radioGroup, i ->
+            when (i) {
+                R.id.rbSplitModeSplit -> chapter.split_mode = 0
+                R.id.rbSplitModeNoSplit -> chapter.split_mode = 1
+                R.id.rbSplitModeBoth -> chapter.split_mode = 2
+            }
+        }
+        view.rgReadMode.setOnCheckedChangeListener { radioGroup, i ->
+            when (i) {
+                R.id.rbReadModeManga -> chapter.style = "manga"
+                R.id.rbReadModeComic -> chapter.style = "comic"
             }
         }
 
@@ -153,6 +166,17 @@ class ChapterFormView(val view: View, val controller: ChapterFormContract.Contro
 
         view.etChapter.setText(trimTrailingZero(chapter.chapter.toString()))
         view.tietTitle.setText(chapter.title)
+
+        when (chapter.split_mode) {
+            0 -> view.rbSplitModeSplit.isChecked = true
+            1 -> view.rbSplitModeNoSplit.isChecked = true
+            2 -> view.rbSplitModeBoth.isChecked = true
+        }
+
+        when (chapter.style) {
+            "manga" -> view.rbReadModeManga.isChecked = true
+            "comic" -> view.rbReadModeComic.isChecked = true
+        }
     }
 
     override fun setManga(manga: Manga) {

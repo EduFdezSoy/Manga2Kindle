@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about_description">Hola! Soy Eduardo y me gusta hacer cosas. Sientete libre de mandarme un correo, estaré encantado de escucharte! Si te gusta la app déjame algunas estrellas en la Play Store! ╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ</string>
     <string name="about_first_group">Manga2Kindle info</string>
     <string name="about_second_group">Sigueme!</string>
     <string name="about_title">A cerca de</string>
@@ -118,4 +117,11 @@
     <string name="preference_showTutorial_title">Mostrar Tutorial</string>
     <string name="preference_showTutorial_description">Muestra la introducción a la app de nuevo</string>
     <string name="chapter_form_no_author_toast">No puedes enviar un capítulo sin autor!\n(Estamos trabajando en ello)</string>
+    <string name="chapter_form_doublePage">Con las páginas dobles…</string>
+    <string name="chapter_form_splitMode_noSplit">Mostrar páginas dobles en horizontal</string>
+    <string name="chapter_form_splitMode_split">Cortar páginas dobles en dos páginas</string>
+    <string name="chapter_form_splitMode_both">Mostrar en horizontal y luego cortadas en dos páginas</string>
+    <string name="chapter_form_readMode">Modo de lectura</string>
+    <string name="chapter_form_mangaMode">Manga (derecha a izquierda)</string>
+    <string name="chapter_form_comicMode">Comic (izquierda a derecha)</string>
 </resources>

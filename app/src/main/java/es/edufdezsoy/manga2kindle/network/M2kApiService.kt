@@ -154,6 +154,7 @@ interface M2kApiService {
         @Part("volume") volume: Int?,
         @Part("checksum") checksum: String,
         @Part("mail") mail: String,
+        @Part("options") options: String,
         // @Part("file") file: File
         @Part file: MultipartBody.Part
     ): List<Chapter>

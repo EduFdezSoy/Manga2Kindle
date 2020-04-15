@@ -80,11 +80,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="@string/chapter_title_max_length"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etVolume"
-            app:counterEnabled="true"
-            app:counterMaxLength="@string/chapter_title_max_length">
+            app:layout_constraintTop_toBottomOf="@+id/etVolume">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietTitle"
@@ -163,5 +163,90 @@
             app:layout_constraintBottom_toBottomOf="@+id/tilAuthor"
             app:layout_constraintEnd_toStartOf="@+id/tilLang"
             app:layout_constraintTop_toTopOf="@+id/tilAuthor" />
+
+    <TextView
+            android:id="@+id/tvDoublePage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/chapter_form_doublePage"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/rgSplitMode"
+            app:layout_constraintStart_toStartOf="@+id/rgSplitMode"
+            app:layout_constraintTop_toBottomOf="@+id/tilAuthor" />
+
+    <TextView
+            android:id="@+id/tvReadMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/chapter_form_readMode"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/rgReadMode"
+            app:layout_constraintStart_toStartOf="@+id/rgReadMode"
+            app:layout_constraintTop_toBottomOf="@+id/rgSplitMode" />
+
+    <RadioGroup
+            android:id="@+id/rgSplitMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDoublePage">
+
+        <RadioButton
+                android:id="@+id/rbSplitModeSplit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/chapter_form_splitMode_split"
+                android:theme="@style/RadioButton" />
+
+        <RadioButton
+                android:id="@+id/rbSplitModeNoSplit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chapter_form_splitMode_noSplit"
+                android:theme="@style/RadioButton" />
+
+        <RadioButton
+                android:id="@+id/rbSplitModeBoth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chapter_form_splitMode_both"
+                android:theme="@style/RadioButton" />
+    </RadioGroup>
+
+    <RadioGroup
+            android:id="@+id/rgReadMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvReadMode">
+
+        <RadioButton
+                android:id="@+id/rbReadModeManga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/chapter_form_mangaMode"
+                android:theme="@style/RadioButton" />
+
+        <RadioButton
+                android:id="@+id/rbReadModeComic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chapter_form_comicMode"
+                android:theme="@style/RadioButton" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -198,6 +198,7 @@ class ChapterRepository {
         volume: Int?,
         checksum: String,
         mail: String,
+        options: String,
         file: MultipartBody.Part
     ): Chapter? {
         try {
@@ -209,6 +210,7 @@ class ChapterRepository {
                 volume,
                 checksum,
                 mail,
+                options,
                 file
             )
 

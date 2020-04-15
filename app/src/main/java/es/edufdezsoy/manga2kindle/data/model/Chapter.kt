@@ -18,6 +18,8 @@ data class Chapter(
     var title: String?,
     var file_path: String?,
     var checksum: String?,
+    var style: String?,
+    var split_mode: Int?,
     var delivered: Boolean,
     var error: Boolean,
     var reason: String?,

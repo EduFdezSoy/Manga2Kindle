@@ -24,4 +24,13 @@
         <item name="spinBars">false</item>
         <item name="color">@android:color/white</item>
     </style>
+    
+    <!-- Radio Buttons -->
+    <style name="RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="colorControlNormal">@color/btnDisabled</item>
+        <item name="colorControlActivated">@color/btnNormal</item>
+        <item name="colorControlHighlight">@color/btnNormalPressed</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/textRegular</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+    </style>
 </resources>

@@ -11,7 +11,7 @@ class M2kApplication : Application() {
     companion object {
         const val TAG = "MANGA2KINDLE"
         const val BASE_URL = "https://manga2kindle.com/api/"
-//        const val BASE_URL = "https://test.manga2kindle.com/api/"
+//        const val BASE_URL = "https://test.manga2kindle.com/"
         var debug = false
     }
 

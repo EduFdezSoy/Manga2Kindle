@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "52f9106154e4d45aa24f970fab60698c",
+    "identityHash": "152ba694744d5c80f1a7752c5b73e46b",
     "entities": [
       {
         "tableName": "Folder",
@@ -146,8 +146,7 @@
       },
       {
         "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `status` INTEGER NOT NULL, `enqueue_date` INTEGER, `upload_date` INTEGER, `id` INTEGER, `manga_id` INTEGER NOT NULL, `lang_id` INTEGER, `volume` INTEGER, `chapter` REAL NOT NULL, `title` TEXT, `file_path` TEXT, `checksum` TEXT, `style` TEXT, `split_mode` INTEGER, `delivered` INTEGER NOT NULL, `error` INTEGER NOT NULL, `reason` TEXT, `visible` INTEGER NOT NULL)",
-        "fields": [
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `status` INTEGER NOT NULL, `enqueue_date` INTEGER, `upload_date` INTEGER, `id` INTEGER, `manga_id` INTEGER NOT NULL, `lang_id` INTEGER, `volume` INTEGER, `chapter` REAL NOT NULL, `title` TEXT, `file_path` TEXT, `checksum` TEXT, `delivered` INTEGER NOT NULL, `error` INTEGER NOT NULL, `reason` TEXT, `visible` INTEGER NOT NULL)",        "fields": [
           {
             "fieldPath": "identifier",
             "columnName": "identifier",
@@ -221,18 +220,6 @@
             "notNull": false
           },
           {
-            "fieldPath": "style",
-            "columnName": "style",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "split_mode",
-            "columnName": "split_mode",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
             "fieldPath": "delivered",
             "columnName": "delivered",
             "affinity": "INTEGER",
@@ -270,7 +257,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '52f9106154e4d45aa24f970fab60698c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '152ba694744d5c80f1a7752c5b73e46b')"
     ]
   }
 }

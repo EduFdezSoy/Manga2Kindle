@@ -106,6 +106,12 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                         if (title == null)
                             title = ""
 
+                        // prepare options field
+                        var options = "{"
+                        options += if (it.style != null) "\"style\":\"" + it.style + "\"" else ""
+                        options += if (it.split_mode != null) ", \"splitter\":" + it.split_mode else ""
+                        options += "}"
+
                         // set chapter to uploading
                         it.status = Chapter.STATUS_UPLOADING
                         it.upload_date = Calendar.getInstance().time
@@ -124,6 +130,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                             it.volume,
                             it.checksum!!,
                             mail,
+                            options,
                             part
                         ).also { chapSrv ->
                             if (chapSrv != null) {

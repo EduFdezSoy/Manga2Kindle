@@ -13,7 +13,7 @@ import java.util.*
 
 @Database(
     entities = [Folder::class, Author::class, Manga::class, Language::class, Chapter::class],
-    version = 7
+    version = 8
 )
 @TypeConverters(Converters::class)
 abstract class M2kDatabase : RoomDatabase() {
@@ -37,6 +37,7 @@ abstract class M2kDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_4_5)
                 .addMigrations(MIGRATION_5_6)
                 .addMigrations(MIGRATION_6_7)
+                .addMigrations(MIGRATION_7_8)
 //                .fallbackToDestructiveMigration()
                 .build()
 
@@ -75,6 +76,13 @@ abstract class M2kDatabase : RoomDatabase() {
 
                 // update the content to those chapters that where already uploaded
                 database.execSQL("UPDATE chapter SET enqueue_date = upload_date WHERE upload_date != null")
+            }
+        }
+
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE chapter ADD style TEXT")
+                database.execSQL("ALTER TABLE chapter ADD split_mode INTEGER")
             }
         }
     }

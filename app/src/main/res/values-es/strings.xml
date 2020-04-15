@@ -118,4 +118,11 @@
     <string name="preference_showTutorial_title">Mostrar Tutorial</string>
     <string name="preference_showTutorial_description">Muestra la introducción a la app de nuevo</string>
     <string name="chapter_form_no_author_toast">No puedes enviar un capítulo sin autor!\n(Estamos trabajando en ello)</string>
+    <string name="chapter_form_doublePage">Con las páginas dobles…</string>
+    <string name="chapter_form_splitMode_noSplit">Mostrar páginas dobles en horizontal</string>
+    <string name="chapter_form_splitMode_split">Cortar páginas dobles en dos páginas</string>
+    <string name="chapter_form_splitMode_both">Mostrar en horizontal y luego cortadas en dos páginas</string>
+    <string name="chapter_form_readMode">Modo de lectura</string>
+    <string name="chapter_form_mangaMode">Manga (derecha a izquierda)</string>
+    <string name="chapter_form_comicMode">Comic (izquierda a derecha)</string>
 </resources>

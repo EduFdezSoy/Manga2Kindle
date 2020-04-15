@@ -146,7 +146,8 @@
       },
       {
         "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `status` INTEGER NOT NULL, `enqueue_date` INTEGER, `upload_date` INTEGER, `id` INTEGER, `manga_id` INTEGER NOT NULL, `lang_id` INTEGER, `volume` INTEGER, `chapter` REAL NOT NULL, `title` TEXT, `file_path` TEXT, `checksum` TEXT, `delivered` INTEGER NOT NULL, `error` INTEGER NOT NULL, `reason` TEXT, `visible` INTEGER NOT NULL)",        "fields": [
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `status` INTEGER NOT NULL, `enqueue_date` INTEGER, `upload_date` INTEGER, `id` INTEGER, `manga_id` INTEGER NOT NULL, `lang_id` INTEGER, `volume` INTEGER, `chapter` REAL NOT NULL, `title` TEXT, `file_path` TEXT, `checksum` TEXT, `delivered` INTEGER NOT NULL, `error` INTEGER NOT NULL, `reason` TEXT, `visible` INTEGER NOT NULL)",
+        "fields": [
           {
             "fieldPath": "identifier",
             "columnName": "identifier",

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="about_description">Hola! Soy Eduardo y me gusta hacer cosas. Sientete libre de mandarme un correo, estaré encantado de escucharte! Si te gusta la app déjame algunas estrellas en la Play Store! ╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ</string>
     <string name="about_first_group">Manga2Kindle info</string>
     <string name="about_second_group">Sigueme!</string>
     <string name="about_title">A cerca de</string>
@@ -124,5 +125,4 @@
     <string name="chapter_form_readMode">Modo de lectura</string>
     <string name="chapter_form_mangaMode">Manga (derecha a izquierda)</string>
     <string name="chapter_form_comicMode">Comic (izquierda a derecha)</string>
-    <string name="about_description">Hola! Soy Eduardo y me gusta hacer cosas. Sientete libre de mandarme un correo, estaré encantado de escucharte! Si te gusta la app déjame algunas estrellas en la Play Store! ╰(✿˙ᗜ˙)੭━☆ﾟ.*･｡ﾟ</string>
 </resources>

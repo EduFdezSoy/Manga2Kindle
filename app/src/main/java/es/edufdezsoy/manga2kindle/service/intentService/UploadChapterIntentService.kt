@@ -109,7 +109,8 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                         // prepare options field
                         var options = "{"
                         options += if (it.style != null) "\"style\":\"" + it.style + "\"" else ""
-                        options += if (it.split_mode != null) ", \"splitter\":" + it.split_mode else ""
+                        options += if (options == "{") "" else ", "
+                        options += if (it.split_mode != null) "\"splitter\":" + it.split_mode else ""
                         options += "}"
 
                         // set chapter to uploading

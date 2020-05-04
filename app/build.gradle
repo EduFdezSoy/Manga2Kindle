@@ -12,13 +12,13 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "es.edufdezsoy.manga2kindle"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 20
-        versionName "2.2.0"
+        versionCode 21
+        versionName "2.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {

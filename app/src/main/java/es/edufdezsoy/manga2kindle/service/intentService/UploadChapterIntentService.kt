@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
+import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -107,11 +108,11 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                             title = ""
 
                         // prepare options field
-                        var options = "{"
-                        options += if (it.style != null) "\"style\":\"" + it.style + "\"" else ""
-                        options += if (options == "{") "" else ", "
-                        options += if (it.split_mode != null) "\"splitter\":" + it.split_mode else ""
-                        options += "}"
+                        val options = JSONObject()
+                        if (it.style != null)
+                            options.put("style", it.style)
+                        if (it.split_mode != null)
+                            options.put("splitter", it!!.split_mode)
 
                         // set chapter to uploading
                         it.status = Chapter.STATUS_UPLOADING
@@ -131,7 +132,7 @@ class UploadChapterIntentService : JobIntentService(), CoroutineScope,
                             it.volume,
                             it.checksum!!,
                             mail,
-                            options,
+                            options.toString(),
                             part
                         ).also { chapSrv ->
                             if (chapSrv != null) {

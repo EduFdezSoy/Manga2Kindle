@@ -3,7 +3,11 @@ dist: trusty
 android:
   components:
     - android-29
-    - build-tools-29.0.0
+    - build-tools-29.0.3
+  licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 env:
   global:

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="es.edufdezsoy.manga2kindle.ui.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_onBoardingFragment"
+            app:destination="@id/onBoardingFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="es.edufdezsoy.manga2kindle.ui.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="es.edufdezsoy.manga2kindle.ui.onboarding.OnBoardingFragment"
+        android:label="fragment_on_boarding"
+        tools:layout="@layout/fragment_on_boarding">
+        <action
+            android:id="@+id/action_onBoardingFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/onBoardingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

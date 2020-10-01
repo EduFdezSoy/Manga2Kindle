@@ -1,32 +1,16 @@
 package es.edufdezsoy.manga2kindle.service
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
-import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
-import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
-import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.coroutineScope
 import java.util.regex.Pattern
-import kotlin.coroutines.CoroutineContext
 
-class ScanManga : CoroutineScope {
-    //#region vars and vals
+object ScanManga {
+    //region vars and vals
 
-    private val TAG = M2kApplication.TAG + "_ScanManga"
-    private val job: Job
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + job
+    private val TAG = this::class.java.simpleName
 
-    // Those regex are from different sources, with them we find the chapters
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
         Pattern.compile(".*Ch.\\d+.*"),
@@ -49,153 +33,15 @@ class ScanManga : CoroutineScope {
         Pattern.compile(".*\\d\\d\\d\\d")
     )
 
-    //#endregion
-    //#region constructor and destructor
+    //endregion
+    //region public functions
 
-    init {
-        job = Job()
+    suspend fun performScan(context: Context) = coroutineScope {
+
     }
 
-    protected fun finalize() {
-        job.cancel()
-    }
-
-    //#endregion
-    //#region public methods
-
-    fun performScan(context: Context, done: () -> Unit) {
-        launch {
-            Log.i(TAG, "performing manga scan")
-
-            val finishedCounter = AtomicInteger()
-            val chapterRepository = ChapterRepository.invoke(context)
-            val mangaRepository = MangaRepository.invoke(context)
-            val folderRepository = FolderRepository.invoke(context)
-
-            val folders = folderRepository.getAll()
-
-            if (folders.isEmpty()) {
-                done()
-                Log.i(TAG, "No folders at the moment")
-                Log.i(TAG, "Done scanning mangas")
-            }
-
-            folders.forEach {
-                launch {
-                    // if the folder path is empty we stop here
-                    if (it.path.isNotBlank()) {
-                        val uri = Uri.parse(it.path)
-                        val docFile = DocumentFile.fromTreeUri(context, uri)
-                        if (docFile!!.canRead()) {
-                            val list = getListOfFoldersNFiles(docFile)
-                            val mangas = searchForMangas(list)
-
-                            if (M2kApplication.debug)
-                                mangas.forEach { Log.d(TAG, formatName(it.name)) }
-
-                            mangas.forEach {
-                                val mangaName = formatName(it.name)
-                                var manga = mangaRepository.search(mangaName)
-
-                                if (manga.isEmpty()) {
-                                    manga = arrayListOf(Manga(null, mangaName, null))
-                                    mangaRepository.insert(manga[0])
-                                    manga = mangaRepository.search(mangaName)
-                                }
-                                val chapters = getChapters(it)
-                                chapters.forEach {
-                                    val chapterName = formatName(it.name)
-                                    var chapterTitle: String? = getChapterTitle(chapterName)
-                                    val chapterNum = pickChapter(chapterName)
-                                    val chapterVol = pickVolume(chapterName)
-
-                                    if (chapterTitle.isNullOrBlank())
-                                        chapterTitle = null
-
-                                    val chapterExists = chapterRepository
-                                        .search(manga[0].identifier, chapterNum)
-
-                                    if (chapterExists == null) {
-                                        val chapter = Chapter(
-                                            id = null,
-                                            manga_id = manga[0].identifier,
-                                            lang_id = null,
-                                            volume = chapterVol,
-                                            chapter = chapterNum,
-                                            title = chapterTitle,
-                                            file_path = it.uri.toString(),
-                                            checksum = null,
-                                            style = null,
-                                            split_mode = null,
-                                            delivered = false,
-                                            error = false,
-                                            reason = null,
-                                            visible = true
-                                        )
-                                        chapterRepository.insert(chapter)
-                                    } else {
-                                        if (M2kApplication.debug)
-                                            launch {
-                                                val manga2 =
-                                                    mangaRepository.getMangaById(manga[0].identifier)
-                                                Log.d(
-                                                    TAG,
-                                                    formatName(
-                                                        "Looks like " + manga2.title
-                                                                + " Ch. " + chapterNum + " already exists."
-                                                    )
-                                                )
-                                            }
-
-                                        // if exists check the uri and rewrite it if needed
-                                        if (Uri.parse(chapterExists.file_path) != it.uri) {
-                                            if (M2kApplication.debug)
-                                                Log.d(
-                                                    TAG, formatName(
-                                                        "Chapter uri missmatch: \n" +
-                                                                "Old: " + chapterExists.file_path + "\n" +
-                                                                "New: " + it.uri.toString()
-                                                    )
-                                                )
-
-                                            chapterExists.file_path = it.uri.toString()
-                                            if (M2kApplication.debug)
-                                                Log.d(TAG, formatName("Chapter uri rewrited."))
-
-                                            chapterRepository.update(chapterExists)
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            Log.e(
-                                TAG,
-                                "Can't read the folder. \n Folder: " + it.name + " (" + it.path + ")"
-                            )
-
-                            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-                            if (M2kApplication.debug) {
-                                try {
-                                    docFile.listFiles()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-                            // -+-+-+-+-+-+ DEBUG +-+-+-+-+-+-
-                        }
-                    }
-
-                    if (finishedCounter.incrementAndGet() == folders.size) {
-                        done()
-                        Log.i(TAG, "Done scanning mangas")
-                    }
-                }
-            }
-        }
-    }
-
-    //#endregion
-    //#region private methods
+    //endregion
+    //region private functions
 
     /**
      *  Digs in the DocumentFile to read all the folder structure
@@ -203,12 +49,12 @@ class ScanManga : CoroutineScope {
      * @param doc must be a folder
      * @return an ordered list of folders and files
      */
-    private fun getListOfFoldersNFiles(doc: DocumentFile): List<DocumentFile> {
+    private fun getListOfFoldersAndFiles(doc: DocumentFile): List<DocumentFile> {
         val tree = ArrayList<DocumentFile>()
 
         doc.listFiles().forEach {
             if (it.isDirectory) {
-                val supTree = getListOfFoldersNFiles(it)
+                val supTree = getListOfFoldersAndFiles(it)
 
                 tree.add(it)
                 tree.addAll(supTree)
@@ -297,11 +143,7 @@ class ScanManga : CoroutineScope {
                             if (!temporal) {
                                 chapters.add(it)
                             } else {
-                                if (M2kApplication.debug)
-                                    Log.d(
-                                        TAG,
-                                        "This chapter is not downloaded yet (" + it.name + ")"
-                                    )
+                                Log.d(TAG, "This chapter is not downloaded yet (" + it.name + ")")
                             }
                             return
                         }
@@ -327,6 +169,7 @@ class ScanManga : CoroutineScope {
         // the chapter name can have numbers, we dont want that numbers so we split it
         val part = name.split(" - ")[0]
         val matcher = chapterRegex.matcher(part)
+
 
         while (matcher.find()) {
             chapter = matcher.group()
@@ -452,6 +295,5 @@ class ScanManga : CoroutineScope {
         return chapterTitle
     }
 
-//#endregion
-
+    //endregion
 }

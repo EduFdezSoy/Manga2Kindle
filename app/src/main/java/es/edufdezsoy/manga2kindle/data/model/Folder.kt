@@ -4,8 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class Folder(
-    @PrimaryKey var id: Int,
+data class Folder(
     var name: String,
-    var path: String
-)
+    var path: String,
+    var color: String
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}

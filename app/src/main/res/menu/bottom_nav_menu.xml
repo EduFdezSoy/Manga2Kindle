@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_chapters"
+        android:icon="@drawable/book_variant_multiple"
+        android:title="Chapters" />
+    <item
+        android:id="@+id/nav_uploaded"
+        android:icon="@drawable/progress_upload"
+        android:title="Uploaded" />
+    <item
+        android:id="@+id/nav_folders"
+        android:icon="@drawable/folder_sync"
+        android:title="Folders" />
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/dots_horizontal"
+        android:title="More" />
+</menu>

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9c11057972ff84fa14eb097dc0382a9a",
+    "identityHash": "eb66c3a06de60fd089bb10addd1ced8f",
     "entities": [
       {
-        "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `manga_id` INTEGER, `remote_id` INTEGER, `manga_title` TEXT NOT NULL, `author` TEXT NOT NULL, `title` TEXT, `chapter` INTEGER NOT NULL, `volume` INTEGER, `path` TEXT NOT NULL)",
+        "tableName": "Manga",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remoteId` INTEGER, `uuid` TEXT, `author` TEXT, `manga_title` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,28 +15,54 @@
             "notNull": true
           },
           {
-            "fieldPath": "manga_id",
-            "columnName": "manga_id",
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "remote_id",
-            "columnName": "remote_id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "manga_title",
-            "columnName": "manga_title",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "author",
             "columnName": "author",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "manga_title",
+            "affinity": "TEXT",
             "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Chapter",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remoteId` TEXT, `title` TEXT, `chapter` INTEGER NOT NULL, `volume` INTEGER, `path` TEXT NOT NULL, `mangaId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -61,6 +87,12 @@
             "columnName": "path",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "mangaId",
+            "columnName": "mangaId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -74,11 +106,11 @@
       },
       {
         "tableName": "Folder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `path` TEXT NOT NULL, `color` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`folderId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `path` TEXT NOT NULL, `color` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "folderId",
+            "columnName": "folderId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -103,7 +135,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "folderId"
           ],
           "autoGenerate": true
         },
@@ -114,7 +146,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c11057972ff84fa14eb097dc0382a9a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eb66c3a06de60fd089bb10addd1ced8f')"
     ]
   }
 }

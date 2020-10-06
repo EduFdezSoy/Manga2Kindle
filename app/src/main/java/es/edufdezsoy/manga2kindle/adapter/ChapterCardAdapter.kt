@@ -10,7 +10,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.ui.newChapters.NoteViewModel
 import kotlinx.android.synthetic.main.view_chapter.view.*
 
@@ -19,7 +19,7 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
 
     private val dialog = MaterialDialog(context, BottomSheet(LayoutMode.MATCH_PARENT))
     private val view: View
-    private lateinit var chapter: Chapter
+    private lateinit var chapter: ChapterWithManga
     private lateinit var chapterViewModel: NoteViewModel
 
     //endregion
@@ -37,7 +37,7 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //endregion
     //region public functions
 
-    fun setChapter(chapter: Chapter, chapterViewModel: NoteViewModel) {
+    fun setChapter(chapter: ChapterWithManga, chapterViewModel: NoteViewModel) {
         this.chapter = chapter
         this.chapterViewModel = chapterViewModel
 
@@ -53,11 +53,11 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region private functions
 
     private fun setChapter() {
-        view.series_textInputLayoutLayout.editText?.setText(chapter.manga_title)
+/*        view.series_textInputLayoutLayout.editText?.setText(chapter.manga_title)
         view.author_textInputLayout.editText?.setText(chapter.author)
         view.title_textInputLayout.editText?.setText(chapter.title)
         view.chapter_textInputLayout.editText?.setText(chapter.chapter.toString())
-        view.volume_textInputLayout.editText?.setText(chapter.volume?.toString())
+        view.volume_textInputLayout.editText?.setText(chapter.volume?.toString())*/
     }
 
     private fun setListeners() {
@@ -73,13 +73,13 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     }
 
     private fun saveChapter() {
-        chapter.manga_title = view.series_textInputLayoutLayout.editText?.text.toString()
+/*        chapter.manga_title = view.series_textInputLayoutLayout.editText?.text.toString()
         chapter.author = view.author_textInputLayout.editText?.text.toString()
         chapter.title = view.title_textInputLayout.editText?.text.toString()
         chapter.chapter = view.chapter_textInputLayout.editText?.text.toString().toInt()
-        chapter.volume = view.volume_textInputLayout.editText?.text.toString().toIntOrNull()
+        chapter.volume = view.volume_textInputLayout.editText?.text.toString().toIntOrNull()*/
 
-        chapterViewModel.update(chapter)
+        chapterViewModel.update(chapter.chapter)
     }
 
     private fun resetChapter() {

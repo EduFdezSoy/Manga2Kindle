@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "9c11057972ff84fa14eb097dc0382a9a",
+    "identityHash": "6bc8c990f6c7c3b24cc69df90c54a3e8",
     "entities": [
       {
         "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `manga_id` INTEGER, `remote_id` INTEGER, `manga_title` TEXT NOT NULL, `author` TEXT NOT NULL, `title` TEXT, `chapter` INTEGER NOT NULL, `volume` INTEGER, `path` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remoteId` TEXT, `title` TEXT, `chapter` INTEGER NOT NULL, `volume` INTEGER, `path` TEXT NOT NULL, `id` INTEGER NOT NULL, `remoteId` INTEGER, `uuid` TEXT, `author` TEXT, `title` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,28 +15,10 @@
             "notNull": true
           },
           {
-            "fieldPath": "manga_id",
-            "columnName": "manga_id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "remote_id",
-            "columnName": "remote_id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "manga_title",
-            "columnName": "manga_title",
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "author",
-            "columnName": "author",
-            "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -59,6 +41,36 @@
           {
             "fieldPath": "path",
             "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manga.id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manga.remoteId",
+            "columnName": "remoteId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manga.uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manga.author",
+            "columnName": "author",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manga.title",
+            "columnName": "title",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -114,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c11057972ff84fa14eb097dc0382a9a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6bc8c990f6c7c3b24cc69df90c54a3e8')"
     ]
   }
 }

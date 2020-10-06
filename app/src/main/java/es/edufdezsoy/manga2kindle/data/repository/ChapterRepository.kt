@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import es.edufdezsoy.manga2kindle.data.ChapterDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 
 class ChapterRepository(application: Application) {
     private val chapterDao: ChapterDao
-    private val allNotes: LiveData<List<Chapter>>
+    private val allNotes: LiveData<List<ChapterWithManga>>
 
     init {
         val database = ChapterDatabase.getInstance(application.applicationContext)
@@ -33,7 +34,7 @@ class ChapterRepository(application: Application) {
         chapterDao.deleteAllNotes()
     }
 
-    fun getAllNotes(): LiveData<List<Chapter>> {
+    fun getAllNotes(): LiveData<List<ChapterWithManga>> {
         return allNotes
     }
 }

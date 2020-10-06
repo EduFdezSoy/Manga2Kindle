@@ -5,12 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import kotlinx.coroutines.launch
 
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = ChapterRepository(application)
-    private lateinit var notes: LiveData<List<Chapter>>
+    private lateinit var notes: LiveData<List<ChapterWithManga>>
 
     init {
         viewModelScope.launch {
@@ -43,7 +44,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun getAllNotes(): LiveData<List<Chapter>> {
+    fun getAllNotes(): LiveData<List<ChapterWithManga>> {
         return notes
     }
 }

@@ -10,5 +10,5 @@ data class Folder(
     var color: String
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var folderId: Int = 0
 }

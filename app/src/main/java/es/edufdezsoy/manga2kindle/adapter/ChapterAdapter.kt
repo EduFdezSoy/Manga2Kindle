@@ -8,26 +8,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 
-class ChapterAdapter : ListAdapter<Chapter, ChapterAdapter.NoteHolder>(DIFF_CALLBACK) {
+class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(DIFF_CALLBACK) {
     private var itemClickListener: OnItemClickListener? = null
     private var itemLongClickListener: OnItemLongClickListener? = null
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Chapter>() {
-            override fun areItemsTheSame(oldItem: Chapter, newItem: Chapter): Boolean {
-                return oldItem.id == newItem.id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChapterWithManga>() {
+            override fun areItemsTheSame(oldItem: ChapterWithManga, newItem: ChapterWithManga): Boolean {
+                return oldItem.chapter.id == newItem.chapter.id
             }
 
-            override fun areContentsTheSame(oldItem: Chapter, newItem: Chapter): Boolean {
-                return oldItem.author == newItem.author &&
-                        oldItem.chapter == newItem.chapter &&
-                        oldItem.manga_id == newItem.manga_id &&
-                        oldItem.manga_title == newItem.manga_title &&
-                        oldItem.path == newItem.path &&
-                        oldItem.remote_id == newItem.remote_id &&
-                        oldItem.volume == newItem.volume
+            override fun areContentsTheSame(oldItem: ChapterWithManga, newItem: ChapterWithManga): Boolean {
+                return oldItem.chapter == newItem.chapter &&
+                        oldItem.chapter.mangaId == newItem.chapter.mangaId &&
+                        oldItem.chapter.path == newItem.chapter.path &&
+                        oldItem.chapter.remoteId == newItem.chapter.remoteId &&
+                        oldItem.chapter.volume == newItem.chapter.volume
             }
 
         }
@@ -43,17 +41,17 @@ class ChapterAdapter : ListAdapter<Chapter, ChapterAdapter.NoteHolder>(DIFF_CALL
     override fun onBindViewHolder(holder: NoteHolder, position: Int) {
         val chapter = getItem(position)
 
-        holder.manga.text = chapter.manga_title
-        holder.chapterTitle.text = ": " + chapter.title
-        holder.chapter.text = "Ch." + chapter.chapter.toString()
-        holder.chapter2.text = chapter.chapter.toString()
-        if (chapter.volume != null)
-            holder.volume.text = "(Vol. " + chapter.volume + ")"
-        else
-            holder.volume.text = ""
+//        holder.manga.text = chapter.manga_title
+//        holder.chapterTitle.text = ": " + chapter.title
+//        holder.chapter.text = "Ch." + chapter.chapter.toString()
+//        holder.chapter2.text = chapter.chapter.toString()
+//        if (chapter.volume != null)
+//            holder.volume.text = "(Vol. " + chapter.volume + ")"
+//        else
+//            holder.volume.text = ""
     }
 
-    override fun submitList(list: List<Chapter>?) {
+    override fun submitList(list: List<ChapterWithManga>?) {
         super.submitList(list)
         notifyDataSetChanged()
     }
@@ -76,7 +74,7 @@ class ChapterAdapter : ListAdapter<Chapter, ChapterAdapter.NoteHolder>(DIFF_CALL
     }
 
     interface OnItemClickListener {
-        fun onItemClick(chapter: Chapter)
+        fun onItemClick(chapter: ChapterWithManga)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -84,7 +82,7 @@ class ChapterAdapter : ListAdapter<Chapter, ChapterAdapter.NoteHolder>(DIFF_CALL
     }
 
     interface OnItemLongClickListener {
-        fun onItemLongClick(chapter: Chapter)
+        fun onItemLongClick(chapter: ChapterWithManga)
     }
 
     fun setOnItemLongClickListener(listener: OnItemLongClickListener) {

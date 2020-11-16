@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.data.repository
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import es.edufdezsoy.manga2kindle.data.ChapterDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.model.Chapter
@@ -9,13 +10,13 @@ import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 
 class ChapterRepository(application: Application) {
     private val chapterDao: ChapterDao
-    private val allNotes: LiveData<List<ChapterWithManga>>
+     private val allNotes: LiveData<List<ChapterWithManga>>
 
     init {
         val database = ChapterDatabase.getInstance(application.applicationContext)
         chapterDao = database.chapterDao()
 
-        allNotes = chapterDao.getAllNotes()
+         allNotes = chapterDao.getAllNotes()
     }
 
     suspend fun insert(chapter: Chapter) {
@@ -34,6 +35,7 @@ class ChapterRepository(application: Application) {
         chapterDao.deleteAllNotes()
     }
 
+    @Transaction
     fun getAllNotes(): LiveData<List<ChapterWithManga>> {
         return allNotes
     }

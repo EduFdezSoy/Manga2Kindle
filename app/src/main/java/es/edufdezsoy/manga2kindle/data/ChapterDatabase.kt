@@ -7,16 +7,16 @@ import androidx.room.RoomDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.dao.FolderDao
 import es.edufdezsoy.manga2kindle.data.dao.MangaDao
-import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.Folder
-import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.*
 import es.edufdezsoy.manga2kindle.utils.SingletonHolder
 
 @Database(
     entities = [
         Manga::class,
+        Author::class,
         Chapter::class,
-        Folder::class
+        Folder::class,
+        MangaAuthorCrossRef::class
     ],
     version = 1
 )

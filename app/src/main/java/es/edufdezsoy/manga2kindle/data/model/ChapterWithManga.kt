@@ -4,9 +4,9 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class ChapterWithManga(
-    @Embedded val manga: Manga,
+    @Embedded val manga: MangaWithAuthors,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "mangaId",
         entityColumn = "mangaId"
     )
     val chapter: Chapter

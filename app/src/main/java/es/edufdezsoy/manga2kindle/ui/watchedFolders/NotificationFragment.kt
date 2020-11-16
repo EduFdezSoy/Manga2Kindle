@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.service.ExampleJobService
 import es.edufdezsoy.manga2kindle.service.ExampleService
-import kotlinx.android.synthetic.main.fragment_notification.*
 import kotlinx.android.synthetic.main.fragment_notification.view.*
 
 class NotificationFragment : Fragment() {
@@ -36,7 +35,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun startService() {
-        textView.text = "service started"
+        // textView.text = "service started"
 
         val serviceIntent = Intent(context, ExampleService::class.java)
         serviceIntent.putExtra("inputExtra", "example input")
@@ -45,14 +44,14 @@ class NotificationFragment : Fragment() {
     }
 
     private fun stopService() {
-        textView.text = "service stopped"
+        // textView.text = "service stopped"
 
         val serviceIntent = Intent(context, ExampleService::class.java)
         activity?.stopService(serviceIntent)
     }
 
     private fun startScheduledService() {
-        textView.text = "scheduled service started"
+        // textView.text = "scheduled service started"
 
         val cn = ComponentName(requireContext(), ExampleJobService::class.java)
         val ji = JobInfo.Builder(123, cn)
@@ -76,7 +75,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun stopScheduledService() {
-        textView.text = "scheduled service stoped"
+        // textView.text = "scheduled service stoped"
         val scheduler = activity?.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
         scheduler.cancel(123)
         Log.d(TAG, "stopScheduledService: Job Canceled")

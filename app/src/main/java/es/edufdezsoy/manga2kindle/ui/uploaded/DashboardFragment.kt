@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.liveData
+import androidx.lifecycle.observe
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.network.ApiService
 import kotlinx.android.synthetic.main.fragment_dashboard.*
@@ -33,15 +34,15 @@ class DashboardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
         lifecycleScope.launch {
-            getHello().observe(viewLifecycleOwner) {
-                textView.text = it
+            getVersion().observe(viewLifecycleOwner) {
+                textView.text = it.version
             }
         }
 
         return view
     }
 
-    private fun getHello() = liveData(Dispatchers.IO) {
-        emit(apiService.getHello())
+    private fun getVersion() = liveData(Dispatchers.IO) {
+        emit(apiService.getVersion())
     }
 }

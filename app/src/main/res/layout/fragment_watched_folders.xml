@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.watchedFolders.NotificationFragment">
+    tools:context=".ui.watchedFolders.WatchedFoldersFragment">
 
     <Button
         android:id="@+id/startServiceBtn"
@@ -46,6 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/stopServiceBtn" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/folderList_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -14,7 +14,7 @@ import es.edufdezsoy.manga2kindle.adapter.ViewPagerAdapter
 import es.edufdezsoy.manga2kindle.ui.more.MoreFragment
 import es.edufdezsoy.manga2kindle.ui.newChapters.NewChaptersFragment
 import es.edufdezsoy.manga2kindle.ui.uploaded.DashboardFragment
-import es.edufdezsoy.manga2kindle.ui.watchedFolders.NotificationFragment
+import es.edufdezsoy.manga2kindle.ui.watchedFolders.WatchedFoldersFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
         val fragmentList = arrayListOf<Fragment>(
             NewChaptersFragment(),
             DashboardFragment(),
-            NotificationFragment(),
+            WatchedFoldersFragment(),
             MoreFragment()
         )
 

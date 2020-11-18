@@ -5,33 +5,108 @@ import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.adapter.FolderAdapter
+import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.service.ExampleJobService
 import es.edufdezsoy.manga2kindle.service.ExampleService
-import kotlinx.android.synthetic.main.fragment_notification.view.*
+import kotlinx.android.synthetic.main.fragment_watched_folders.view.*
+import kotlinx.coroutines.launch
 
-class NotificationFragment : Fragment() {
+
+class WatchedFoldersFragment : Fragment() {
     private val TAG = this::class.java.simpleName
+    private val PICK_FOLDER_REQUEST_CODE = 1
+
+    private lateinit var folderViewModel: FolderViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_notification, container, false)
+        val view = inflater.inflate(R.layout.fragment_watched_folders, container, false)
 
+        view.folderList_recycler.layoutManager = LinearLayoutManager(context)
+        view.folderList_recycler.setHasFixedSize(true)
+
+        val adapter = FolderAdapter()
+        view.folderList_recycler.adapter = adapter
+
+        folderViewModel = ViewModelProvider(this).get(FolderViewModel::class.java)
+        lifecycleScope.launch {
+            folderViewModel.getAllFolders().observe(viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
+
+        // set listeners
+        view.floatingActionButton.setOnClickListener { performFileSearch() }
+
+        // listeners for service test buttons (to be removed)
         view.startServiceBtn.setOnClickListener { startService() }
         view.stopServiceBtn.setOnClickListener { stopService() }
         view.startServiceBtn2.setOnClickListener { startScheduledService() }
         view.stopServiceBtn2.setOnClickListener { stopScheduledService() }
 
         return view
+    }
+
+    private fun performFileSearch() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_FOLDER_REQUEST_CODE && data != null) {
+            val path = data.data.toString()
+            val readablePath = Uri.parse(path).path!!
+            var name = readablePath.substring(readablePath.lastIndexOf('/') + 1)
+            name = name.substring(name.lastIndexOf(':') + 1)
+
+            folderViewModel.insert(Folder(name, path, true))
+
+            // get permissions on sub-folders and files
+
+            // persistable permissions (to read contents)
+            requireContext().grantUriPermission(
+                requireContext().packageName,
+                data.data,
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+            )
+
+            // read permission
+            requireContext().grantUriPermission(
+                requireContext().packageName,
+                data.data,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
+            // write permission
+            requireContext().grantUriPermission(
+                requireContext().packageName,
+                data.data,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+
+            // TODO: remove toast when done
+            Toast.makeText(context, path, Toast.LENGTH_LONG).show()
+        }
     }
 
     // service shit that needs to be removed

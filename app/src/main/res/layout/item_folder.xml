@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
@@ -15,27 +16,31 @@
         android:layout_marginEnd="8dp">
 
         <TextView
-            android:id="@+id/chapter_bg_textview"
+            android:id="@+id/logo_bg_textview"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:alpha="0.1"
+            android:ellipsize="none"
             android:includeFontPadding="false"
-            android:text="logo"
+            android:singleLine="true"
             android:textSize="80sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/name_textview"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Tachiyomiiiiiiiiiiiiiii" />
 
         <TextView
-            android:id="@+id/title_textview"
+            android:id="@+id/name_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:includeFontPadding="true"
             android:singleLine="true"
-            android:text="Tachiyomi"
+            tools:text="Tachiyomi"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -43,26 +48,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/chapter_textview"
+            android:id="@+id/path_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:ellipsize="start"
             android:singleLine="true"
-            android:text="/ruta/muy/larga/a/la/carpeta/de/los/mangasaaaaaaaaaaaaaaaaaaaaaaaa"
+            tools:text="/ruta/muy/larga/a/la/carpeta/de/los/mangasaaaaaaaaaaaaaaaaaaaaaaaa"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/switch1"
+            app:layout_constraintEnd_toStartOf="@+id/active_switch"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_textview"
+            app:layout_constraintTop_toBottomOf="@+id/name_textview"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch1"
+            android:id="@+id/active_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:checked="true"
+            tools:checked="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

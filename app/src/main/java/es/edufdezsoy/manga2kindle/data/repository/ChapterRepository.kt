@@ -3,7 +3,7 @@ package es.edufdezsoy.manga2kindle.data.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.room.Transaction
-import es.edufdezsoy.manga2kindle.data.ChapterDatabase
+import es.edufdezsoy.manga2kindle.data.M2KDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
@@ -13,7 +13,7 @@ class ChapterRepository(application: Application) {
      private val allNotes: LiveData<List<ChapterWithManga>>
 
     init {
-        val database = ChapterDatabase.getInstance(application.applicationContext)
+        val database = M2KDatabase.getInstance(application.applicationContext)
         chapterDao = database.chapterDao()
 
          allNotes = chapterDao.getAllNotes()

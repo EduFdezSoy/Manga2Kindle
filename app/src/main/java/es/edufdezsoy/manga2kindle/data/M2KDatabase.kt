@@ -20,16 +20,16 @@ import es.edufdezsoy.manga2kindle.utils.SingletonHolder
     ],
     version = 1
 )
-abstract class ChapterDatabase : RoomDatabase() {
+abstract class M2KDatabase : RoomDatabase() {
 
     abstract fun folderDao(): FolderDao
     abstract fun mangaDao(): MangaDao
     abstract fun chapterDao(): ChapterDao
 
-    companion object : SingletonHolder<ChapterDatabase, Context>({
+    companion object : SingletonHolder<M2KDatabase, Context>({
         Room.databaseBuilder(
             it.applicationContext,
-            ChapterDatabase::class.java,
+            M2KDatabase::class.java,
             "manga2kindle_database"
         )
             .fallbackToDestructiveMigration()

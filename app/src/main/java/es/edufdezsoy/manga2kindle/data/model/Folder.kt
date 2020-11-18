@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Folder(
     var name: String,
     var path: String,
-    var color: String
+    var active: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
     var folderId: Int = 0

@@ -34,6 +34,8 @@ class NotificationFragment : Fragment() {
         return view
     }
 
+    // service shit that needs to be removed
+
     private fun startService() {
         // textView.text = "service started"
 
@@ -55,13 +57,13 @@ class NotificationFragment : Fragment() {
 
         val cn = ComponentName(requireContext(), ExampleJobService::class.java)
         val ji = JobInfo.Builder(123, cn)
-            .setRequiresCharging(true)
+            .setRequiresCharging(false)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
             .setPersisted(true)
             .setPeriodic(15 * 60 * 1000) // 15 mins, the lower valid value
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            ji.setImportantWhileForeground(true)
+            // ji.setImportantWhileForeground(true) // this wont be needed for this job but may be usefull for the upload job
         }
 
         // check: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Chapter(
     var title: String?,
-    var chapter: Int,
+    var chapter: Float,
     var volume: Int?,
     var path: String,
     val mangaId: Int,

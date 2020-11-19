@@ -22,7 +22,7 @@ interface Manga2KindleService {
     suspend fun getAuthor(id: Int): Author
 
     @GET("author/search/:query")
-    suspend fun searchAuthor(query: String): Array<Author>
+    suspend fun searchAuthor(query: String): Array<Author?>
 
     //endregion
     //region Manga
@@ -31,7 +31,7 @@ interface Manga2KindleService {
     suspend fun getManga(id: Int): Manga
 
     @GET("manga/search/:query")
-    suspend fun searchManga(query: String): Array<Manga>
+    suspend fun searchManga(query: String): Array<Manga?>
 
     @PUT("manga")
     suspend fun putManga(manga: Manga): Manga

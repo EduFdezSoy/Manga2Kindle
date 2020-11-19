@@ -1,17 +1,15 @@
 package es.edufdezsoy.manga2kindle.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.model.Manga
 
 @Dao
 interface MangaDao {
     @Insert
-    suspend fun insert(manga: Manga)
+    suspend fun insert(manga: Manga): Manga
 
     @Update
-    suspend fun update(manga: Manga)
+    suspend fun update(manga: Manga): Manga
 
     @Delete
     suspend fun delete(manga: Manga)
@@ -19,7 +17,6 @@ interface MangaDao {
     @Query("DELETE FROM Manga")
     suspend fun deleteAll()
 
-    @Transaction
-    @Query("SELECT * FROM Manga")
-    fun getAllNotes(): LiveData<List<ChapterWithManga>>
+    @Query("SELECT * FROM Manga WHERE title LIKE :title LIMIT 1")
+    suspend fun search(title: String): Manga?
 }

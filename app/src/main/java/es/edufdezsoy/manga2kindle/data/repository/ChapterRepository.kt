@@ -10,13 +10,13 @@ import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 
 class ChapterRepository(application: Application) {
     private val chapterDao: ChapterDao
-     private val allNotes: LiveData<List<ChapterWithManga>>
+     private val allChapters: LiveData<List<ChapterWithManga>>
 
     init {
         val database = M2KDatabase.getInstance(application.applicationContext)
         chapterDao = database.chapterDao()
 
-         allNotes = chapterDao.getAllNotes()
+         allChapters = chapterDao.getAllChapters()
     }
 
     suspend fun insert(chapter: Chapter) {
@@ -36,7 +36,7 @@ class ChapterRepository(application: Application) {
     }
 
     @Transaction
-    fun getAllNotes(): LiveData<List<ChapterWithManga>> {
-        return allNotes
+    fun getAllChapters(): LiveData<List<ChapterWithManga>> {
+        return allChapters
     }
 }

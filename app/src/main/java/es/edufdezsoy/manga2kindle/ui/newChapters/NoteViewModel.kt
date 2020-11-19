@@ -15,7 +15,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            notes = repository.getAllNotes()
+            notes = repository.getAllChapters()
         }
     }
 

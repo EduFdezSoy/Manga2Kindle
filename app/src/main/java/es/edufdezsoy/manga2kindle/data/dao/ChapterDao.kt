@@ -21,5 +21,5 @@ interface ChapterDao {
 
     @Transaction
     @Query("SELECT * FROM Manga")
-    fun getAllNotes(): LiveData<List<ChapterWithManga>>
+    fun getAllChapters(): LiveData<List<ChapterWithManga>>
 }

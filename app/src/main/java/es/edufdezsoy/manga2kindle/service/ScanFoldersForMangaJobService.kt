@@ -5,6 +5,7 @@ import android.app.job.JobService
 import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
+import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
@@ -107,18 +108,49 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                         mangaList.forEach {
                             val mangaName = formatName(it.name)
                             val manga = mangaRepository.searchOrCreate(mangaName)
+                            val chapters = getChapters(it)
 
-                            // TODO: working on this
+                            chapters.forEach {
+                                val chName = formatName(it.name)
+                                var chTitle: String? = getChapterTitle(chName)
+                                val chNum = pickChapter(chName)
+                                val chVol = pickVolume(chName)
+
+                                if (chTitle.isNullOrBlank())
+                                    chTitle = null
+
+                                val chExists = chapterRepository.search(manga.mangaId, chNum)
+
+                                if (chExists == null) {
+                                    chapterRepository.insert(
+                                        Chapter(
+                                            chTitle,
+                                            chNum,
+                                            chVol,
+                                            it.uri.toString(),
+                                            manga.mangaId
+                                        )
+                                    )
+                                } else {
+                                    // TODO: check when a chapter already exists
+                                }
+
+                            }
 
                             Log.v(TAG, mangaName)
 
                             if (jobCancelled)
                                 throw InterruptedException("Service was interrupted by the system")
                         }
+
+                        if (finishedCounter.incrementAndGet() == folders.size) {
+                            Log.i(TAG, "Done scanning manga folders")
+                            Log.d(TAG, "doBackgroundWork: Job Finished")
+
+                            jobFinished(params, wantsReschedule)
+                        }
                     }
                 }
-
-
             } catch (e: InterruptedException) {
                 Log.e(TAG, "Error: " + e.message)
                 return@Service
@@ -126,9 +158,6 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                 wantsReschedule = true
                 Log.e(TAG, "Error: " + e.message)
             }
-
-            Log.d(TAG, "doBackgroundWork: Job Finished")
-            jobFinished(params, wantsReschedule)
         }
     }
 

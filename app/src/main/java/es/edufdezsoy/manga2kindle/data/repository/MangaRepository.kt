@@ -18,11 +18,12 @@ class MangaRepository(application: Application) {
     }
 
     suspend fun insert(manga: Manga): Manga {
-        return mangaDao.insert(manga)
+        val id = mangaDao.insert(manga)
+        return mangaDao.get(id)
     }
 
-    suspend fun update(manga: Manga): Manga {
-        return mangaDao.update(manga)
+    suspend fun update(manga: Manga) {
+        mangaDao.update(manga)
     }
 
     suspend fun delete(manga: Manga) {

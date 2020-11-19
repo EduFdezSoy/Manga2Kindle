@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -75,7 +76,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
                 val finishedCounter = AtomicInteger()
                 val chapterRepository = ChapterRepository(application)
-                // val mangaRepository = MangaRepository(application)
+                val mangaRepository = MangaRepository(application)
                 val folderRepository = FolderRepository(application)
 
                 val folders = folderRepository.getStaticFolderList()
@@ -105,7 +106,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
                         mangaList.forEach {
                             val mangaName = formatName(it.name)
-                            // val manga = mangaRepository.search(mangaName)
+                            val manga = mangaRepository.searchOrCreate(mangaName)
 
                             // TODO: working on this
 

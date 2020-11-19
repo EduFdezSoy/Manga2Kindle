@@ -17,4 +17,7 @@ interface FolderDao {
 
     @Query("SELECT * FROM Folder")
     fun getAllFolders(): LiveData<List<Folder>>
+
+    @Query("SELECT * FROM Folder")
+    suspend fun getStaticFolderList(): List<Folder>
 }

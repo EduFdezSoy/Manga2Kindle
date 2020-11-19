@@ -32,4 +32,8 @@ class FolderRepository(application: Application) {
     fun getAllFolders(): LiveData<List<Folder>> {
         return allFolders
     }
+
+    suspend fun getStaticFolderList(): List<Folder> {
+        return folderDao.getStaticFolderList()
+    }
 }

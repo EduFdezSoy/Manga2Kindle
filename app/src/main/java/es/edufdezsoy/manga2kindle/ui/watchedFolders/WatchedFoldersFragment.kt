@@ -19,6 +19,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.FolderAdapter
+import es.edufdezsoy.manga2kindle.adapter.FolderCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.service.ExampleJobService
 import es.edufdezsoy.manga2kindle.service.ExampleService
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_watched_folders.view.*
 import kotlinx.coroutines.launch
 
 
-class WatchedFoldersFragment : Fragment() {
+class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemLongClickListener {
     private val TAG = this::class.java.simpleName
     private val PICK_FOLDER_REQUEST_CODE = 1
 
@@ -54,6 +55,7 @@ class WatchedFoldersFragment : Fragment() {
 
 
         // set listeners
+        adapter.setOnItemLongClickListener(this)
         view.floatingActionButton.setOnClickListener { performFileSearch() }
 
         // listeners for service test buttons (to be removed)
@@ -107,6 +109,12 @@ class WatchedFoldersFragment : Fragment() {
             // TODO: remove toast when done
             Toast.makeText(context, path, Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onItemLongClick(folder: Folder) {
+        val folderCard = FolderCardAdapter(requireContext(), viewLifecycleOwner)
+        folderCard.setFolder(folder, folderViewModel)
+        folderCard.show()
     }
 
     // service shit that needs to be removed

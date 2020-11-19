@@ -71,7 +71,7 @@ class FolderAdapter : ListAdapter<Folder, FolderAdapter.FolderHolder>(DIFF_CALLB
     }
 
     interface OnItemClickListener {
-        fun onItemClick(chapter: Folder)
+        fun onItemClick(folder: Folder)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -79,7 +79,7 @@ class FolderAdapter : ListAdapter<Folder, FolderAdapter.FolderHolder>(DIFF_CALLB
     }
 
     interface OnItemLongClickListener {
-        fun onItemLongClick(chapter: Folder)
+        fun onItemLongClick(folder: Folder)
     }
 
     fun setOnItemLongClickListener(listener: OnItemLongClickListener) {

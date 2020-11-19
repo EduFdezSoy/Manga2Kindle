@@ -1,23 +1,32 @@
 package es.edufdezsoy.manga2kindle.service
 
-import android.content.Context
+import android.app.job.JobParameters
+import android.app.job.JobService
+import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
-import kotlinx.coroutines.coroutineScope
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
+import kotlin.coroutines.CoroutineContext
 
-object ScanManga {
+class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
     //region vars and vals
-
     private val TAG = this::class.java.simpleName
-
+    private var jobCancelled = false
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
         Pattern.compile(".*Ch.\\d+.*"),
         // Oneshot chapters usually dont have Vol or Ch
         Pattern.compile(".*Oneshot.*"),
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
-        Pattern.compile("[#]\\d+.*"),
+        // Guya, scanlator_N - Title
+        Pattern.compile(".*[_#]\\d+.*"),
         // Manga Rock, this one uses Chapter NNN, what a nightmare
         Pattern.compile(".*Chapter \\d+.*"),
         // LectorManga, uses Capítulo N.NN
@@ -27,21 +36,97 @@ object ScanManga {
         Pattern.compile("Chapter"),
         // HeavenManga, Chap NN
         Pattern.compile(".*Chap \\d+.*"),
-        // Guya, starts with NN
+        // Others starting with NN
         Pattern.compile("\\d+.*"),
         // MangaLife, something NNNN
         Pattern.compile(".*\\d\\d\\d\\d")
     )
 
     //endregion
-    //region public functions
+    //region override methods
 
-    suspend fun performScan(context: Context) = coroutineScope {
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
+    override fun onStartJob(params: JobParameters?): Boolean {
+        Log.d(TAG, "onStartJob: job started")
+
+        doBackgroundWork(params)
+
+        return true // true means we are doing things in the background
+    }
+
+    override fun onStopJob(params: JobParameters?): Boolean {
+        Log.d(TAG, "onStopJob: Job Cancelled before completion")
+        jobCancelled = true
+        return true // true if we need to run it again (if something fails, for example)
     }
 
     //endregion
-    //region private functions
+    //region private methods
+
+    private fun doBackgroundWork(params: JobParameters?) {
+        var wantsReschedule = false
+
+        launch Service@{
+            try {
+                Log.i(TAG, "performing manga scan")
+
+                val finishedCounter = AtomicInteger()
+                val chapterRepository = ChapterRepository(application)
+                // val mangaRepository = MangaRepository(application)
+                val folderRepository = FolderRepository(application)
+
+                val folders = folderRepository.getStaticFolderList()
+                if (folders.isEmpty()) {
+                    Log.i(TAG, "No folders to scan")
+                    return@Service
+                }
+
+                folders.forEach {
+                    launch Folder@{
+                        if (it.path.isBlank())
+                            return@Folder
+
+                        val uri = Uri.parse(it.path)
+                        val docFile = DocumentFile.fromTreeUri(applicationContext, uri)
+
+                        if (!docFile!!.canRead()) {
+                            Log.e(TAG, "Cant read the folder \n" + it.name + " (" + it.path + ")")
+                            return@Folder
+                        }
+
+                        val list = getListOfFoldersAndFiles(docFile)
+                        val mangaList = searchForMangas(list)
+
+                        mangaList.forEach {
+                            val mangaName = formatName(it.name)
+                            // val manga = mangaRepository.search(mangaName)
+
+                            // TODO: working on this
+
+                            Log.v(TAG, mangaName)
+
+                            if (jobCancelled)
+                                throw InterruptedException("Service was interrupted by the system")
+                        }
+                    }
+                }
+
+
+            } catch (e: InterruptedException) {
+                Log.e(TAG, "Error: " + e.message)
+                return@Service
+            } catch (e: Exception) {
+                wantsReschedule = true
+                Log.e(TAG, "Error: " + e.message)
+            }
+
+            Log.d(TAG, "doBackgroundWork: Job Finished")
+            jobFinished(params, wantsReschedule)
+        }
+    }
 
     /**
      *  Digs in the DocumentFile to read all the folder structure
@@ -154,6 +239,7 @@ object ScanManga {
 
         return chapters
     }
+
 
     /**
      * Pick the chapter number from the folder name pased

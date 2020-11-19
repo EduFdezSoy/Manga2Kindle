@@ -86,6 +86,9 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
                 folders.forEach {
                     launch Folder@{
+                        if (!it.active)
+                            return@Folder
+
                         if (it.path.isBlank())
                             return@Folder
 

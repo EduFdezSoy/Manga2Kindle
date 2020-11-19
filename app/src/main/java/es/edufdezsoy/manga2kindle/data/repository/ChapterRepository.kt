@@ -39,4 +39,8 @@ class ChapterRepository(application: Application) {
     fun getAllChapters(): LiveData<List<ChapterWithManga>> {
         return allChapters
     }
+
+    suspend fun search(mangaId: Int, chapterNum: Float): Chapter? {
+        return chapterDao.search(mangaId, chapterNum)
+    }
 }

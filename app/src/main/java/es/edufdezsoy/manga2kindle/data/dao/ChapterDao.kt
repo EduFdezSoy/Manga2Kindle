@@ -22,4 +22,7 @@ interface ChapterDao {
     @Transaction
     @Query("SELECT * FROM Manga")
     fun getAllChapters(): LiveData<List<ChapterWithManga>>
+
+    @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")
+    suspend fun search(mangaId: Int, chapterNum: Float): Chapter?
 }

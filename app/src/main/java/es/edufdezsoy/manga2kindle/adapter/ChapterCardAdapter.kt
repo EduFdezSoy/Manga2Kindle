@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.ui.newChapters.NoteViewModel
 import kotlinx.android.synthetic.main.view_chapter.view.*
@@ -53,11 +54,11 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region private functions
 
     private fun setChapter() {
-/*        view.series_textInputLayoutLayout.editText?.setText(chapter.manga_title)
-        view.author_textInputLayout.editText?.setText(chapter.author)
-        view.title_textInputLayout.editText?.setText(chapter.title)
-        view.chapter_textInputLayout.editText?.setText(chapter.chapter.toString())
-        view.volume_textInputLayout.editText?.setText(chapter.volume?.toString())*/
+        view.series_textInputLayoutLayout.editText?.setText(chapter.manga.manga.title)
+        view.author_textInputLayout.editText?.setText(chapter.manga.authorsToString())
+        view.title_textInputLayout.editText?.setText(chapter.chapter.title)
+        view.chapter_textInputLayout.editText?.setText(chapter.chapter.chapterToString())
+        view.volume_textInputLayout.editText?.setText(chapter.chapter.volume?.toString())
     }
 
     private fun setListeners() {
@@ -73,12 +74,19 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     }
 
     private fun saveChapter() {
-/*        chapter.manga_title = view.series_textInputLayoutLayout.editText?.text.toString()
-        chapter.author = view.author_textInputLayout.editText?.text.toString()
-        chapter.title = view.title_textInputLayout.editText?.text.toString()
-        chapter.chapter = view.chapter_textInputLayout.editText?.text.toString().toInt()
-        chapter.volume = view.volume_textInputLayout.editText?.text.toString().toIntOrNull()*/
+        chapter.manga.manga.title = view.series_textInputLayoutLayout.editText?.text.toString()
+        chapter.chapter.title = view.title_textInputLayout.editText?.text.toString()
+        chapter.chapter.chapter = view.chapter_textInputLayout.editText?.text.toString().toFloat()
+        chapter.chapter.volume = view.volume_textInputLayout.editText?.text.toString().toIntOrNull()
 
+        val authorsStr = view.author_textInputLayout.editText?.text.toString().split(",")
+        val authors = ArrayList<Author>()
+        authorsStr.forEach {
+            authors.add(Author(it.trim()))
+        }
+        chapter.manga.authors = authors
+
+        // TODO: add manga and author view models and save all
         chapterViewModel.update(chapter.chapter)
     }
 

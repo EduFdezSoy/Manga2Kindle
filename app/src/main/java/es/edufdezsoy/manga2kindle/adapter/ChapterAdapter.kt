@@ -41,14 +41,20 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(
     override fun onBindViewHolder(holder: NoteHolder, position: Int) {
         val chapter = getItem(position)
 
-//        holder.manga.text = chapter.manga_title
-//        holder.chapterTitle.text = ": " + chapter.title
-//        holder.chapter.text = "Ch." + chapter.chapter.toString()
-//        holder.chapter2.text = chapter.chapter.toString()
-//        if (chapter.volume != null)
-//            holder.volume.text = "(Vol. " + chapter.volume + ")"
-//        else
-//            holder.volume.text = ""
+        holder.chapterTitle.isSelected = true
+
+        holder.manga.text = chapter.manga.manga.title
+        holder.chapterTitle.text = chapter.chapter.title
+        holder.chapter.text = "Ch." + chapter.chapter.chapterToString()
+        holder.chapter2.text = chapter.chapter.chapterToString().replace(".", "-")
+
+        if (chapter.chapter.volume != null)
+            holder.volume.text = "(Vol. " + chapter.chapter.volume + ")"
+        else
+            holder.volume.text = ""
+
+        if (holder.chapterTitle.text.isNotBlank())
+            holder.chapter.text = holder.chapter.text.toString() + ": "
     }
 
     override fun submitList(list: List<ChapterWithManga>?) {

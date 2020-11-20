@@ -70,10 +70,18 @@
 
         <TextView
             android:id="@+id/chapter_name_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text=": The wholesome compilation"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text=": The wholesome compilation aaaaaaaaaaaaaaaaaaaaaaaaa"
             app:layout_constraintBottom_toBottomOf="@+id/chapter_textview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/chapter_textview"
             app:layout_constraintTop_toTopOf="@+id/chapter_textview" />
     </androidx.constraintlayout.widget.ConstraintLayout>

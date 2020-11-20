@@ -43,7 +43,7 @@ class MangaRepository(application: Application) {
 
         // search online (and insert in local if exists)
         val mangas = apiService.searchManga(title)
-        if (mangas[0] != null) {
+        if (!mangas.isNullOrEmpty() && mangas[0] != null) {
             return insert(mangas[0]!!)
         }
 

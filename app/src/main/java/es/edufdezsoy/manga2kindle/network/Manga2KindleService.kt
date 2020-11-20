@@ -6,6 +6,7 @@ import es.edufdezsoy.manga2kindle.data.model.Status
 import es.edufdezsoy.manga2kindle.data.model.Version
 import retrofit2.http.GET
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface Manga2KindleService {
 
@@ -18,20 +19,20 @@ interface Manga2KindleService {
 
     //region Author
 
-    @GET("author/:id")
-    suspend fun getAuthor(id: Int): Author
+    @GET("author/{id}")
+    suspend fun getAuthor(@Path("id") id: Int): Author
 
-    @GET("author/search/:query")
-    suspend fun searchAuthor(query: String): Array<Author?>
+    @GET("author/search/{query}")
+    suspend fun searchAuthor(@Path("query") query: String): Array<Author?>
 
     //endregion
     //region Manga
 
-    @GET("manga/:id")
-    suspend fun getManga(id: Int): Manga
+    @GET("manga/{id}")
+    suspend fun getManga(@Path("id") id: Int): Manga
 
-    @GET("manga/search/:query")
-    suspend fun searchManga(query: String): Array<Manga?>
+    @GET("manga/search/{query}")
+    suspend fun searchManga(@Path("query") query: String): Array<Manga?>
 
     @PUT("manga")
     suspend fun putManga(manga: Manga): Manga
@@ -39,8 +40,8 @@ interface Manga2KindleService {
     //endregion
     //region Status
 
-    @GET("status/:id")
-    suspend fun getStatus(id: Int): Status
+    @GET("status/{id}")
+    suspend fun getStatus(@Path("id") id: Int): Status
 
     @PUT("status/register")
     suspend fun getNewStatus(): Status

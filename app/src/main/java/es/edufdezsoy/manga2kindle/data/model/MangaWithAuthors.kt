@@ -11,5 +11,17 @@ data class MangaWithAuthors(
         entityColumn = "authorId",
         associateBy = Junction(MangaAuthorCrossRef::class)
     )
-    val authors: List<Author>
-)
+    var authors: List<Author>
+) {
+    fun authorsToString(): String {
+        var names = ""
+
+        authors.forEach {
+            if (names.isNotBlank())
+                names += ", "
+            names += it.name
+        }
+
+        return names
+    }
+}

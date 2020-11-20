@@ -14,4 +14,12 @@ data class Chapter(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
     var remoteId: String? = null
+
+    fun chapterToString(): String {
+        return if (chapter % 1.0 != 0.0)
+            String.format("%s", chapter)
+        else
+            String.format("%.0f", chapter)
+    }
+
 }

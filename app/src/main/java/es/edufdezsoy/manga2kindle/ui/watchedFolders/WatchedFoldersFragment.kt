@@ -105,9 +105,6 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemLongClickListener
                 data.data,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
-
-            // TODO: remove toast when done
-            Toast.makeText(context, path, Toast.LENGTH_LONG).show()
         }
     }
 

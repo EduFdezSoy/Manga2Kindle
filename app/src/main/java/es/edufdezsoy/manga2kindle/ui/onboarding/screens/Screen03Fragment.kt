@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_screen01.view.*
+import kotlinx.android.synthetic.main.fragment_screen03.view.*
 
 class Screen03Fragment : Fragment() {
 

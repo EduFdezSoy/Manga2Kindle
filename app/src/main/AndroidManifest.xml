@@ -28,6 +28,9 @@
         <service
             android:name=".service.ExampleJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.ScanFoldersForMangaJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

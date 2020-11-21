@@ -22,6 +22,7 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(
 
             override fun areContentsTheSame(oldItem: ChapterWithManga, newItem: ChapterWithManga): Boolean {
                 return oldItem.chapter == newItem.chapter &&
+                        oldItem.chapter.chapter == newItem.chapter.chapter &&
                         oldItem.chapter.mangaId == newItem.chapter.mangaId &&
                         oldItem.chapter.path == newItem.chapter.path &&
                         oldItem.chapter.remoteId == newItem.chapter.remoteId &&

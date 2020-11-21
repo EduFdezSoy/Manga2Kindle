@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
     ChapterAdapter.OnItemLongClickListener {
-    private lateinit var noteViewModel: NoteViewModel
+    private lateinit var chapterViewModel: ChapterViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +32,9 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
         val adapter = ChapterAdapter()
         view.noteList_recycler.adapter = adapter
 
-        noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+        chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
         lifecycleScope.launch {
-            noteViewModel.getAllNotes().observe(viewLifecycleOwner) {
+            chapterViewModel.getAllNotes().observe(viewLifecycleOwner) {
                 adapter.submitList(it)
             }
         }
@@ -47,7 +47,7 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
 
     override fun onItemClick(chapter: ChapterWithManga) {
         val chapterCard = ChapterCardAdapter(requireContext(), viewLifecycleOwner)
-        chapterCard.setChapter(chapter, noteViewModel)
+        chapterCard.setChapter(chapter, chapterViewModel)
         chapterCard.show()
     }
 

@@ -12,7 +12,7 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
-import es.edufdezsoy.manga2kindle.ui.newChapters.NoteViewModel
+import es.edufdezsoy.manga2kindle.ui.newChapters.ChapterViewModel
 import kotlinx.android.synthetic.main.view_chapter.view.*
 
 class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
@@ -21,7 +21,7 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     private val dialog = MaterialDialog(context, BottomSheet(LayoutMode.MATCH_PARENT))
     private val view: View
     private lateinit var chapter: ChapterWithManga
-    private lateinit var chapterViewModel: NoteViewModel
+    private lateinit var chapterViewModel: ChapterViewModel
 
     //endregion
     //region constructor
@@ -38,7 +38,7 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //endregion
     //region public functions
 
-    fun setChapter(chapter: ChapterWithManga, chapterViewModel: NoteViewModel) {
+    fun setChapter(chapter: ChapterWithManga, chapterViewModel: ChapterViewModel) {
         this.chapter = chapter
         this.chapterViewModel = chapterViewModel
 

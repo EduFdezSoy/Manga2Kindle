@@ -32,7 +32,7 @@ class ChapterRepository(application: Application) {
     }
 
     suspend fun deleteAllNotes() {
-        chapterDao.deleteAllNotes()
+        chapterDao.deleteAllChapters()
     }
 
     @Transaction

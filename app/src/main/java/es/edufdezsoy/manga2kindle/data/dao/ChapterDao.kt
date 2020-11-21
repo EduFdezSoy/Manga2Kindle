@@ -17,7 +17,7 @@ interface ChapterDao {
     suspend fun delete(chapter: Chapter)
 
     @Query("DELETE FROM Chapter")
-    suspend fun deleteAllNotes()
+    suspend fun deleteAllChapters()
 
     @Transaction
     @Query("SELECT * FROM Manga WHERE mangaId IN (SELECT mangaId FROM Chapter WHERE mangaId)")

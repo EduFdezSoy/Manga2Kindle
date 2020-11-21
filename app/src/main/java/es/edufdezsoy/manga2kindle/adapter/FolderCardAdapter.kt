@@ -54,8 +54,6 @@ class FolderCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region private functions
 
     private fun setFolder() {
-        Log.d("a", folder.toString())
-
         view.title_textInputLayout.editText?.setText(folder.name)
         view.path_textInputLayout.editText?.setText(folder.path)
         view.active_switch.isChecked = folder.active

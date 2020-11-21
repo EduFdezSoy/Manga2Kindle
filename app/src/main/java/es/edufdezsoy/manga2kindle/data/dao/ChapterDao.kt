@@ -20,7 +20,7 @@ interface ChapterDao {
     suspend fun deleteAllNotes()
 
     @Transaction
-    @Query("SELECT * FROM Manga")
+    @Query("SELECT * FROM Manga WHERE mangaId IN (SELECT mangaId FROM Chapter WHERE mangaId)")
     fun getAllChapters(): LiveData<List<ChapterWithManga>>
 
     @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")

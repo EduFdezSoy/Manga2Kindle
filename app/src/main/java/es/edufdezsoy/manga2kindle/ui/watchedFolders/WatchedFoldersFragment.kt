@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,8 @@ import kotlinx.android.synthetic.main.fragment_watched_folders.view.*
 import kotlinx.coroutines.launch
 
 
-class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemLongClickListener {
+class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
+    FolderAdapter.OnItemLongClickListener {
     private val TAG = this::class.java.simpleName
     private val PICK_FOLDER_REQUEST_CODE = 1
 
@@ -55,6 +55,7 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemLongClickListener
 
 
         // set listeners
+        adapter.setOnItemClickListener(this)
         adapter.setOnItemLongClickListener(this)
         view.floatingActionButton.setOnClickListener { performFileSearch() }
 
@@ -106,6 +107,11 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemLongClickListener
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
+    }
+
+    override fun onItemClick(folder: Folder) {
+        folder.active = !folder.active
+        folderViewModel.update(folder)
     }
 
     override fun onItemLongClick(folder: Folder) {

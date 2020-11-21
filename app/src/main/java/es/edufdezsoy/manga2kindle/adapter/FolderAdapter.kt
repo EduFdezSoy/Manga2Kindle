@@ -3,7 +3,6 @@ package es.edufdezsoy.manga2kindle.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -47,6 +46,7 @@ class FolderAdapter : ListAdapter<Folder, FolderAdapter.FolderHolder>(DIFF_CALLB
         holder.logo.text = folder.name
         holder.path.text = folder.path
         holder.active.isChecked = folder.active
+        holder.active.setOnClickListener { itemClickListener?.onItemClick(folder) }
     }
 
     override fun submitList(list: List<Folder>?) {
@@ -64,8 +64,13 @@ class FolderAdapter : ListAdapter<Folder, FolderAdapter.FolderHolder>(DIFF_CALLB
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     itemClickListener?.onItemClick(getItem(adapterPosition))
+                }
+            }
+            itemView.setOnLongClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
                     itemLongClickListener?.onItemLongClick(getItem(adapterPosition))
                 }
+                return@setOnLongClickListener true
             }
         }
     }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 
-class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(DIFF_CALLBACK) {
+class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.ChapterHolder>(DIFF_CALLBACK) {
     private var itemClickListener: OnItemClickListener? = null
     private var itemLongClickListener: OnItemLongClickListener? = null
 
@@ -32,16 +32,18 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_new_chapter, parent, false)
 
-        return NoteHolder(view)
+        return ChapterHolder(view)
     }
 
-    override fun onBindViewHolder(holder: NoteHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChapterHolder, position: Int) {
         val chapter = getItem(position)
 
+        // these two lines allow the text to move
+        holder.manga.isSelected = true
         holder.chapterTitle.isSelected = true
 
         holder.manga.text = chapter.manga.manga.title
@@ -63,7 +65,7 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.NoteHolder>(
         notifyDataSetChanged()
     }
 
-    inner class NoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ChapterHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val manga: TextView = itemView.findViewById(R.id.title_textview)
         val chapterTitle: TextView = itemView.findViewById(R.id.chapter_name_textview)
         val chapter: TextView = itemView.findViewById(R.id.chapter_textview)

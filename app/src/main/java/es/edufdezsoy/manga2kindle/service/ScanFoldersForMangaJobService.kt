@@ -119,7 +119,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                                 if (chTitle.isNullOrBlank())
                                     chTitle = null
 
-                                val chExists = chapterRepository.search(manga.mangaId, chNum)
+                                val chExists = chapterRepository.search(manga.manga.mangaId, chNum)
 
                                 if (chExists == null) {
                                     chapterRepository.insert(
@@ -128,7 +128,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                                             chNum,
                                             chVol,
                                             it.uri.toString(),
-                                            manga.mangaId
+                                            manga.manga.mangaId
                                         )
                                     )
                                 } else {

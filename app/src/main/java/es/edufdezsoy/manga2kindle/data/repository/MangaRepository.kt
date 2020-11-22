@@ -4,6 +4,7 @@ import android.app.Application
 import es.edufdezsoy.manga2kindle.data.M2KDatabase
 import es.edufdezsoy.manga2kindle.data.dao.MangaDao
 import es.edufdezsoy.manga2kindle.data.model.Manga
+import es.edufdezsoy.manga2kindle.data.model.MangaWithAuthors
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.network.Manga2KindleService
 
@@ -17,7 +18,7 @@ class MangaRepository(application: Application) {
         apiService = ApiService.getInstance(application.applicationContext)
     }
 
-    suspend fun insert(manga: Manga): Manga {
+    suspend fun insert(manga: Manga): MangaWithAuthors {
         val id = mangaDao.insert(manga)
         return mangaDao.get(id)
     }
@@ -30,11 +31,15 @@ class MangaRepository(application: Application) {
         mangaDao.delete(manga)
     }
 
-    suspend fun search(title: String): Manga? {
+    suspend fun get(id: Int): MangaWithAuthors {
+        return mangaDao.get(id.toLong())
+    }
+
+    suspend fun search(title: String): MangaWithAuthors? {
         return mangaDao.search(title)
     }
 
-    suspend fun searchOrCreate(title: String): Manga {
+    suspend fun searchOrCreate(title: String): MangaWithAuthors {
         // search local
         val manga = mangaDao.search(title)
         if (manga != null) {

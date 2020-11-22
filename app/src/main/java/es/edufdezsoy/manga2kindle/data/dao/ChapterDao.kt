@@ -1,9 +1,8 @@
 package es.edufdezsoy.manga2kindle.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChapterDao {
@@ -19,9 +18,8 @@ interface ChapterDao {
     @Query("DELETE FROM Chapter")
     suspend fun deleteAllChapters()
 
-    @Transaction
-    @Query("SELECT * FROM Manga WHERE mangaId IN (SELECT mangaId FROM Chapter WHERE mangaId)")
-    fun getAllChapters(): LiveData<List<ChapterWithManga>>
+    @Query("SELECT * FROM Chapter")
+    fun getAllChapters(): Flow<List<Chapter>>
 
     @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")
     suspend fun search(mangaId: Int, chapterNum: Float): Chapter?

@@ -1,22 +1,20 @@
 package es.edufdezsoy.manga2kindle.data.repository
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.room.Transaction
 import es.edufdezsoy.manga2kindle.data.M2KDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.model.Chapter
-import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import kotlinx.coroutines.flow.Flow
 
 class ChapterRepository(application: Application) {
     private val chapterDao: ChapterDao
-     private val allChapters: LiveData<List<ChapterWithManga>>
+    private val allChapters: Flow<List<Chapter>>
 
     init {
         val database = M2KDatabase.getInstance(application.applicationContext)
         chapterDao = database.chapterDao()
 
-         allChapters = chapterDao.getAllChapters()
+        allChapters = chapterDao.getAllChapters()
     }
 
     suspend fun insert(chapter: Chapter) {
@@ -35,8 +33,7 @@ class ChapterRepository(application: Application) {
         chapterDao.deleteAllChapters()
     }
 
-    @Transaction
-    fun getAllChapters(): LiveData<List<ChapterWithManga>> {
+    fun getAllChapters(): Flow<List<Chapter>> {
         return allChapters
     }
 

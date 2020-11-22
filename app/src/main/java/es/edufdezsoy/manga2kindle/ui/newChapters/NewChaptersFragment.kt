@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import kotlinx.android.synthetic.main.fragment_new_chapters.view.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
@@ -34,7 +34,7 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
 
         chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
         lifecycleScope.launch {
-            chapterViewModel.getAllNotes().observe(viewLifecycleOwner) {
+            chapterViewModel.getAllNotes().collect {
                 adapter.submitList(it)
             }
         }

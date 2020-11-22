@@ -7,9 +7,11 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
+import es.edufdezsoy.manga2kindle.service.ScanRemovedChaptersService
 
 class Application : Application() {
     private val TAG = this::class.java.simpleName
@@ -24,6 +26,7 @@ class Application : Application() {
 
         createNotificationChannel()
         startScheduledService()
+        startOneTimeServices()
     }
 
     private fun createNotificationChannel() {
@@ -53,5 +56,10 @@ class Application : Application() {
             Log.d(TAG, "startScheduledService: Job Scheduled")
         else
             Log.d(TAG, "startScheduledService: Job Scheduling failed")
+    }
+
+    private fun startOneTimeServices() {
+        val serviceIntent = Intent(applicationContext, ScanRemovedChaptersService::class.java)
+        applicationContext.startService(serviceIntent)
     }
 }

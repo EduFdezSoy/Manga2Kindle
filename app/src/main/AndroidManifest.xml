@@ -25,6 +25,7 @@
         </activity>
 
         <service android:name=".service.ExampleService" />
+        <service android:name=".service.ScanRemovedChaptersService" />
         <service
             android:name=".service.ExampleJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

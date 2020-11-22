@@ -21,6 +21,9 @@ interface ChapterDao {
     @Query("SELECT * FROM Chapter ORDER BY mangaId DESC, chapter")
     fun getAllChapters(): Flow<List<Chapter>>
 
+    @Query("SELECT * FROM Chapter")
+    suspend fun getStaticAllChapters(): List<Chapter>
+
     @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")
     suspend fun search(mangaId: Int, chapterNum: Float): Chapter?
 }

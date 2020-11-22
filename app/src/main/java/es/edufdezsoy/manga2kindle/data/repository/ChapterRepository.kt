@@ -37,6 +37,10 @@ class ChapterRepository(application: Application) {
         return allChapters
     }
 
+    suspend fun getStaticAllChapters(): List<Chapter> {
+        return chapterDao.getStaticAllChapters()
+    }
+
     suspend fun search(mangaId: Int, chapterNum: Float): Chapter? {
         return chapterDao.search(mangaId, chapterNum)
     }

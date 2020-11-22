@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.data.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,6 +13,7 @@ data class Chapter(
     val mangaId: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "rowid")
     var id: Int = 0
     var remoteId: String? = null
 

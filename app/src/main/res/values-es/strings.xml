@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello_blank_fragment">Hola fragmento blanco</string>
+    <string name="sliders_next_button">Siguiente</string>
+    <string name="sliders_finish_button">Finalizar</string>
+    <string name="sliders_logo_description">app logo (Kanjis para Ma y Ki)</string>
+    <string name="sliders_help_text">Si necesitas más ayuda visita esta guía:</string>
+    <string name="sliders_email_hint">mi_dispositivo@kindle.com</string>
+    <string name="sliders_1_paragraph_1_welcome_text">¡Bienvenido a Manga2Kindle!\\nPara usar la aplicación necesitamos configurar un par de cosas, ¡vamos a ello!</string>
+    <string name="sliders_2_title_authorize_app_mail">Autoriza el email de la app</string>
+    <string name="sliders_2_paragraph_1">"Primero necesitas autorizar a nuestro servidor de correos para que pueda mandar a tu kindle los archivos de los mangas: "</string>
+    <string name="sliders_2_paragraph_2">Puedes hacerlo desde tu cuenta de Amazon, busca \"Gestionar Contenido y Dispositivos\" y ve a \"Preferencias\".</string>
+    <string name="sliders_2_paragraph_3">Baja hasta \"Configuración de documentos personales\", clicka en \"Añade una nueva dirección de e-mail autorizada\" y escribe nuestro correo:</string>
+    <string name="sliders_3_title_add_mail">Añade el email de tu dispositivo</string>
+    <string name="sliders_3_paragraph_1">"Tu Kindle tiene algo parecido a una dirección de correo para ser identificado, la necesitaremos para enviarle mangas "</string>
+    <string name="sliders_3_paragraph_2">Puedes encontrarla en la configuración de tu Kindle, en \"Tu Cuenta\", abajo del todo.</string>
+</resources>

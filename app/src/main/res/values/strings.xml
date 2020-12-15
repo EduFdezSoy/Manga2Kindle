@@ -16,4 +16,22 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Welcome Sliders -->
+    <string name="sliders_next_button">Next</string>
+    <string name="sliders_finish_button">Finish</string>
+    <string name="sliders_logo_description">app logo (Kanjis for Ma and Ki)</string>
+    <string name="sliders_help_text">If you need more help, check out this guide:</string>
+    <string name="sliders_help_link_1">m2k.wf/h1</string>
+    <string name="sliders_help_link_2">m2k.wf/h2</string>
+    <string name="sliders_mk2_email">manga2kindle@m2k.wf</string>
+    <string name="sliders_email_hint">my_device@kindle.com</string>
+    <string name="sliders_1_paragraph_1_welcome_text">Welcome to Manga2Kindle!\nTo use the app we need to configure a few things, let\'s start!</string>
+    <string name="sliders_2_title_authorize_app_mail">Authorize app mail</string>
+    <string name="sliders_2_paragraph_1">First you\'ll need to authorize our mail server to send to your kindle device the manga documents:</string>
+    <string name="sliders_2_paragraph_2">You can do that from your Amazon\'s Account, search for \"Manage your Content and Devices\" and go to \"Preferences\".</string>
+    <string name="sliders_2_paragraph_3">Scroll to Personal Documents Settingsand click Add a new authorized e-mailthen just write ours one:</string>
+    <string name="sliders_3_title_add_mail">Add your device email</string>
+    <string name="sliders_3_paragraph_1">Your Kindle device has something like an email address to be identified, we need it to send manga to it</string>
+    <string name="sliders_3_paragraph_2">You can find it in your Kindle\'s settings, inside \"Your Account\", at the very bottom.</string>
 </resources>

@@ -2,14 +2,12 @@
 <a href="https://www.manga2kindle.com/"><img src="https://www.manga2kindle.com/assets/media/hero.png" width="200px" alt="manga2kindle_logo"></a>
 <h1 align="center" style="margin: 20px; text-align: center;">Manga2Kindle&nbsp;<a href="https://travis-ci.org/EduFdezSoy/Manga2Kindle"><img src="https://travis-ci.org/EduFdezSoy/Manga2Kindle.svg?branch=master" alt="Build Status"></a>
 </h1></p>
-<p align="center"><i>The easiest way to move mangas to your e-reader.</i></p>
 <p align="center">
-<h2 align="center" style="text-align: center;">Support me on&nbsp;
-<a href="https://ko-fi.com/EduFdezSoy">
-<img style="margin-bottom:-10px" src="https://ko-fi.com/img/Kofi_Logo_Blue.svg" alt="ko-fi"></a>
-<h2>
+<i>The easiest way to move mangas to your e-reader.</i>
+<br><br>
+<a href="https://ko-fi.com/X8X0IK3C"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" alt="ko-fi"></a>
 </p>
-
+  
 ## Description
 Manga2Kindle track the mangas at your phone and send them to your Kindle device.  
 It allows you to read in your e-reader while using your favourite app to buy and download mangas.

@@ -1,12 +1,8 @@
 package es.edufdezsoy.manga2kindle.network
 
-import es.edufdezsoy.manga2kindle.data.model.Author
-import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.data.model.Status
-import es.edufdezsoy.manga2kindle.data.model.Version
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import es.edufdezsoy.manga2kindle.data.model.*
+import okhttp3.MultipartBody
+import retrofit2.http.*
 
 interface Manga2KindleService {
 
@@ -40,11 +36,19 @@ interface Manga2KindleService {
     //endregion
     //region Status
 
-    @GET("status/{id}")
-    suspend fun getStatus(@Path("id") id: Int): Status
+    @GET("chapter/{id}")
+    suspend fun getChapterStatus(@Path("id") id: Int): Status
 
-    @PUT("status/register")
-    suspend fun getNewStatus(): Status
+    @PUT("chapter")
+    suspend fun getNewChapterStatus(@Query("chapter") chapter: UploadChapter): Status
+
+    @Multipart
+    @POST("chapter/{id}/{page}")
+    suspend fun putChapterPage(
+        @Path("id") id: Int,
+        @Path("page") page: Int,
+        @Part("file") image: MultipartBody.Part
+        )
 
     //endregion
 }

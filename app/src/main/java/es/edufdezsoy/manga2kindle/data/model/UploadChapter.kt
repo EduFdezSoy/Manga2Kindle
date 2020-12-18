@@ -8,7 +8,8 @@ data class UploadChapter(
     var pages: Int?,
     var email: String?,
     var readMode: String?,
-    var splitType: Int?
+    var splitType: Int?,
+    var path: String?
 ) {
     constructor(chapterWithManga: ChapterWithManga) : this(chapterWithManga, null, null)
     constructor(chapterWithManga: ChapterWithManga, readMode: String?, splitType: Int?) : this(
@@ -19,6 +20,7 @@ data class UploadChapter(
         null,
         null,
         readMode,
-        splitType
+        splitType,
+        chapterWithManga.chapter.path
     )
 }

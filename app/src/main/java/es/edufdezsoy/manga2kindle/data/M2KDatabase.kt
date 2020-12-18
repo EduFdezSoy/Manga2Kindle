@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import es.edufdezsoy.manga2kindle.data.dao.ChapterDao
 import es.edufdezsoy.manga2kindle.data.dao.FolderDao
 import es.edufdezsoy.manga2kindle.data.dao.MangaDao
+import es.edufdezsoy.manga2kindle.data.dao.StatusDao
 import es.edufdezsoy.manga2kindle.data.model.*
 import es.edufdezsoy.manga2kindle.utils.SingletonHolder
 
@@ -16,7 +17,8 @@ import es.edufdezsoy.manga2kindle.utils.SingletonHolder
         Author::class,
         Chapter::class,
         Folder::class,
-        MangaAuthorCrossRef::class
+        MangaAuthorCrossRef::class,
+        Status::class
     ],
     version = 1
 )
@@ -25,6 +27,7 @@ abstract class M2KDatabase : RoomDatabase() {
     abstract fun folderDao(): FolderDao
     abstract fun mangaDao(): MangaDao
     abstract fun chapterDao(): ChapterDao
+    abstract fun statusDao(): StatusDao
 
     companion object : SingletonHolder<M2KDatabase, Context>({
         Room.databaseBuilder(

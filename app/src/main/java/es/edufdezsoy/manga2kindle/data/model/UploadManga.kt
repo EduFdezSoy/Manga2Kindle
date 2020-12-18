@@ -1,6 +1,6 @@
 package es.edufdezsoy.manga2kindle.data.model
 
-class UploadManga(
+data class UploadManga(
     var id: Int?,
     var title: String,
     var uuid: String?,

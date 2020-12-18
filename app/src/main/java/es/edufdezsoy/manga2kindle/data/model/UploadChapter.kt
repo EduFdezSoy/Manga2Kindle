@@ -1,6 +1,6 @@
 package es.edufdezsoy.manga2kindle.data.model
 
-class UploadChapter(
+data class UploadChapter(
     var manga: UploadManga,
     var title: String?,
     var chapter: Float,

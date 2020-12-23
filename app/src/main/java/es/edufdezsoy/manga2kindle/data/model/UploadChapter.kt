@@ -1,5 +1,7 @@
 package es.edufdezsoy.manga2kindle.data.model
 
+import java.io.Serializable
+
 data class UploadChapter(
     var manga: UploadManga,
     var title: String?,
@@ -10,7 +12,7 @@ data class UploadChapter(
     var readMode: String?,
     var splitType: Int?,
     var path: String?
-) {
+) : Serializable {
     constructor(chapterWithManga: ChapterWithManga) : this(chapterWithManga, null, null)
     constructor(chapterWithManga: ChapterWithManga, readMode: String?, splitType: Int?) : this(
         UploadManga(chapterWithManga.manga),

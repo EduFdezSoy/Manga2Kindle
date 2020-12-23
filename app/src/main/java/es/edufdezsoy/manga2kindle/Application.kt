@@ -60,6 +60,10 @@ class Application : Application() {
 
     private fun startOneTimeServices() {
         val serviceIntent = Intent(applicationContext, ScanRemovedChaptersService::class.java)
-        applicationContext.startService(serviceIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            applicationContext.startForegroundService(serviceIntent)
+        } else {
+            applicationContext.startService(serviceIntent)
+        }
     }
 }

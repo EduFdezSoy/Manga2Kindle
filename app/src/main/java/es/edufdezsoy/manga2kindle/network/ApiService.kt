@@ -1,6 +1,7 @@
 package es.edufdezsoy.manga2kindle.network
 
 import android.content.Context
+import com.squareup.moshi.Moshi
 import es.edufdezsoy.manga2kindle.utils.SingletonHolder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,10 +15,14 @@ object ApiService : SingletonHolder<Manga2KindleService, Context?>({
         .addInterceptor(interceptor)
         .build()
 
+    val moshi = Moshi.Builder()
+        .add(AuthorArrayListMoshiAdapter())
+        .build()
+
     val retrofit = Retrofit.Builder()
         .baseUrl(Manga2KindleService.API_URL)
         .client(client)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
     retrofit.create(Manga2KindleService::class.java)

@@ -39,8 +39,9 @@ interface Manga2KindleService {
     @GET("chapter/{id}")
     suspend fun getChapterStatus(@Path("id") id: Int): Status
 
+    // @Multipart
     @PUT("chapter")
-    suspend fun getNewChapterStatus(@Query("chapter") chapter: UploadChapter): Status
+    suspend fun getNewChapterStatus(@Body chapter: UploadChapter): Status
 
     @Multipart
     @POST("chapter/{id}/{page}")

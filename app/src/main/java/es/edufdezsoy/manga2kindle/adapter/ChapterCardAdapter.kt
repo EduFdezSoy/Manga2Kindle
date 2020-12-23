@@ -22,6 +22,11 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     private val view: View
     private lateinit var chapter: ChapterWithManga
     private lateinit var chapterViewModel: ChapterViewModel
+    private var uploadItemListener: OnUploadItemListener? = null
+
+    interface OnUploadItemListener {
+        fun onUploadItem(chapter: ChapterWithManga)
+    }
 
     //endregion
     //region constructor
@@ -37,6 +42,10 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
 
     //endregion
     //region public functions
+
+    fun setOnUploadItemListener(listener: OnUploadItemListener) {
+        uploadItemListener = listener
+    }
 
     fun setChapter(chapter: ChapterWithManga, chapterViewModel: ChapterViewModel) {
         this.chapter = chapter
@@ -68,7 +77,7 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
         }
         view.upload_button.setOnClickListener {
             saveChapter()
-            // TODO: upload the chapter or mark as pending to upload
+            uploadItemListener?.onUploadItem(chapter)
             dialog.cancel()
         }
     }

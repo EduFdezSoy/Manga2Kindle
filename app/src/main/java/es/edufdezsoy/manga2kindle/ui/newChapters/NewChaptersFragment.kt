@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import kotlinx.android.synthetic.main.fragment_new_chapters.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
-    ChapterAdapter.OnItemLongClickListener {
+    ChapterAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
     private lateinit var chapterViewModel: ChapterViewModel
 
     override fun onCreateView(
@@ -47,11 +50,22 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
 
     override fun onItemClick(chapter: ChapterWithManga) {
         val chapterCard = ChapterCardAdapter(requireContext(), viewLifecycleOwner)
+        chapterCard.setOnUploadItemListener(this)
         chapterCard.setChapter(chapter, chapterViewModel)
         chapterCard.show()
     }
 
     override fun onItemLongClick(chapter: ChapterWithManga) {
         // Toast.makeText(context, "long click " + note.priority, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUploadItem(chapter: ChapterWithManga) {
+        val uploadChapter = UploadChapter(chapter)
+        uploadChapter.email = requireActivity().getSharedPreferences(
+            "es.edufdezsoy.manga2kindle_preferences",
+            Context.MODE_PRIVATE
+        ).getString("kindle_email", "yo@edufdez.es")
+
+        (activity as MainActivity).uploadChapter(uploadChapter)
     }
 }

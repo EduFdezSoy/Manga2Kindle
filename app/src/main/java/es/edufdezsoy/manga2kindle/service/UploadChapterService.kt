@@ -27,6 +27,7 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.io.FileNotFoundException
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -70,7 +71,7 @@ class UploadChapterService : Service(), CoroutineScope {
 
     override fun onBind(intent: Intent?): IBinder {
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
-        if (element != null){
+        if (element != null) {
             chapList.add(element)
             listSize++
         }
@@ -83,7 +84,7 @@ class UploadChapterService : Service(), CoroutineScope {
         apiService = ApiService.getInstance(applicationContext)
 
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
-        if (element != null){
+        if (element != null) {
             chapList.add(element)
             listSize++
         }
@@ -131,7 +132,10 @@ class UploadChapterService : Service(), CoroutineScope {
 
                     // optimize images and convert to jpg
                     val pageImage =
-                        Compressor.compress(applicationContext, File(it.uri.path!!)) {
+                        Compressor.compress(
+                            applicationContext,
+                            File(getDocReadableFilePath(it, applicationContext))
+                        ) {
                             default(format = Bitmap.CompressFormat.JPEG)
                         }
 
@@ -169,6 +173,27 @@ class UploadChapterService : Service(), CoroutineScope {
 
     //endregion
     //region private methods
+
+    private fun getDocReadableFilePath(mDocFile: DocumentFile?, context: Context): String {
+        if (mDocFile != null && mDocFile.isFile) {
+            return try {
+                val parcelFileDescriptor = context.contentResolver.openFileDescriptor(
+                    mDocFile.uri,
+                    "r"
+                ) // gets FileNotFoundException here, if file we used to have was deleted
+                if (parcelFileDescriptor != null) {
+                    val fd = parcelFileDescriptor.detachFd() // if we want to close in native code
+                    "/proc/self/fd/$fd"
+                } else {
+                    ""
+                }
+            } catch (fne: FileNotFoundException) {
+                ""
+            }
+        } else {
+            return ""
+        }
+    }
 
     /**
      * Get a list of files inside a folder

@@ -48,7 +48,7 @@ interface Manga2KindleService {
     suspend fun putChapterPage(
         @Path("id") id: Int,
         @Path("page") page: Int,
-        @Part("file") image: MultipartBody.Part
+        @Part() image: MultipartBody.Part
         )
 
     //endregion

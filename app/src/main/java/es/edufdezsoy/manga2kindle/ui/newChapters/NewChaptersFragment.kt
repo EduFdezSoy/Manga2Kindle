@@ -29,11 +29,11 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_new_chapters, container, false)
 
-        view.noteList_recycler.layoutManager = LinearLayoutManager(context)
-        view.noteList_recycler.setHasFixedSize(true)
+        view.new_chapter_recycler.layoutManager = LinearLayoutManager(context)
+        view.new_chapter_recycler.setHasFixedSize(true)
 
         val adapter = ChapterAdapter()
-        view.noteList_recycler.adapter = adapter
+        view.new_chapter_recycler.adapter = adapter
 
         chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
         lifecycleScope.launch {
@@ -64,8 +64,7 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
         uploadChapter.email = requireActivity().getSharedPreferences(
             "es.edufdezsoy.manga2kindle_preferences",
             Context.MODE_PRIVATE
-        ).getString("kindle_email", "yo@edufdez.es")
-
+        ).getString("kindle_email", "yo@edufdez.es") // TODO: change this
         (activity as MainActivity).uploadChapter(uploadChapter)
     }
 }

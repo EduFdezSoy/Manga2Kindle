@@ -6,7 +6,7 @@
     tools:context=".ui.newChapters.NewChaptersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/noteList_recycler"
+        android:id="@+id/new_chapter_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_new_chapter" />

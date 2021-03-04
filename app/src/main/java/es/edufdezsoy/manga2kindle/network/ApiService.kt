@@ -12,7 +12,7 @@ object ApiService : SingletonHolder<Manga2KindleService, Context?>({
     val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     val client = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
+//        .addInterceptor(interceptor)
         .build()
 
     val moshi = Moshi.Builder()

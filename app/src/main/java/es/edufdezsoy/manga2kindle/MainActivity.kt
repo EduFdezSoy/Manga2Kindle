@@ -63,12 +63,14 @@ class MainActivity : AppCompatActivity() {
     //region public methods
 
     fun uploadChapter(chapter: UploadChapter) {
-        val intent = Intent(applicationContext, UploadChapterService::class.java)
-        intent.putExtra(UploadChapterService.UPLOAD_CHAPTER_INTENT_KEY, chapter)
+        if (!serviceBound) {
+            val intent = Intent(applicationContext, UploadChapterService::class.java)
+            intent.putExtra(UploadChapterService.UPLOAD_CHAPTER_INTENT_KEY, chapter)
 
-        startService(intent)
-
-        // uploadChapterService.addUploadChapter(chapter)
+            startService(intent)
+        } else {
+            uploadChapterService.addUploadChapter(chapter)
+        }
     }
 
 

@@ -52,6 +52,7 @@ class UploadChapterService : Service(), CoroutineScope {
     private lateinit var chapterRepository: ChapterRepository
     private var listSize = 0
     private var iteration = 0
+    private lateinit var notificationManager: NotificationManagerCompat
 
     inner class UploadChapterBinder : Binder() {
         fun getService(): UploadChapterService = this@UploadChapterService
@@ -82,6 +83,7 @@ class UploadChapterService : Service(), CoroutineScope {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         chapterRepository = ChapterRepository(application)
         apiService = ApiService.getInstance(applicationContext)
+        notificationManager = NotificationManagerCompat.from(this)
 
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
         if (element != null) {
@@ -96,7 +98,6 @@ class UploadChapterService : Service(), CoroutineScope {
             priority = NotificationCompat.PRIORITY_LOW
         }
 
-        val notificationManager = NotificationManagerCompat.from(this)
         startForeground(2, notification.build()) // TODO: move id to a resource
 
         launch {
@@ -173,6 +174,11 @@ class UploadChapterService : Service(), CoroutineScope {
         }
 
         return START_REDELIVER_INTENT
+    }
+
+    override fun onDestroy() {
+        notificationManager.cancel(2)
+        super.onDestroy()
     }
 
     //endregion

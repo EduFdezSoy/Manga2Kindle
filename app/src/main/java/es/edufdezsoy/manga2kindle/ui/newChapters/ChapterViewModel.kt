@@ -57,4 +57,12 @@ class ChapterViewModel(application: Application) : AndroidViewModel(application)
     fun getAllNotes(): Flow<List<ChapterWithManga>> {
         return chapters
     }
+
+    fun getNotUploadedChapters(): Flow<List<ChapterWithManga>> {
+        return chapters.map { it.filter { item -> item.chapter.remoteId == null } }
+    }
+
+    fun getUploadedChapters(): Flow<List<ChapterWithManga>> {
+        return chapters.map { it.filterNot { item -> item.chapter.remoteId == null } }
+    }
 }

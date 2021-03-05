@@ -14,7 +14,7 @@ import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.Application
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
-import es.edufdezsoy.manga2kindle.data.repository.StatusRepository
+import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.network.Manga2KindleService
 import id.zelory.compressor.Compressor
@@ -49,7 +49,7 @@ class UploadChapterService : Service(), CoroutineScope {
     private val binder = UploadChapterBinder()
     private val chapList = ArrayList<UploadChapter>()
     private lateinit var apiService: Manga2KindleService
-    private lateinit var statusRepository: StatusRepository
+    private lateinit var chapterRepository: ChapterRepository
     private var listSize = 0
     private var iteration = 0
 
@@ -80,7 +80,7 @@ class UploadChapterService : Service(), CoroutineScope {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        statusRepository = StatusRepository(application)
+        chapterRepository = ChapterRepository(application)
         apiService = ApiService.getInstance(applicationContext)
 
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
@@ -122,8 +122,12 @@ class UploadChapterService : Service(), CoroutineScope {
                 // TODO: create chapter, upload chapter metadata
                 val uploadChapterCopy = uploadChapter.copy()
                 uploadChapterCopy.path = null
+                uploadChapterCopy.id = null
                 val status = apiService.getNewChapterStatus(uploadChapterCopy)
-                statusRepository.insert(status)
+                val chapter = chapterRepository.getById(uploadChapter.id!!)
+                chapter!!.remoteId = status.id
+                chapter.status = status.status
+                chapterRepository.update(chapter)
 
                 var page = 0
                 fileList.forEach {

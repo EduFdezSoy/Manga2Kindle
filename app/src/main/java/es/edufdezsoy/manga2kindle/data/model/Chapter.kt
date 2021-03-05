@@ -15,7 +15,8 @@ data class Chapter(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
     var id: Int = 0
-    var remoteId: String? = null
+    var remoteId: Int? = null
+    var status: Int = 0
 
     fun chapterToString(): String {
         return if (chapter % 1.0 != 0.0)

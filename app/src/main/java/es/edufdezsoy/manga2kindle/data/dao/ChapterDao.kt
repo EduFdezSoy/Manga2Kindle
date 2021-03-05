@@ -26,4 +26,7 @@ interface ChapterDao {
 
     @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")
     suspend fun search(mangaId: Int, chapterNum: Float): Chapter?
+
+    @Query("SELECT * FROM Chapter WHERE rowid = :id")
+    suspend fun getById(id: Int): Chapter?
 }

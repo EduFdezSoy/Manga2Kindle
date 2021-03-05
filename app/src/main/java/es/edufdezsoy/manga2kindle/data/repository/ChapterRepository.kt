@@ -44,4 +44,8 @@ class ChapterRepository(application: Application) {
     suspend fun search(mangaId: Int, chapterNum: Float): Chapter? {
         return chapterDao.search(mangaId, chapterNum)
     }
+
+    suspend fun getById(chapterId: Int): Chapter? {
+        return chapterDao.getById(chapterId)
+    }
 }

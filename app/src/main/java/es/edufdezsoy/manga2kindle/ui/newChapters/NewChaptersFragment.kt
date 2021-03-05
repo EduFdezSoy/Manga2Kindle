@@ -37,7 +37,7 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
 
         chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
         lifecycleScope.launch {
-            chapterViewModel.getAllNotes().collect {
+            chapterViewModel.getNotUploadedChapters().collect {
                 adapter.submitList(it)
             }
         }

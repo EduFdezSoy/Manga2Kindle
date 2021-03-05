@@ -35,59 +35,6 @@ abstract class M2KDatabase : RoomDatabase() {
             .addMigrations()
             .fallbackToDestructiveMigrationFrom(1)
             .fallbackToDestructiveMigrationOnDowngrade()
-//            .addCallback(
-//                object : RoomDatabase.Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//                        val noteDao = ChapterDatabase.getInstance(it.applicationContext).chapterDao()
-//                        GlobalScope.launch {
-//                            noteDao.insert(
-//                                Chapter(
-//                                    "Kaguya-sama: Love is War",
-//                                    "Aka Akasaka",
-//                                    "The wholesomest chapter",
-//                                    92,
-//                                    8,
-//                                    ""
-//                                )
-//                            )
-//                            noteDao.insert(Chapter("Legit Manga", "", "Dumb Title", 5, null, ""))
-//                            noteDao.insert(
-//                                Chapter(
-//                                    "One-punch Man",
-//                                    "ONE, Murata",
-//                                    "Punch it",
-//                                    120,
-//                                    12,
-//                                    ""
-//                                )
-//                            )
-//                            noteDao.insert(
-//                                Chapter(
-//                                    "Kaguya-sama: Love is War",
-//                                    "Aka Akasaka",
-//                                    "The wholesomest chapter",
-//                                    123,
-//                                    14,
-//                                    ""
-//                                )
-//                            )
-//                            noteDao.insert(Chapter("Legit Manga", "", "Dumb Title", 456, null, ""))
-//                            noteDao.insert(
-//                                Chapter(
-//                                    "One-punch Man",
-//                                    "ONE, Murata",
-//                                    "Punch it",
-//                                    789,
-//                                    94,
-//                                    ""
-//                                )
-//                            )
-//                            noteDao.insert(Chapter("Legit Manga", "", "Who knows", 0, 0, ""))
-//                        }
-//                    }
-//                }
-//            )
             .build()
     })
 }

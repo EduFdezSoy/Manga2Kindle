@@ -29,7 +29,7 @@ class ChapterRepository(application: Application) {
         chapterDao.delete(chapter)
     }
 
-    suspend fun deleteAllNotes() {
+    suspend fun deleteAllChapters() {
         chapterDao.deleteAllChapters()
     }
 

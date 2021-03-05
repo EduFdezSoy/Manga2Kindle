@@ -47,14 +47,13 @@ class ChapterViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun deleteAllNotes() {
+    fun deleteAllChapters() {
         viewModelScope.launch {
-            chapterRepository.deleteAllNotes()
+            chapterRepository.deleteAllChapters()
         }
     }
 
-
-    fun getAllNotes(): Flow<List<ChapterWithManga>> {
+    fun getAllChapters(): Flow<List<ChapterWithManga>> {
         return chapters
     }
 

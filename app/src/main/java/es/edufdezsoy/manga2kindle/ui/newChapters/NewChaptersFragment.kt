@@ -55,8 +55,9 @@ class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
         chapterCard.show()
     }
 
-    override fun onItemLongClick(chapter: ChapterWithManga) {
+    override fun onItemLongClick(chapter: ChapterWithManga): Boolean {
         // Toast.makeText(context, "long click " + note.priority, Toast.LENGTH_SHORT).show()
+        return true
     }
 
     override fun onUploadItem(chapter: ChapterWithManga) {

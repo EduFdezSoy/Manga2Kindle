@@ -76,8 +76,17 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.ChapterHolde
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     itemClickListener?.onItemClick(getItem(adapterPosition))
-                    itemLongClickListener?.onItemLongClick(getItem(adapterPosition))
                 }
+            }
+            itemView.setOnLongClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    val returnValue =
+                        itemLongClickListener?.onItemLongClick(getItem(adapterPosition))
+                    if (returnValue != null) {
+                        return@setOnLongClickListener returnValue
+                    }
+                }
+                return@setOnLongClickListener false
             }
         }
     }
@@ -91,7 +100,7 @@ class ChapterAdapter : ListAdapter<ChapterWithManga, ChapterAdapter.ChapterHolde
     }
 
     interface OnItemLongClickListener {
-        fun onItemLongClick(chapter: ChapterWithManga)
+        fun onItemLongClick(chapter: ChapterWithManga): Boolean
     }
 
     fun setOnItemLongClickListener(listener: OnItemLongClickListener) {

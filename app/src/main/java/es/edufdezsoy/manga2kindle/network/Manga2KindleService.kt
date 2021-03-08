@@ -53,7 +53,7 @@ interface Manga2KindleService {
         @Path("id") id: Int,
         @Path("page") page: Int,
         @Part() image: MultipartBody.Part
-        )
+    )
 
     //endregion
 }

@@ -48,4 +48,8 @@ class ChapterRepository(application: Application) {
     suspend fun getById(chapterId: Int): Chapter? {
         return chapterDao.getById(chapterId)
     }
+
+    suspend fun getByRemoteId(chapterRemoteId: Int): Chapter? {
+        return chapterDao.getByRemoteId(chapterRemoteId)
+    }
 }

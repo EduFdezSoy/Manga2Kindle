@@ -29,4 +29,7 @@ interface ChapterDao {
 
     @Query("SELECT * FROM Chapter WHERE rowid = :id")
     suspend fun getById(id: Int): Chapter?
+
+    @Query("SELECT * FROM Chapter WHERE remoteId = :id")
+    suspend fun getByRemoteId(id: Int): Chapter?
 }

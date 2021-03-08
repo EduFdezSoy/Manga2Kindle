@@ -12,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
+import es.edufdezsoy.manga2kindle.adapter.ChapterBaseAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
+import es.edufdezsoy.manga2kindle.adapter.UploadedChapterAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import es.edufdezsoy.manga2kindle.data.model.Status
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.ui.newChapters.ChapterViewModel
 import kotlinx.android.synthetic.main.fragment_uploaded_chapters.view.*
@@ -22,8 +24,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-class UploadedChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener, ChapterAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
+class UploadedChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener, ChapterBaseAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
     private lateinit var chapterViewModel: ChapterViewModel
+    private lateinit var statusViewModel: StatusViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +37,11 @@ class UploadedChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
         view.uploaded_chapter_recycler.layoutManager = LinearLayoutManager(context)
         view.uploaded_chapter_recycler.setHasFixedSize(true)
 
-        val adapter = ChapterAdapter() // TODO: change this adapter to a custom adapter (or adapt this one)
+        val adapter = UploadedChapterAdapter()
         view.uploaded_chapter_recycler.adapter = adapter
 
         chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
+        statusViewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
         lifecycleScope.launch {
             chapterViewModel.getUploadedChapters().collect {
                 adapter.submitList(it)

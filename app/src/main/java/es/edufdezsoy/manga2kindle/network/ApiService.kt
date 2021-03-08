@@ -23,6 +23,7 @@ object ApiService : SingletonHolder<Manga2KindleService, Context?>({
         .baseUrl(Manga2KindleService.API_URL)
         .client(client)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .client(client)
         .build()
 
     retrofit.create(Manga2KindleService::class.java)

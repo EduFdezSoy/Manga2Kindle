@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class StatusRemoteDataSource(
-    private val application: Application,
+    application: Application,
     private val refreshIntervalMs: Long = 3000
 ) {
     private val apiService = ApiService.getInstance(application.applicationContext)

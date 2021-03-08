@@ -64,10 +64,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
         private val status_error: ImageView = itemView.findViewById(R.id.chapter_progress_error)
 
         init {
-            status_bar.visibility = View.INVISIBLE
-            status_upload.visibility = View.INVISIBLE
-            status_done.visibility = View.INVISIBLE
-            status_error.visibility = View.INVISIBLE
+            setAllIconsInvisible()
 
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
@@ -86,23 +83,31 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
             }
         }
 
+        private fun setAllIconsInvisible() {
+            status_bar.visibility = View.INVISIBLE
+            status_upload.visibility = View.INVISIBLE
+            status_done.visibility = View.INVISIBLE
+            status_error.visibility = View.INVISIBLE
+        }
+
         fun uploading() {
+            setAllIconsInvisible()
             status_bar.visibility = View.VISIBLE
             status_upload.visibility = View.VISIBLE
         }
 
         fun processing() {
+            setAllIconsInvisible()
             status_bar.visibility = View.VISIBLE
-            status_upload.visibility = View.INVISIBLE
         }
 
         fun done() {
-            status_bar.visibility = View.INVISIBLE
+            setAllIconsInvisible()
             status_done.visibility = View.VISIBLE
         }
 
         fun error() {
-            status_bar.visibility = View.INVISIBLE
+            setAllIconsInvisible()
             status_error.visibility = View.VISIBLE
         }
     }

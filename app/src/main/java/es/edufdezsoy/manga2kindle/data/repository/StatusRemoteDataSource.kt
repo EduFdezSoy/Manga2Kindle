@@ -17,7 +17,7 @@ class StatusRemoteDataSource(
     val statuses: Flow<List<Status>> = flow {
         while (true) {
             val chapters = chapterRepository.getStaticAllChapters()
-                .filterNot { item -> item.remoteId == null }
+                .filterNot { item -> item.status == 0 }
                 .filterNot { item -> item.status >= Status.DONE }
 
             val statuses: ArrayList<Status> = arrayListOf()
@@ -28,5 +28,12 @@ class StatusRemoteDataSource(
             emit(statuses)
             delay(refreshIntervalMs)
         }
+    }
+
+    suspend fun freeChapterStatus(id: Int) {
+        apiService.deleteChapterStatus(id)
+        val chapter = chapterRepository.getByRemoteId(id)
+        chapter!!.remoteId = null
+        chapterRepository.update(chapter)
     }
 }

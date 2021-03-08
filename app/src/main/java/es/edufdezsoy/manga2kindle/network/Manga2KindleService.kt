@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.network
 
 import es.edufdezsoy.manga2kindle.data.model.*
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface Manga2KindleService {
@@ -38,6 +39,9 @@ interface Manga2KindleService {
 
     @GET("chapter/{id}")
     suspend fun getChapterStatus(@Path("id") id: Int): Status
+
+    @DELETE("chapter/{id}")
+    suspend fun deleteChapterStatus(@Path("id") id: Int): Response<Unit> // FIXME: this does not handle errors but an empty body will fail otherwise (https://github.com/square/retrofit/issues/2867)
 
     // @Multipart
     @PUT("chapter")

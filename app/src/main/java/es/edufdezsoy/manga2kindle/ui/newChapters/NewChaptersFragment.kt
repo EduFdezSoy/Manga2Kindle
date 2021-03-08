@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
+import es.edufdezsoy.manga2kindle.adapter.ChapterBaseAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
@@ -19,8 +20,8 @@ import kotlinx.android.synthetic.main.fragment_new_chapters.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class NewChaptersFragment : Fragment(), ChapterAdapter.OnItemClickListener,
-    ChapterAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
+class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
+    ChapterBaseAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
     private lateinit var chapterViewModel: ChapterViewModel
 
     override fun onCreateView(

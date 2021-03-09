@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.onboarding.screens
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.android.synthetic.main.fragment_screen03.view.*
 
 class Screen03Fragment : Fragment() {
@@ -28,9 +28,6 @@ class Screen03Fragment : Fragment() {
     }
 
     private fun onBoardingFinished() {
-        val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putBoolean("Finished", true)
-        editor.apply()
+        SharedPreferencesHandler(requireContext()).onBoarding = true
     }
 }

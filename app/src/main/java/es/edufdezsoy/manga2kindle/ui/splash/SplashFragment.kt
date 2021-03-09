@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.splash
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,7 +33,6 @@ class SplashFragment : Fragment(), CoroutineScope {
     }
 
     private fun onBoardingFinished(): Boolean {
-        val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        return sharedPref.getBoolean("Finished", false)
+        return SharedPreferencesHandler(requireContext()).onBoarding
     }
 }

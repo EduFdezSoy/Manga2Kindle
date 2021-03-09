@@ -1,6 +1,5 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterBaseAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
+import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.android.synthetic.main.fragment_new_chapters.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -63,10 +62,6 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
 
     override fun onUploadItem(chapter: ChapterWithManga) {
         val uploadChapter = UploadChapter(chapter)
-        uploadChapter.email = requireActivity().getSharedPreferences(
-            "es.edufdezsoy.manga2kindle_preferences",
-            Context.MODE_PRIVATE
-        ).getString("kindle_email", "yo@edufdez.es") // TODO: change this
-        (activity as MainActivity).uploadChapter(uploadChapter)
+        uploadChapter.email = SharedPreferencesHandler(requireContext()).kindleEmail
     }
 }

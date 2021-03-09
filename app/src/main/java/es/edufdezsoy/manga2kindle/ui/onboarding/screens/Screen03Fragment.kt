@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
+import kotlinx.android.synthetic.main.fragment_screen03.*
 import kotlinx.android.synthetic.main.fragment_screen03.view.*
 
 class Screen03Fragment : Fragment() {
@@ -28,6 +29,9 @@ class Screen03Fragment : Fragment() {
     }
 
     private fun onBoardingFinished() {
-        SharedPreferencesHandler(requireContext()).onBoarding = true
+        val pref = SharedPreferencesHandler(requireContext())
+        pref.onBoarding = true
+        pref.kindleEmail = autoCompleteTextView.text.toString() // TODO: may check if this is an email
+        view?.clearFocus()
     }
 }

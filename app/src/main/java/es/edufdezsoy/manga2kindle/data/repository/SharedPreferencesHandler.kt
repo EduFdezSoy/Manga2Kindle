@@ -12,7 +12,7 @@ class SharedPreferencesHandler(context: Context) {
         set(value) = pref.edit { putBoolean("on_boarding", value) }
 
     var kindleEmail: String?
-        get() = pref.getString("kindle_email", "yo@edufdez.es") // TODO: change this
+        get() = pref.getString("kindle_email", null)
         set(value) = pref.edit { putString("kindle_email", value) }
 
     var uploadOnlyOnWifi: Boolean

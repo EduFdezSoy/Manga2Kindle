@@ -86,7 +86,7 @@ class UploadChapterService : Service(), CoroutineScope {
         notificationManager = NotificationManagerCompat.from(this)
 
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
-        if (element != null) {
+        if (element?.email != null) {
             chapList.add(element)
             listSize++
         }

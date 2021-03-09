@@ -6,45 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.watchedFolders.WatchedFoldersFragment">
 
-    <Button
-        android:id="@+id/startServiceBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Service"
-        app:layout_constraintBottom_toTopOf="@+id/stopServiceBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/startServiceBtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start scheduled service"
-        app:layout_constraintBottom_toTopOf="@+id/stopServiceBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startServiceBtn" />
-
-    <Button
-        android:id="@+id/stopServiceBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop Service"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startServiceBtn" />
-
-    <Button
-        android:id="@+id/stopServiceBtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop scheduled service"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stopServiceBtn" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/folderList_recycler"
         android:layout_width="match_parent"
@@ -62,6 +23,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        app:tint="#FFF"
         android:src="@drawable/ic_baseline_add_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

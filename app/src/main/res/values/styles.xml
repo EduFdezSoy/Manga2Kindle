@@ -10,4 +10,13 @@
     <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
+
+    <!-- Custom preference-like styles -->
+    <style name="CustomPreferences.Title" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="CustomPreferences.Description" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

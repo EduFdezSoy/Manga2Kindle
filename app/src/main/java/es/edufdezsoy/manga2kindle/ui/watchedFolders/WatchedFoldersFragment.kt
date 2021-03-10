@@ -59,12 +59,6 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         adapter.setOnItemLongClickListener(this)
         view.floatingActionButton.setOnClickListener { performFileSearch() }
 
-        // listeners for service test buttons (to be removed)
-        view.startServiceBtn.setOnClickListener { startService() }
-        view.stopServiceBtn.setOnClickListener { stopService() }
-        view.startServiceBtn2.setOnClickListener { startScheduledService() }
-        view.stopServiceBtn2.setOnClickListener { stopScheduledService() }
-
         return view
     }
 
@@ -120,7 +114,7 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         folderCard.show()
     }
 
-    // service shit that needs to be removed
+    // TODO: service shit that needs to be removed
 
     private fun startService() {
         // textView.text = "service started"

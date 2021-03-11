@@ -14,4 +14,20 @@
     <string name="sliders_3_title_add_mail">Añade el email de tu dispositivo</string>
     <string name="sliders_3_paragraph_1">"Tu Kindle tiene algo parecido a una dirección de correo para ser identificado, la necesitaremos para enviarle mangas "</string>
     <string name="sliders_3_paragraph_2">Puedes encontrarla en la configuración de tu Kindle, en \"Tu Cuenta\", abajo del todo.</string>
+    <string name="kindle_email_dialog_title">Correo del Kindle</string>
+    <string name="kindle_email_dialog_error_msg">Correo no valido</string>
+    <string name="kindle_email_dialog_textInput_title">Correro del Kindle</string>
+    <string name="kindle_email_dialog_button_save">Guardar</string>
+    <string name="kindle_email_dialog_button_return">Volver</string>
+    <string name="fragment_kindle_email_dot_contentDescription">punto</string>
+    <string name="fragment_kindle_email_screen01_text1">¿Dónde lo encuentro?</string>
+    <string name="fragment_kindle_email_screen01_text2">(Desliza para leer más ➔)</string>
+    <string name="fragment_kindle_email_screen02_text1">Desbloquea tu kindle, en la barra superior de tu Inicio (⌂) hay un botón \"configuración\" (⚙).</string>
+    <string name="fragment_kindle_email_screen02_text2">Haz click en él (⚙)</string>
+    <string name="fragment_kindle_email_screen03_text1">Una barra más grande aparecerá</string>
+    <string name="fragment_kindle_email_screen03_text2">haz click en \"Todos los ajustes\" (⚙), a la derecha.</string>
+    <string name="fragment_kindle_email_screen04_text1">Un menú se abrirá</string>
+    <string name="fragment_kindle_email_screen04_text2">Haz click en la primera entrada de la lista, \"Mi cuenta\" (&#128100;)</string>
+    <string name="fragment_kindle_email_screen05_text1">Abajo del todo, en este submenú, hay una entrada llamada <b>\"E-mail de Enviar a Kindle\"</b></string>
+    <string name="fragment_kindle_email_screen05_text2">En la ultima línea se mostrará el correo de tu dispositivo, como: ALGO@KINDLE.COM</string>
 </resources>

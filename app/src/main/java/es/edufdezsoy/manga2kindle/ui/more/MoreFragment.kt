@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.adapter.KindleEmailAdapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.android.synthetic.main.fragment_more.*
 import kotlinx.android.synthetic.main.fragment_more.view.*
@@ -28,7 +29,15 @@ class MoreFragment : Fragment() {
 
     private fun setButtonsClickActions(view: View) {
         view.layout_email_constraintLayout.setOnClickListener {
-            // TODO: open email box (with the explanation where to find)
+            val dialog = KindleEmailAdapter(
+                requireContext(),
+                viewLifecycleOwner,
+                requireActivity().supportFragmentManager
+            )
+            dialog.onDismiss {
+                setSettings(view)
+            }
+            dialog.show()
         }
 
         view.layout_wifi_constraintLayout.setOnClickListener {
@@ -101,7 +110,6 @@ class MoreFragment : Fragment() {
             }
         }
     }
-
 
     //endregion
 }

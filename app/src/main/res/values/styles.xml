@@ -19,4 +19,15 @@
     <style name="CustomPreferences.Description" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="ViewPagerStepDot">
+        <item name="android:scaleX">0.25</item>
+        <item name="android:scaleY">0.25</item>
+        <item name="android:layout_weight">1</item>
+        <item name="srcCompat">@drawable/ic_baseline_circle</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">-2dp</item>
+        <item name="android:paddingRight">-2dp</item>
+    </style>
 </resources>

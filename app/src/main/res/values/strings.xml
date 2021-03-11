@@ -34,4 +34,22 @@
     <string name="sliders_3_title_add_mail">Add your device email</string>
     <string name="sliders_3_paragraph_1">Your Kindle device has something like an email address to be identified, we need it to send manga to it</string>
     <string name="sliders_3_paragraph_2">You can find it in your Kindle\'s settings, inside \"Your Account\", at the very bottom.</string>
+
+    <!-- Kindle Email Dialog Sliders, tutorial where to find the email -->
+    <string name="kindle_email_dialog_title">Kindle Email Address</string>
+    <string name="kindle_email_dialog_error_msg">Email not valid</string>
+    <string name="kindle_email_dialog_textInput_title">Kindle Email</string>
+    <string name="kindle_email_dialog_button_save">Save</string>
+    <string name="kindle_email_dialog_button_return">Return</string>
+    <string name="fragment_kindle_email_screen05_text1">At the bottom of this submenu there is an entry called <b>\"Send-to-Kindle Email\"</b></string>
+    <string name="fragment_kindle_email_screen04_text2">click on the first entry, \"Your Account\" (&#128100;)</string>
+    <string name="fragment_kindle_email_screen04_text1">A list menu will show</string>
+    <string name="fragment_kindle_email_screen03_text2">click on \"All settings\" (⚙) on the right.</string>
+    <string name="fragment_kindle_email_screen03_text1">A bigger top bar will show</string>
+    <string name="fragment_kindle_email_screen02_text1">Unlock your kindle, in the top bar on your Home (⌂) there is a \'settings\' button (⚙).</string>
+    <string name="fragment_kindle_email_screen02_text2">Click on it (⚙)</string>
+    <string name="fragment_kindle_email_screen01_text1">Where do I find it?</string>
+    <string name="fragment_kindle_email_screen01_text2">(Swipe to read ➔)</string>
+    <string name="fragment_kindle_email_dot_contentDescription">dot</string>
+    <string name="fragment_kindle_email_screen05_text2">In the last line will show your device email, like: SOMETHING@KINDLE.COM</string>
 </resources>

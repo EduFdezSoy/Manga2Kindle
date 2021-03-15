@@ -11,14 +11,12 @@
         style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:text="@string/fragment_kindle_email_screen01_text1"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/arrow_forward"
+        app:layout_constraintStart_toEndOf="@+id/arrow_backward"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -69,5 +67,26 @@
             style="@style/ViewPagerStepDot"
             android:contentDescription="@string/fragment_kindle_email_dot_contentDescription" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/arrow_forward"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintBottom_toBottomOf="@+id/tvText2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvText1" />
+
+    <ImageView
+        android:id="@+id/arrow_backward"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_arrow_back"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tvText2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvText1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

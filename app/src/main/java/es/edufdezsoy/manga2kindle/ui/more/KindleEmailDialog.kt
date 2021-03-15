@@ -1,4 +1,4 @@
-package es.edufdezsoy.manga2kindle.adapter
+package es.edufdezsoy.manga2kindle.ui.more
 
 import android.content.Context
 import android.view.View
@@ -12,11 +12,12 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.adapter.ViewPagerAdapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import es.edufdezsoy.manga2kindle.ui.more.kindleEmailScreens.*
 import kotlinx.android.synthetic.main.view_kindle_email_dialog.view.*
 
-class KindleEmailAdapter(
+class KindleEmailDialog(
     private val context: Context,
     private val owner: LifecycleOwner,
     private val fragmentManager: FragmentManager

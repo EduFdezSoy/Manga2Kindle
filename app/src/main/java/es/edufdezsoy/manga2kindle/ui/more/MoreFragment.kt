@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import es.edufdezsoy.manga2kindle.R
-import es.edufdezsoy.manga2kindle.adapter.KindleEmailAdapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.android.synthetic.main.fragment_more.*
 import kotlinx.android.synthetic.main.fragment_more.view.*
@@ -29,7 +28,7 @@ class MoreFragment : Fragment() {
 
     private fun setButtonsClickActions(view: View) {
         view.layout_email_constraintLayout.setOnClickListener {
-            val dialog = KindleEmailAdapter(
+            val dialog = KindleEmailDialog(
                 requireContext(),
                 viewLifecycleOwner,
                 requireActivity().supportFragmentManager

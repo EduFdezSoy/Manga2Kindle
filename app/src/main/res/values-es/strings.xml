@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello_blank_fragment">Hola fragmento blanco</string>
     <string name="sliders_next_button">Siguiente</string>
     <string name="sliders_finish_button">Finalizar</string>
     <string name="sliders_logo_description">app logo (Kanjis para Ma y Ki)</string>

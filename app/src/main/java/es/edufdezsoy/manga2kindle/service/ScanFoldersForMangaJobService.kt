@@ -330,10 +330,10 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         if (volume.length > 2)
             volume = ""
 
-        if (volume.isBlank())
-            return null
+        return if (volume.isBlank())
+            null
         else
-            return volume.toInt()
+            volume.toInt()
     }
 
     /**
@@ -387,7 +387,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                 }
             }
         }
-        if (!chapterTitle.isBlank())
+        if (chapterTitle.isNotBlank())
             chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
 
         if (chapterTitle.isBlank()) {
@@ -406,7 +406,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                     }
                 }
             }
-            if (!chapterTitle.isBlank())
+            if (chapterTitle.isNotBlank())
                 chapterTitle =
                     chapterTitle.substring(0, chapterTitle.length - 2)
         }

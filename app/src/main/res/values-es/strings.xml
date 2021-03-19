@@ -30,4 +30,19 @@
     <string name="fragment_kindle_email_screen04_text2">Haz click en la primera entrada de la lista, \"Mi cuenta\" (&#128100;)</string>
     <string name="fragment_kindle_email_screen05_text1">Abajo del todo, en este submenú, hay una entrada llamada <b>\"E-mail de Enviar a Kindle\"</b></string>
     <string name="fragment_kindle_email_screen05_text2">En la ultima línea se mostrará el correo de tu dispositivo, como: ALGO@KINDLE.COM</string>
+    <string name="watched_folders_help_pre">¿Necesitas&#160;</string>
+    <string name="watched_folders_help_button">ayuda</string>
+    <string name="watched_folders_help_post">\?</string>
+    <string name="watched_folders_add_new_folder_floating_button">Añadir Nueva Carpeta</string>
+    <string name="watched_folders_help_dialog_close">cerrar</string>
+    <string name="watched_folders_help_dialog_screen01_text1">¿Qué hago ahora?</string>
+    <string name="watched_folders_help_dialog_screen01_text2">Desliza para leer</string>
+    <string name="watched_folders_help_dialog_screen02_text1">Tendrás que añadir la carpeta <i>(o carpetas)</i> que contengan capítulos de mangas.</string>
+    <string name="watched_folders_help_dialog_screen02_text2">Si usas una aplicación como <a href="https://tachiyomi.org/">Tachiyomi</a> tendrás que seleccionar esa carpeta.</string>
+    <string name="watched_folders_help_dialog_screen02_text3">Veamos como se hace.</string>
+    <string name="watched_folders_help_dialog_screen03_text1">Al tocar el botón \"<b>+</b>\" en la esquina inferior derecha <i>(en la pantalla bajo este cuadro de dialogo)</i> un selector de archivos del sistema se abrirá.</string>
+    <string name="watched_folders_help_dialog_screen03_text2">En él tendrás que buscar la carpeta de la que hablamos antes.</string>
+    <string name="watched_folders_help_dialog_screen04_text1">Una vez la añadas la app empezará a escanearla. Le echará un vistazo de vez en cuando en busca de capítulos nuevos, verás una notificación durante los escaneos.</string>
+    <string name="watched_folders_help_dialog_screen05_text1">Por otra parte, en la lista de esta pantalla tendrás la carpeta que recien añadiste. Puedes <b>tocarla para activarla/desactivarla</b> y dejarla pulsada para cambiar su nombre o borrarla.</string>
+    <string name="watched_folders_help_dialog_screen05_text2">Al desactivar una carpeta harás que los capitulos que contenga desaparezcan de la lista de Capítulos <i>(el primer icono en el menú inferior)</i>.</string>
 </resources>

@@ -26,8 +26,65 @@
         app:tint="#FFF"
         android:src="@drawable/ic_baseline_add_white"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:contentDescription="Add New Folder"
+        android:contentDescription="@string/watched_folders_add_new_folder_floating_button"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/watched_folders_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/kaguya_sama_o_kawaii_koto"
+            android:paddingHorizontal="64dp"
+            android:src="@drawable/kaguya_how_cute" />
+
+        <LinearLayout
+            android:id="@+id/watched_folders_background_help_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CustomPreferences.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/watched_folders_help_pre"
+                android:textAlignment="center" />
+
+            <TextView
+                style="@style/CustomPreferences.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/watched_folders_help_button"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/CustomPreferences.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/watched_folders_help_post"
+                android:textAlignment="center" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

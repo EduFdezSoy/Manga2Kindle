@@ -52,4 +52,20 @@
     <string name="fragment_kindle_email_screen01_text2">(Swipe to read ➔)</string>
     <string name="fragment_kindle_email_dot_contentDescription">dot</string>
     <string name="fragment_kindle_email_screen05_text2">In the last line will show your device email, like: SOMETHING@KINDLE.COM</string>
+    <string name="watched_folders_add_new_folder_floating_button">Add New Folder</string>
+    <string name="kaguya_sama_o_kawaii_koto" translatable="false">Kaguya-sama - O kawaii koto</string>
+    <string name="watched_folders_help_pre">Need&#160;</string>
+    <string name="watched_folders_help_button">help</string>
+    <string name="watched_folders_help_post">\?</string>
+    <string name="watched_folders_help_dialog_close">close</string>
+    <string name="watched_folders_help_dialog_screen01_text1">What do I do?</string>
+    <string name="watched_folders_help_dialog_screen01_text2">Swipe to read</string>
+    <string name="watched_folders_help_dialog_screen02_text1">You need to add the folder <i>(or folders)</i> that contains manga chapters</string>
+    <string name="watched_folders_help_dialog_screen02_text2">If you are using an app like <a href="https://tachiyomi.org/">Tachiyomi</a> you need to select that folder.</string>
+    <string name="watched_folders_help_dialog_screen02_text3">Let\'s see how it\'s done.</string>
+    <string name="watched_folders_help_dialog_screen03_text1">By touching the \"<b>+</b>\" button in the right bottom corner <i>(in the screen under this dialog)</i> a filesystem selector will open.</string>
+    <string name="watched_folders_help_dialog_screen03_text2">You need to search the folder we talked before.</string>
+    <string name="watched_folders_help_dialog_screen04_text1">Once you added a folder it will start scanning it. It will keep an eye on it and scan it every now and then, a notification will show during scans.</string>
+    <string name="watched_folders_help_dialog_screen05_text1">Now then, in the list you will have now the recently added folder. You can <b>touch it to enable/disable</b> it and a long touch to change it\'s name or delete it.</string>
+    <string name="watched_folders_help_dialog_screen05_text2">Disabling a folder will make the chapters inside disappear from the Chapter List <i>(the first icon in the bottom menu)</i>.</string>
 </resources>

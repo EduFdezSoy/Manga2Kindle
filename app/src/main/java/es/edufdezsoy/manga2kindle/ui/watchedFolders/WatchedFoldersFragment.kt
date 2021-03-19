@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.FolderAdapter
@@ -50,16 +49,37 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         lifecycleScope.launch {
             folderViewModel.getAllFolders().observe(viewLifecycleOwner) {
                 adapter.submitList(it)
+
+                // show/hide background pun/help
+                if (it.isNotEmpty()) {
+                    val v = view.watched_folders_background
+                    v.visibility = View.GONE
+                    // the following translation does not show as the view is gone, but is needed to animate the return
+                    v.translationY = v.height.toFloat()
+                } else {
+                    val v = view.watched_folders_background
+                    v.animate().translationY(0F).withStartAction {
+                        v.visibility = View.VISIBLE
+                    }
+                }
             }
         }
-
 
         // set listeners
         adapter.setOnItemClickListener(this)
         adapter.setOnItemLongClickListener(this)
         view.floatingActionButton.setOnClickListener { performFileSearch() }
+        view.watched_folders_background_help_text_layout.setOnClickListener { openHelpDialog() }
 
         return view
+    }
+
+    private fun openHelpDialog() {
+        WatchedFoldersHelpDialog(
+            requireContext(),
+            viewLifecycleOwner,
+            requireActivity().supportFragmentManager
+        ).show()
     }
 
     private fun performFileSearch() {

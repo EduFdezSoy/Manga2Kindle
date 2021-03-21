@@ -95,20 +95,6 @@ class WatchedFoldersTest {
         Thread.sleep(100)
         watchedFoldersBackgroundHelpLayoutToClick.perform(click())
 
-        val watchedFoldersHelpDialog = onView(
-            allOf(
-                withId(R.id.md_root),
-                withParent(
-                    allOf(
-                        withId(android.R.id.content),
-                        withParent(IsInstanceOf.instanceOf(android.widget.LinearLayout::class.java))
-                    )
-                ),
-                isDisplayed()
-            )
-        )
-        watchedFoldersHelpDialog.check(matches(isDisplayed()))
-
         val watchedFoldersDialogCloseButton = onView(
             allOf(
                 withId(R.id.close_button),
@@ -123,6 +109,8 @@ class WatchedFoldersTest {
                 isDisplayed()
             )
         )
+
+        watchedFoldersDialogCloseButton.check(matches(isDisplayed()))
         watchedFoldersDialogCloseButton.perform(click())
 
         val folderRepo = FolderRepository(ApplicationProvider.getApplicationContext())

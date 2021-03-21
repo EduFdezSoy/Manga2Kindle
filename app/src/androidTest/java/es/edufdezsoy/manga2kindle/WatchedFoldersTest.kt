@@ -60,7 +60,7 @@ class WatchedFoldersTest {
             )
         )
         navBarWatchedFoldersButton.perform(click())
-        Thread.sleep(100)
+        Thread.sleep(300)
 
         val watchedFoldersBackgroundHelpLayout = onView(
             allOf(

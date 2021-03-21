@@ -294,8 +294,19 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
             chapter = matcher.group()
         }
 
-        if (chapter.isBlank())
-            chapter = "0"
+        if (chapter.isBlank()) {
+            // try with the full chapter name
+            val matcher2 = chapterRegex.matcher(name)
+
+            while (matcher2.find()) {
+                chapter = matcher2.group()
+            }
+
+            // if there is no coincidences we put a 0
+            if (chapter.isBlank()) {
+                chapter = "0"
+            }
+        }
 
         return chapter.toFloat()
     }
@@ -371,7 +382,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
      * @param chapterName
      * @return the chapter title
      */
-    private fun getChapterTitle(chapterName: String): String {
+    fun getChapterTitle(chapterName: String): String {
         val str = chapterName.split(" - ")
         var chapterTitle = ""
 

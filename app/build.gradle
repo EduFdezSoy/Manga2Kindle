@@ -21,6 +21,14 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
+        // remove all data before tests
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
+        testOptions {
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+            animationsDisabled = true
+        }
     }
 
     buildTypes {
@@ -61,6 +69,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestUtil 'androidx.test:orchestrator:1.3.0'
 
     def room_version = "2.2.6"
     implementation "androidx.room:room-runtime:$room_version"

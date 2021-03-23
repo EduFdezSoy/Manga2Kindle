@@ -23,20 +23,16 @@ The only thing you need to change is the API url, you can find that in `M2KAppli
 Note that if you plan to run the app in any Android device with Pie (v9.0) or newer you'll need to use HTTPS, otherwise it won't work by default.  
 
 ## Dependencies
-Library | Homepage
---- | ---
-Room | [https://developer.android.com/jetpack/androidx/releases/room](https://developer.android.com/jetpack/androidx/releases/room)
-Retrofit | [https://square.github.io/retrofit/](https://square.github.io/retrofit/)
-Commons IO | [https://commons.apache.org/proper/commons-io/](https://commons.apache.org/proper/commons-io/)
-MaterialDrawer | [https://mikepenz.github.io/MaterialDrawer/](https://mikepenz.github.io/MaterialDrawer/)
-Android About Page | [https://github.com/medyo/android-about-page](https://github.com/medyo/android-about-page)
-Conductor | [https://github.com/bluelinelabs/Conductor](https://github.com/bluelinelabs/Conductor)
-Conductor Support Preference | [https://github.com/inorichi/conductor-support-preference](https://github.com/inorichi/conductor-support-preference)
-Firebase | [https://firebase.google.com/](https://firebase.google.com/)
-Crashlytics | [https://fabric.io/kits/android/crashlytics/](https://fabric.io/kits/android/crashlytics/)
-Sweet Alert Dialog | [https://github.com/f0ris/sweet-alert-dialog](https://github.com/f0ris/sweet-alert-dialog)
+Library             | Homepage
+---                 | ---
+Retrofit            | [https://square.github.io/retrofit/](https://square.github.io/retrofit/)
+Moshi               | [https://github.com/square/moshi](https://github.com/square/moshi)
+Material Dialogs    | [https://github.com/afollestad/material-dialogs](https://github.com/afollestad/material-dialogs)
+Compressor          | [https://github.com/zetbaitsu/Compressor](https://github.com/zetbaitsu/Compressor)
+Firebase            | [https://firebase.google.com/](https://firebase.google.com/)
+Crashlytics         | [https://fabric.io/kits/android/crashlytics/](https://fabric.io/kits/android/crashlytics/)
 
-*Last updated: v2.0-RC7*
+*Last updated: d350bb8*
 
 ## Donations
 If you really liked it and feel like I deserve some money, you can buy me a [coffee](https://ko-fi.com/EduFdezSoy) and I'll continue transforming caffeine into code!  

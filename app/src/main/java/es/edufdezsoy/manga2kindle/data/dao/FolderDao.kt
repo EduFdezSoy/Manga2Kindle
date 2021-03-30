@@ -20,4 +20,7 @@ interface FolderDao {
 
     @Query("SELECT * FROM Folder")
     suspend fun getStaticFolderList(): List<Folder>
+
+    @Query("SELECT * FROM Folder WHERE active = 1")
+    suspend fun getStaticActiveFolders(): List<Folder>
 }

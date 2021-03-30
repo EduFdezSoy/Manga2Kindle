@@ -4,14 +4,15 @@ import android.app.Service
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.Application.Companion.CHANNEL_ID
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Chapter
+import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,7 +43,9 @@ class ScanRemovedChaptersService : Service(), CoroutineScope {
 
         launch {
             val chRepo = ChapterRepository(application)
+            val folderRepo = FolderRepository(application)
             val chapters = chRepo.getStaticAllChapters()
+            val folders = folderRepo.getStaticActiveFolders()
             val PROGRESS_MAX = chapters.size
 
             notificationManager.notify(1, notification.build())
@@ -58,6 +61,16 @@ class ScanRemovedChaptersService : Service(), CoroutineScope {
 
                 if (docFile == null || !docFile.exists()) {
                     chRepo.delete(chapter)
+                } else {
+                    var contains = false
+                    folders.forEach { folder: Folder ->
+                        if (chapter.path.contains(folder.path)) {
+                            contains = true
+                        }
+                    }
+                    if (!contains) {
+                        chRepo.delete(chapter)
+                    }
                 }
             }
 

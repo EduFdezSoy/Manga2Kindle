@@ -36,4 +36,8 @@ class FolderRepository(application: Application) {
     suspend fun getStaticFolderList(): List<Folder> {
         return folderDao.getStaticFolderList()
     }
+
+    suspend fun getStaticActiveFolders(): List<Folder> {
+        return folderDao.getStaticActiveFolders()
+    }
 }

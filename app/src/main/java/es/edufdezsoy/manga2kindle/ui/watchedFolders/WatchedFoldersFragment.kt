@@ -84,6 +84,10 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
 
     private fun performFileSearch() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            .addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            .addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
         startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE)
     }
 
@@ -98,26 +102,13 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
 
             folderViewModel.insert(Folder(name, path, true))
 
-            // get permissions on sub-folders and files
-
-            // persistable permissions (to read contents)
-            requireContext().grantUriPermission(
-                requireContext().packageName,
-                data.data,
-                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-            )
-
-            // read permission
-            requireContext().grantUriPermission(
-                requireContext().packageName,
-                data.data,
+            // get permissions on sub-folders and files (read and write)
+            requireContext().contentResolver.takePersistableUriPermission(
+                data.data!!,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
-
-            // write permission
-            requireContext().grantUriPermission(
-                requireContext().packageName,
-                data.data,
+            requireContext().contentResolver.takePersistableUriPermission(
+                data.data!!,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }

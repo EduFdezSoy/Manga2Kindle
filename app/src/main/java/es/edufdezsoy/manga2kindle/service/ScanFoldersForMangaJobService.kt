@@ -298,7 +298,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
             // try with the full chapter name
             val matcher2 = chapterRegex.matcher(name)
 
-            while (matcher2.find()) {
+            if (matcher2.find()) {
                 chapter = matcher2.group()
             }
 

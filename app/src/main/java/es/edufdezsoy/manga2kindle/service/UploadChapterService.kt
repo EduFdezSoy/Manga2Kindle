@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.Application
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.model.Status
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.network.ApiService
@@ -54,6 +55,9 @@ class UploadChapterService : Service(), CoroutineScope {
     private var iteration = 0
     private lateinit var notificationManager: NotificationManagerCompat
 
+    @Volatile
+    private var atomicBoolean = false
+
     inner class UploadChapterBinder : Binder() {
         fun getService(): UploadChapterService = this@UploadChapterService
     }
@@ -75,6 +79,14 @@ class UploadChapterService : Service(), CoroutineScope {
         if (element != null) {
             chapList.add(element)
             listSize++
+
+            // set the chapter as locally enqueued
+            launch {
+                chapterRepository = ChapterRepository(application)
+                val chapter = chapterRepository.getById(element.id!!)!!
+                chapter.status = Status.LOCAL_QUEUE
+                chapterRepository.update(chapter)
+            }
         }
 
         return binder
@@ -82,14 +94,28 @@ class UploadChapterService : Service(), CoroutineScope {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         chapterRepository = ChapterRepository(application)
-        apiService = ApiService.getInstance(applicationContext)
-        notificationManager = NotificationManagerCompat.from(this)
 
         val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
         if (element?.email != null) {
             chapList.add(element)
             listSize++
+
+            // set the chapter as locally enqueued
+            launch {
+                val chapter = chapterRepository.getById(element.id!!)!!
+                chapter.status = Status.LOCAL_QUEUE
+                chapterRepository.update(chapter)
+            }
         }
+
+        if (atomicBoolean) {
+            return START_REDELIVER_INTENT
+        }
+
+        atomicBoolean = true
+
+        apiService = ApiService.getInstance(applicationContext)
+        notificationManager = NotificationManagerCompat.from(this)
 
         val notification = NotificationCompat.Builder(this, Application.CHANNEL_ID).apply {
             setContentTitle("Uploading Chapter") // TODO: move to a resource
@@ -101,7 +127,8 @@ class UploadChapterService : Service(), CoroutineScope {
         startForeground(2, notification.build()) // TODO: move id to a resource
 
         launch {
-            chapList.forEach { uploadChapter ->
+            while (chapList.size > 0) {
+                val uploadChapter = chapList[0]
                 var progress = 0
                 var progressMax = 0
 
@@ -132,6 +159,7 @@ class UploadChapterService : Service(), CoroutineScope {
 
                 var page = 0
                 fileList.forEach {
+                    notification.setContentText("$iteration of $listSize") // TODO: move to a resource and translate
                     notification.setProgress(progressMax, ++progress, false)
                     notificationManager.notify(2, notification.build())
 
@@ -170,6 +198,7 @@ class UploadChapterService : Service(), CoroutineScope {
                 chapList.remove(uploadChapter)
             }
 
+            atomicBoolean = false
             stopSelf()
         }
 
@@ -178,6 +207,7 @@ class UploadChapterService : Service(), CoroutineScope {
 
     override fun onDestroy() {
         notificationManager.cancel(2)
+        atomicBoolean = false
         super.onDestroy()
     }
 

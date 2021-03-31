@@ -22,7 +22,9 @@ class StatusRemoteDataSource(
 
             val statuses: ArrayList<Status> = arrayListOf()
             for (ch in chapters) {
-                statuses.add(apiService.getChapterStatus(ch.remoteId!!))
+                if (ch.remoteId != null) {
+                    statuses.add(apiService.getChapterStatus(ch.remoteId!!))
+                }
             }
 
             emit(statuses)

@@ -5,6 +5,7 @@ data class Status(
     var status: Int
 ) {
     companion object {
+        const val LOCAL_QUEUE = 1
         const val REGISTERED = 10
         const val UPLOADING = 20
         const val UPLOADED = 30

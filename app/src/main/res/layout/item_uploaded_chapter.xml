@@ -102,6 +102,18 @@
             app:layout_constraintTop_toTopOf="@+id/chapter_name_textview" />
 
         <ImageView
+            android:id="@+id/chapter_progress_local_queued"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingLeft="4dp"
+            android:src="@drawable/ic_outline_queue"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/chapter_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/chapter_name_textview"
+            app:layout_constraintTop_toTopOf="@+id/chapter_progress" />
+
+        <ImageView
             android:id="@+id/chapter_progress_uploading"
             android:layout_width="0dp"
             android:layout_height="0dp"

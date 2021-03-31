@@ -45,6 +45,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
             when (chapter.chapter.status) {
                 Status.DONE -> holder.done()
                 Status.ERROR -> holder.error()
+                Status.LOCAL_QUEUE -> holder.localEnqueued()
                 in Status.UPLOADED..Status.SENDING -> holder.processing()
                 in Status.REGISTERED..Status.UPLOADING -> holder.uploading()
             }
@@ -59,6 +60,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
         val volume: TextView = itemView.findViewById(R.id.volume_textview)
 
         private val status_bar: ProgressBar = itemView.findViewById(R.id.chapter_progress)
+        private val status_local_queued: ImageView = itemView.findViewById(R.id.chapter_progress_local_queued)
         private val status_upload: ImageView = itemView.findViewById(R.id.chapter_progress_uploading)
         private val status_done: ImageView = itemView.findViewById(R.id.chapter_progress_done)
         private val status_error: ImageView = itemView.findViewById(R.id.chapter_progress_error)
@@ -85,9 +87,15 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
 
         private fun setAllIconsInvisible() {
             status_bar.visibility = View.INVISIBLE
+            status_local_queued.visibility = View.INVISIBLE
             status_upload.visibility = View.INVISIBLE
             status_done.visibility = View.INVISIBLE
             status_error.visibility = View.INVISIBLE
+        }
+
+        fun localEnqueued() {
+            setAllIconsInvisible()
+            status_local_queued.visibility = View.VISIBLE
         }
 
         fun uploading() {

@@ -114,7 +114,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                                 val chName = formatName(it.name)
                                 var chTitle: String? = getChapterTitle(chName)
                                 val chNum = pickChapter(chName)
-                                val chVol = pickVolume(chName)
+                                val chVol = pickVolume(chName, chNum)
 
                                 if (chTitle.isNullOrBlank())
                                     chTitle = null
@@ -316,15 +316,16 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
      * (this fun is public in order to perform tests)
      *
      * @param name a folder name from a chapter
+     * @param chNum the chapter number, can be null
      * @return the volume number or null if none
      */
-    fun pickVolume(name: String): Int? {
+    fun pickVolume(name: String, chNum: Float?): Int? {
         val volumeRegex = Pattern.compile("[V-v][O-o][L-l].[+-]?\\d+(?:\\.\\d+)?")
         var volume: String = ""
 
         // the chapter name can have numbers, we dont want that numbers so we split it
-        val part = name.split(" - ")[0]
-        var matcher = volumeRegex.matcher(part)
+        val parts = name.split(" - ")
+        var matcher = volumeRegex.matcher(parts[0])
 
         while (matcher.find()) {
             volume = matcher.group()
@@ -338,7 +339,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         }
 
         // we are picking chapters as volumes in MangaLife, this solves that
-        if (volume.length > 2)
+        if (volume.isNotBlank() && ((parts.size == 1 && chNum == volume.toInt().toFloat()) || volume.length > 2))
             volume = ""
 
         return if (volume.isBlank())

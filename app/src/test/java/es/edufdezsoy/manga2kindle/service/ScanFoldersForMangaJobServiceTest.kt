@@ -33,12 +33,12 @@ class ScanFoldersForMangaJobServiceTest {
         "",
         // Other tests
         "Vol.2 Ch.10 - An awesome chapter - part 3",
-
+        // MangaLife
+        "_Punch 34",
 
 //        // Manga Rock
 //        // LectorManga, TuMangaOnline
 //        // HeavenManga
-//        // MangaLife
     )
 
     // formatName test result and following ones input data
@@ -57,13 +57,15 @@ class ScanFoldersForMangaJobServiceTest {
         // Webtoons (dot) com
         "Ep. 2 - The Two Ladies of Rumor (2) Ch. 2 ♫",
         // NHentai
-        "_Chapter",
+        "Chapter",
         // Oneshot
         "Oneshot - My awesome manga oneshot",
         // Blank (technically impossible)
         "",
         // Other tests
         "Vol.2 Ch.10 - An awesome chapter - part 3",
+        // MangaLife
+        "Punch 34",
     )
 
     // pickChapter test result
@@ -89,6 +91,8 @@ class ScanFoldersForMangaJobServiceTest {
         0F,
         // Other tests
         10F,
+        // MangaLife
+        34F,
     )
 
     // pickVolume test result
@@ -114,6 +118,8 @@ class ScanFoldersForMangaJobServiceTest {
         null,
         // Other tests
         2,
+        // MangaLife
+        null,
     )
 
     // getChapterTitle test result
@@ -139,6 +145,8 @@ class ScanFoldersForMangaJobServiceTest {
         "",
         // Other tests
         "An awesome chapter - part 3",
+        // MangaLife
+        "",
     )
 
     //#endregion
@@ -163,7 +171,7 @@ class ScanFoldersForMangaJobServiceTest {
         println("Test: testPickVolume\n")
 
         for (i in formattedChapterNamesResults.indices) {
-            val res = scanManga.pickVolume(formattedChapterNamesResults[i])
+            val res = scanManga.pickVolume(formattedChapterNamesResults[i], chaptersResults[i])
 
             println("Asserting: " + volumeResults[i] + " (Input: " + formattedChapterNamesResults[i] + ")")
             println("with:      $res")

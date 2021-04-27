@@ -328,7 +328,8 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
         // the chapter name can have numbers, we dont want that numbers so we split it
         val parts = name.split(" - ")
-        var matcher = volumeRegex.matcher(parts[0])
+        val firstPart = parts[0].replace(" ", "")
+        var matcher = volumeRegex.matcher(firstPart)
 
         while (matcher.find()) {
             volume = matcher.group()

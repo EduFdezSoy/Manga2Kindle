@@ -39,6 +39,9 @@ class ScanFoldersForMangaJobServiceTest {
         "_Chapter 1_ A really strange tournament! - Page 0",
         "_Page 1",
         "_Page 1876",
+        // NineMangaEn
+        "_My Hero Academia An Exploding, 'Quirky' Exchange",
+        "_Nanatsu no Taizai Vol. 35 Ch. 293.2 Side Story",
 
 //        // Manga Rock
 //        // LectorManga, TuMangaOnline
@@ -74,6 +77,9 @@ class ScanFoldersForMangaJobServiceTest {
         "Chapter 1: A really strange tournament! - Page 0",
         "Page 1",
         "Page 1876",
+        // NineMangaEn
+        "My Hero Academia An Exploding, 'Quirky' Exchange",
+        "Nanatsu no Taizai Vol. 35 Ch. 293.2 Side Story",
     )
 
     // pickChapter test result
@@ -105,6 +111,9 @@ class ScanFoldersForMangaJobServiceTest {
         1F,
         1F,
         1876F,
+        // NineMangaEn
+        0F,
+        293.2F,
     )
 
     // pickVolume test result
@@ -136,6 +145,9 @@ class ScanFoldersForMangaJobServiceTest {
         null,
         null,
         null,
+        // NineMangaEn
+        null,
+        35,
     )
 
     // getChapterTitle test result
@@ -167,6 +179,9 @@ class ScanFoldersForMangaJobServiceTest {
         "Page 0",
         "",
         "",
+        // NineMangaEn
+        "", // FIXME: may probably be "My Hero Academia An Exploding, 'Quirky' Exchange"
+        "", // FIXME: may probably be "Side Story"
     )
 
     //#endregion

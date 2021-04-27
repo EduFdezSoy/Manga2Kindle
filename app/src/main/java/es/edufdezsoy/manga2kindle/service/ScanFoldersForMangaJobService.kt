@@ -24,6 +24,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
         Pattern.compile(".*Ch.\\d+.*"),
+        Pattern.compile(".*Ch. \\d+.*"),
         // Oneshot chapters usually dont have Vol or Ch
         Pattern.compile(".*Oneshot.*"),
         // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)

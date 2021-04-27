@@ -40,8 +40,8 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         Pattern.compile(".*Chap \\d+.*"),
         // Others starting with NN
         Pattern.compile("\\d+.*"),
-        // MangaLife, something NNNN
-        Pattern.compile(".*\\d\\d\\d\\d")
+        // MangaLife, something N+
+        Pattern.compile(".*\\d+"),
     )
 
     //endregion

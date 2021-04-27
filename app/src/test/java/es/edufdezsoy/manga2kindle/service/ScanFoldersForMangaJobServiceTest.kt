@@ -35,6 +35,10 @@ class ScanFoldersForMangaJobServiceTest {
         "Vol.2 Ch.10 - An awesome chapter - part 3",
         // MangaLife
         "_Punch 34",
+        // Dragon Ball Multiverse
+        "_Chapter 1_ A really strange tournament! - Page 0",
+        "_Page 1",
+        "_Page 1876",
 
 //        // Manga Rock
 //        // LectorManga, TuMangaOnline
@@ -66,6 +70,10 @@ class ScanFoldersForMangaJobServiceTest {
         "Vol.2 Ch.10 - An awesome chapter - part 3",
         // MangaLife
         "Punch 34",
+        // Dragon Ball Multiverse
+        "Chapter 1: A really strange tournament! - Page 0",
+        "Page 1",
+        "Page 1876",
     )
 
     // pickChapter test result
@@ -93,6 +101,10 @@ class ScanFoldersForMangaJobServiceTest {
         10F,
         // MangaLife
         34F,
+        // Dragon Ball Multiverse
+        1F,
+        1F,
+        1876F,
     )
 
     // pickVolume test result
@@ -120,6 +132,10 @@ class ScanFoldersForMangaJobServiceTest {
         2,
         // MangaLife
         null,
+        // Dragon Ball Multiverse
+        null,
+        null,
+        null,
     )
 
     // getChapterTitle test result
@@ -146,6 +162,10 @@ class ScanFoldersForMangaJobServiceTest {
         // Other tests
         "An awesome chapter - part 3",
         // MangaLife
+        "",
+        // Dragon Ball Multiverse
+        "Page 0",
+        "",
         "",
     )
 

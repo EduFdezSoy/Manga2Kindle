@@ -43,6 +43,8 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         Pattern.compile("\\d+.*"),
         // MangaLife, something N+
         Pattern.compile(".*\\d+"),
+        // Unknown, no volume nor chapter numbers, only a title (keep always as the last one)
+        Pattern.compile(".*[_].*"),
     )
 
     //endregion

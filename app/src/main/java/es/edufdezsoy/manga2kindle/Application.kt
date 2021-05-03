@@ -9,7 +9,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
+import es.edufdezsoy.manga2kindle.utils.Log
 import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
 import es.edufdezsoy.manga2kindle.service.ScanRemovedChaptersService
 

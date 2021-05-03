@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
+import es.edufdezsoy.manga2kindle.utils.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
@@ -32,7 +32,7 @@ import java.io.FileNotFoundException
 import kotlin.coroutines.CoroutineContext
 
 /**
- * TODO: Service  incomplete
+ * TODO: Service  incomplete MAKE IT A SINGLETON and edit this text
  * This service may be launch when chapters needs to be uploaded, uses a notification as it needs to
  * be launched as fast as possible and needs to keep working even if the user closes the app to
  * deliver the chapters.

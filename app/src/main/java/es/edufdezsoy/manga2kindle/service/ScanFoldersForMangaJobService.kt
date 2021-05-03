@@ -3,7 +3,7 @@ package es.edufdezsoy.manga2kindle.service
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.net.Uri
-import android.util.Log
+import es.edufdezsoy.manga2kindle.utils.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository

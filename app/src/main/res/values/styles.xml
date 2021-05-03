@@ -20,6 +20,13 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="CustomPreferences.SectionTitle" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
     <style name="ViewPagerStepDot">
         <item name="android:scaleX">0.25</item>
         <item name="android:scaleY">0.25</item>

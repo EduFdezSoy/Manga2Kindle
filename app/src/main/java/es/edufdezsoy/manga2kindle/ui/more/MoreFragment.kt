@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import kotlinx.android.synthetic.main.fragment_more.*
@@ -56,10 +57,8 @@ class MoreFragment : Fragment() {
         setViewAndChildrenEnabled(view.layout_hidden_linearLayout, false)
 
         view.layout_settings_constraintLayout.setOnClickListener {
-            // TODO: open the settings
+            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
-        // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_settings_constraintLayout, false)
 
         view.layout_about_constraintLayout.setOnClickListener {
             // TODO: open the about

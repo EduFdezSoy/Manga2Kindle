@@ -31,6 +31,11 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_mainFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/onBoardingFragment"
@@ -59,4 +64,14 @@
         android:name="es.edufdezsoy.manga2kindle.ui.more.settings.LogCatFragment"
         android:label="fragment_log_cat"
         tools:layout="@layout/fragment_log_cat" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="es.edufdezsoy.manga2kindle.ui.more.about.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" >
+        <action
+            android:id="@+id/action_aboutFragment_to_about_libraries"
+            app:destination="@id/about_libraries" />
+    </fragment>
+    <include app:graph="@navigation/aboutlibs_navigation" />
 </navigation>

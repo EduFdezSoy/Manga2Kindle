@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+// About Libraries (https://github.com/mikepenz/AboutLibraries)
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -99,4 +102,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
+    // About Libraries (https://github.com/mikepenz/AboutLibraries)
+    implementation "com.mikepenz:aboutlibraries-core:${latestAboutLibsRelease}"
+    implementation "com.mikepenz:aboutlibraries:${latestAboutLibsRelease}"
 }

@@ -61,10 +61,8 @@ class MoreFragment : Fragment() {
         }
 
         view.layout_about_constraintLayout.setOnClickListener {
-            // TODO: open the about
+            findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
         }
-        // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_about_constraintLayout, false)
 
         view.layout_help_constraintLayout.setOnClickListener {
             // TODO: open the help (link to the web?)

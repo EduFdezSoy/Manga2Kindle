@@ -32,7 +32,7 @@ Compressor          | [https://github.com/zetbaitsu/Compressor](https://github.c
 Firebase            | [https://firebase.google.com/](https://firebase.google.com/)
 Crashlytics         | [https://fabric.io/kits/android/crashlytics/](https://fabric.io/kits/android/crashlytics/)
 
-*Last updated: d350bb8*
+*Last updated: #d350bb8*
 
 ## Donations
 If you really liked it and feel like I deserve some money, you can buy me a [coffee](https://ko-fi.com/EduFdezSoy) and I'll continue transforming caffeine into code!  

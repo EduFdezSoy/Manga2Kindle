@@ -5,7 +5,7 @@
     <string name="sliders_logo_description">app logo (Kanjis para Ma y Ki)</string>
     <string name="sliders_help_text">Si necesitas más ayuda visita esta guía:</string>
     <string name="sliders_email_hint">mi_dispositivo@kindle.com</string>
-    <string name="sliders_1_paragraph_1_welcome_text">¡Bienvenido a Manga2Kindle!\\nPara usar la aplicación necesitamos configurar un par de cosas, ¡vamos a ello!</string>
+    <string name="sliders_1_paragraph_1_welcome_text">¡Bienvenido a Manga2Kindle!\nPara usar la aplicación necesitamos configurar un par de cosas, ¡vamos a ello!</string>
     <string name="sliders_2_title_authorize_app_mail">Autoriza el email de la app</string>
     <string name="sliders_2_paragraph_1">"Primero necesitas autorizar a nuestro servidor de correos para que pueda mandar a tu kindle los archivos de los mangas: "</string>
     <string name="sliders_2_paragraph_2">Puedes hacerlo desde tu cuenta de Amazon, busca \"Gestionar Contenido y Dispositivos\" y ve a \"Preferencias\".</string>

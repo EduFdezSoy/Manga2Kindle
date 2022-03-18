@@ -35,6 +35,16 @@
     <string name="fragment_kindle_email_screen01_text2">(Swipe to read ➔)</string>
     <string name="fragment_kindle_email_dot_contentDescription">dot</string>
     <string name="fragment_kindle_email_screen05_text2">In the last line will show your device email, like: SOMETHING@KINDLE.COM</string>
+
+
+    <!-- New Chapters fragment -->
+    <string name="frieren_mimic">Frieren been eaten by a mimic</string>
+    <string name="new_chapters_phrase">There\'s nothing in here…</string>
+    <string name="new_chapters_help_pre">Need&#160;</string>
+    <string name="new_chapters_help_button">help</string>
+    <string name="new_chapters_help_post">\?</string>
+
+    <!-- watched folders fragment -->
     <string name="watched_folders_add_new_folder_floating_button">Add New Folder</string>
     <string name="kaguya_sama_o_kawaii_koto" translatable="false">Kaguya-sama - O kawaii koto</string>
     <string name="watched_folders_help_pre">Need&#160;</string>

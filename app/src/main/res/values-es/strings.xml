@@ -44,4 +44,9 @@
     <string name="watched_folders_help_dialog_screen04_text1">Una vez la añadas la app empezará a escanearla. Le echará un vistazo de vez en cuando en busca de capítulos nuevos, verás una notificación durante los escaneos.</string>
     <string name="watched_folders_help_dialog_screen05_text1">Por otra parte, en la lista de esta pantalla tendrás la carpeta que recien añadiste. Puedes <b>tocarla para activarla/desactivarla</b> y dejarla pulsada para cambiar su nombre o borrarla.</string>
     <string name="watched_folders_help_dialog_screen05_text2">Al desactivar una carpeta harás que los capitulos que contenga desaparezcan de la lista de Capítulos <i>(el primer icono en el menú inferior)</i>.</string>
+    <string name="frieren_mimic">Frieren siendo comida por un mímico</string>
+    <string name="new_chapters_phrase">No hay nada aquí…</string>
+    <string name="new_chapters_help_pre">¿Necesitas&#160;</string>
+    <string name="new_chapters_help_button">ayuda</string>
+    <string name="new_chapters_help_post">\?</string>
 </resources>

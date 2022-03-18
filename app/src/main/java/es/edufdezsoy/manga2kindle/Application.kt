@@ -9,9 +9,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import es.edufdezsoy.manga2kindle.utils.Log
 import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
 import es.edufdezsoy.manga2kindle.service.ScanRemovedChaptersService
+import es.edufdezsoy.manga2kindle.utils.Log
 
 class Application : Application() {
     private val TAG = this::class.java.simpleName
@@ -43,12 +43,13 @@ class Application : Application() {
     }
 
     private fun startScheduledService() {
+        val periodicTimer: Long = 15 * 60 * 1000 // 15 mins, the lower valid value
         val cn = ComponentName(applicationContext, ScanFoldersForMangaJobService::class.java)
         val ji = JobInfo.Builder(SCAN_FOR_MANGA_ID, cn)
             .setRequiresCharging(false)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             .setPersisted(true)
-            .setPeriodic(15 * 60 * 1000) // 15 mins, the lower valid value
+            .setPeriodic(periodicTimer)
 
         val scheduler = applicationContext.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
         val resultCode = scheduler.schedule(ji.build())

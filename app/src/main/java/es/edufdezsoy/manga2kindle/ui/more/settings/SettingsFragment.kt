@@ -9,62 +9,61 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.BuildConfig
 import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.fragment_settings.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+    ): View {
+        val binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        setButtonsClickActions(view)
-        setSettings(view)
+        setButtonsClickActions(binding)
+        setSettings(binding)
 
-        return view
+        return binding.root
     }
 
-    private fun setButtonsClickActions(view: View) {
+    private fun setButtonsClickActions(binding: FragmentSettingsBinding) {
         val debugOptionsListener = View.OnClickListener {
             if (it !is SwitchCompat) {
-                enable_debug_options_switch.toggle()
+                binding.enableDebugOptionsSwitch.toggle()
             }
 
-            if (enable_debug_options_switch.isChecked) {
-                enableDebug(view)
+            if (binding.enableDebugOptionsSwitch.isChecked) {
+                enableDebug(binding)
             } else {
-                disableDebug(view)
+                disableDebug(binding)
             }
         }
 
-        view.layout_enable_debug_constraintLayout.setOnClickListener(debugOptionsListener)
-        view.enable_debug_options_switch.setOnClickListener(debugOptionsListener)
+        binding.layoutEnableDebugConstraintLayout.setOnClickListener(debugOptionsListener)
+        binding.enableDebugOptionsSwitch.setOnClickListener(debugOptionsListener)
 
-        view.layout_debug_log_constraintLayout.setOnClickListener {
+        binding.layoutDebugLogConstraintLayout.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_logCatFragment)
 
         }
     }
 
-    private fun setSettings(view: View) {
+    private fun setSettings(binding: FragmentSettingsBinding) {
 //        val pref = SharedPreferencesHandler(requireContext())
 
         if (BuildConfig.DEBUG) {
-            enableDebug(view)
+            enableDebug(binding)
         } else {
-            view.layout_enable_debug_constraintLayout.isEnabled = false
-            disableDebug(view)
+            binding.layoutEnableDebugConstraintLayout.isEnabled = false
+            disableDebug(binding)
         }
     }
 
-    private fun enableDebug(view: View) {
-        view.enable_debug_options_switch.isChecked = true
-        view.layout_debug_log_constraintLayout.visibility = View.VISIBLE
+    private fun enableDebug(binding: FragmentSettingsBinding) {
+        binding.enableDebugOptionsSwitch.isChecked = true
+        binding.layoutDebugLogConstraintLayout.visibility = View.VISIBLE
     }
 
-    private fun disableDebug(view: View) {
-        view.layout_debug_log_constraintLayout.visibility = View.GONE
+    private fun disableDebug(binding: FragmentSettingsBinding) {
+        binding.layoutDebugLogConstraintLayout.visibility = View.GONE
     }
 }

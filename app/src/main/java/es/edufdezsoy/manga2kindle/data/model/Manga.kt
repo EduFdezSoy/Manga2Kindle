@@ -5,15 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Manga(
-    /**
-     * This id is not the identifier!
-     * This id is the same as the server one
-     */
-    var id: Int?,
-    val title: String,
-    val author_id: Int?
+    var title: String
 ) {
     @PrimaryKey(autoGenerate = true)
-    var identifier: Int = 0
-    var synchronized: Boolean = false
+    var mangaId: Int = 0
+    var remoteId: Int? = null
+    var uuid: String? = null
 }

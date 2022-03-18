@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="header">
+
+        <EditTextPreference
+            app:key="signature"
+            app:title="signature"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="false"
+            app:key="reply"
+            app:title="Default reply action"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Sync">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="Sync email" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:summaryOff="blah blah placeholder"
+            app:summaryOn="blah blah placeholder on"
+            app:title="download something placeholder" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

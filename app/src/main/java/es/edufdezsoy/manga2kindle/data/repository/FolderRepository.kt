@@ -1,74 +1,43 @@
 package es.edufdezsoy.manga2kindle.data.repository
 
-import android.content.Context
-import es.edufdezsoy.manga2kindle.M2kApplication
-import es.edufdezsoy.manga2kindle.data.M2kDatabase
+import android.app.Application
+import androidx.lifecycle.LiveData
+import es.edufdezsoy.manga2kindle.data.M2KDatabase
+import es.edufdezsoy.manga2kindle.data.dao.FolderDao
 import es.edufdezsoy.manga2kindle.data.model.Folder
 
-class FolderRepository {
-    private val TAG = M2kApplication.TAG + "_FolderRepo"
-    private val folderList = ArrayList<Folder>()
-    private val database: M2kDatabase
+class FolderRepository(application: Application) {
+    private val folderDao: FolderDao
+    private val allFolders: LiveData<List<Folder>>
 
-    //#region object init
+    init {
+        val database = M2KDatabase.getInstance(application.applicationContext)
+        folderDao = database.folderDao()
 
-    companion object {
-        @Volatile
-        private var instance: FolderRepository? = null
-        private val LOCK = Any()
-
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            instance ?: FolderRepository(context).also { instance = it }
-        }
-    }
-
-    private constructor(context: Context) {
-        this.database = M2kDatabase.invoke(context)
-    }
-
-    //#endregion
-    //#region public methods
-
-    suspend fun get(id: Int): Folder {
-        return database.FolderDao().getFolderById(id)
-    }
-
-    suspend fun getAll(): ArrayList<Folder> {
-        if (folderList.isEmpty())
-            folderList.addAll(database.FolderDao().getAll())
-
-        return folderList
-    }
-
-    suspend fun getLastIndex(): Int? {
-        if (folderList.isNotEmpty()) {
-            folderList.sortBy { it.id }
-            return folderList[folderList.size - 1].id
-        } else {
-            val lastId = database.FolderDao().getLastIndex()
-            return lastId
-        }
+        allFolders = folderDao.getAllFolders()
     }
 
     suspend fun insert(folder: Folder) {
-        folderList.add(folder)
-        database.FolderDao().insert(folder)
+        folderDao.insert(folder)
     }
 
     suspend fun update(folder: Folder) {
-        folderList.forEach {
-            if (it.id == folder.id)
-                folderList.remove(folder)
-        }
-        folderList.add(folder)
-        database.FolderDao().update(folder)
+        folderDao.update(folder)
     }
 
     suspend fun delete(folder: Folder) {
-        database.FolderDao().delete(folder)
-        folderList.clear()
-        folderList.addAll(database.FolderDao().getAll())
+        folderDao.delete(folder)
     }
 
-    //#endregion
+    fun getAllFolders(): LiveData<List<Folder>> {
+        return allFolders
+    }
+
+    suspend fun getStaticFolderList(): List<Folder> {
+        return folderDao.getStaticFolderList()
+    }
+
+    suspend fun getStaticActiveFolders(): List<Folder> {
+        return folderDao.getStaticActiveFolders()
+    }
 }

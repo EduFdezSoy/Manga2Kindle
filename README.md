@@ -2,14 +2,12 @@
 <a href="https://www.manga2kindle.com/"><img src="https://www.manga2kindle.com/assets/media/hero.png" width="200px" alt="manga2kindle_logo"></a>
 <h1 align="center" style="margin: 20px; text-align: center;">Manga2Kindle&nbsp;<a href="https://travis-ci.org/EduFdezSoy/Manga2Kindle"><img src="https://travis-ci.org/EduFdezSoy/Manga2Kindle.svg?branch=master" alt="Build Status"></a>
 </h1></p>
-<p align="center"><i>The easiest way to move mangas to your e-reader.</i></p>
 <p align="center">
-<h2 align="center" style="text-align: center;">Support me on&nbsp;
-<a href="https://ko-fi.com/EduFdezSoy">
-<img style="margin-bottom:-10px" src="https://ko-fi.com/img/Kofi_Logo_Blue.svg" alt="ko-fi"></a>
-<h2>
+<i>The easiest way to move mangas to your e-reader.</i>
+<br><br>
+<a href="https://ko-fi.com/X8X0IK3C"><img src="https://www.ko-fi.com/img/githubbutton_sm.svg" alt="ko-fi"></a>
 </p>
-
+  
 ## Description
 Manga2Kindle track the mangas at your phone and send them to your Kindle device.  
 It allows you to read in your e-reader while using your favourite app to buy and download mangas.
@@ -25,20 +23,16 @@ The only thing you need to change is the API url, you can find that in `M2KAppli
 Note that if you plan to run the app in any Android device with Pie (v9.0) or newer you'll need to use HTTPS, otherwise it won't work by default.  
 
 ## Dependencies
-Library | Homepage
---- | ---
-Room | [https://developer.android.com/jetpack/androidx/releases/room](https://developer.android.com/jetpack/androidx/releases/room)
-Retrofit | [https://square.github.io/retrofit/](https://square.github.io/retrofit/)
-Commons IO | [https://commons.apache.org/proper/commons-io/](https://commons.apache.org/proper/commons-io/)
-MaterialDrawer | [https://mikepenz.github.io/MaterialDrawer/](https://mikepenz.github.io/MaterialDrawer/)
-Android About Page | [https://github.com/medyo/android-about-page](https://github.com/medyo/android-about-page)
-Conductor | [https://github.com/bluelinelabs/Conductor](https://github.com/bluelinelabs/Conductor)
-Conductor Support Preference | [https://github.com/inorichi/conductor-support-preference](https://github.com/inorichi/conductor-support-preference)
-Firebase | [https://firebase.google.com/](https://firebase.google.com/)
-Crashlytics | [https://fabric.io/kits/android/crashlytics/](https://fabric.io/kits/android/crashlytics/)
-Sweet Alert Dialog | [https://github.com/f0ris/sweet-alert-dialog](https://github.com/f0ris/sweet-alert-dialog)
+Library             | Homepage
+---                 | ---
+Retrofit            | [https://square.github.io/retrofit/](https://square.github.io/retrofit/)
+Moshi               | [https://github.com/square/moshi](https://github.com/square/moshi)
+Material Dialogs    | [https://github.com/afollestad/material-dialogs](https://github.com/afollestad/material-dialogs)
+Compressor          | [https://github.com/zetbaitsu/Compressor](https://github.com/zetbaitsu/Compressor)
+Firebase            | [https://firebase.google.com/](https://firebase.google.com/)
+Crashlytics         | [https://fabric.io/kits/android/crashlytics/](https://fabric.io/kits/android/crashlytics/)
 
-*Last updated: v2.0-RC7*
+*Last updated: #d350bb8*
 
 ## Donations
 If you really liked it and feel like I deserve some money, you can buy me a [coffee](https://ko-fi.com/EduFdezSoy) and I'll continue transforming caffeine into code!  

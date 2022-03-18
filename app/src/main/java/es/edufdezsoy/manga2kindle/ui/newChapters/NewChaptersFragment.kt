@@ -42,6 +42,19 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
         lifecycleScope.launch {
             chapterViewModel.getNotUploadedChapters().collect {
                 adapter.submitList(it)
+
+                // show/hide background pun/help
+                if (it.isNotEmpty()) {
+                    val v = binding.newChapterBackground
+                    v.visibility = View.GONE
+                    // the following translation does not show as the view is gone, but is needed to animate the return
+                    v.translationY = v.height.toFloat()
+                } else {
+                    val v = binding.newChapterBackground
+                    v.animate().translationY(0F).withStartAction {
+                        v.visibility = View.VISIBLE
+                    }
+                }
             }
         }
 

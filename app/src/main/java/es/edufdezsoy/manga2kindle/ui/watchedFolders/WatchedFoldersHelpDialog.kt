@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.watchedFolders
 
 import android.content.Context
-import android.view.View
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -9,12 +8,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
-import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ViewPagerAdapter
+import es.edufdezsoy.manga2kindle.databinding.ViewWatchedFoldersHelpDialogBinding
 import es.edufdezsoy.manga2kindle.ui.watchedFolders.helpDialogScreens.*
-import kotlinx.android.synthetic.main.view_watched_folders_help_dialog.view.*
 
 class WatchedFoldersHelpDialog(
     context: Context,
@@ -24,7 +21,7 @@ class WatchedFoldersHelpDialog(
     //region vars and vals
 
     private val dialog = MaterialDialog(context)
-    private val view: View
+    private val binding: ViewWatchedFoldersHelpDialogBinding
 
     //endregion
     //region constructor
@@ -32,11 +29,13 @@ class WatchedFoldersHelpDialog(
     init {
         dialog
             .lifecycleOwner(owner)
-            .customView(R.layout.view_watched_folders_help_dialog)
             .title(text = "Folders Help")
 
-        view = dialog.getCustomView()
-        viewHolder(view)
+        binding = ViewWatchedFoldersHelpDialogBinding.inflate(dialog.layoutInflater)
+
+        dialog.customView(view = binding.root)
+
+        viewHolder(binding)
     }
 
     //endregion
@@ -49,7 +48,7 @@ class WatchedFoldersHelpDialog(
     //endregion
     //region private functions
 
-    private fun viewHolder(view: View) {
+    private fun viewHolder(binding: ViewWatchedFoldersHelpDialogBinding) {
         val fragmentList = arrayListOf<Fragment>(
             WatchedFoldersHelpDialog01Fragment(),
             WatchedFoldersHelpDialog02Fragment(),
@@ -64,9 +63,9 @@ class WatchedFoldersHelpDialog(
             owner.lifecycle
         )
 
-        view.help_viewPager.adapter = viewPagerAdapter
-        view.close_button.setOnClickListener { dialog.dismiss() }
-        view.help_viewPager.registerOnPageChangeCallback(object :
+        binding.helpViewPager.adapter = viewPagerAdapter
+        binding.closeButton.setOnClickListener { dialog.dismiss() }
+        binding.helpViewPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -77,7 +76,7 @@ class WatchedFoldersHelpDialog(
 
     private fun setProgressDot(activeDot: Int) {
         var counter = 0
-        view.progress_dots_linearLayout.children.forEach {
+        binding.progressDotsLinearLayout.children.forEach {
             it.isEnabled = counter++ == activeDot
         }
     }

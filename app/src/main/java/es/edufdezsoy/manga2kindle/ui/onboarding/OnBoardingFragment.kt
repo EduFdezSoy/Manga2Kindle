@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ViewPagerAdapter
+import es.edufdezsoy.manga2kindle.databinding.FragmentOnBoardingBinding
 import es.edufdezsoy.manga2kindle.ui.onboarding.screens.Screen01Fragment
 import es.edufdezsoy.manga2kindle.ui.onboarding.screens.Screen02Fragment
 import es.edufdezsoy.manga2kindle.ui.onboarding.screens.Screen03Fragment
-import kotlinx.android.synthetic.main.fragment_on_boarding.view.*
 
 /**
  * TODO: Create onboarding: tutorial, guide and config
@@ -28,8 +27,8 @@ class OnBoardingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_on_boarding, container, false)
+    ): View {
+        val binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
 
         val fragmentList = arrayListOf<Fragment>(
             Screen01Fragment(),
@@ -43,8 +42,8 @@ class OnBoardingFragment : Fragment() {
             lifecycle
         )
 
-        view.viewPager.adapter = adapter
+        binding.viewPager.adapter = adapter
 
-        return view
+        return binding.root
     }
 }

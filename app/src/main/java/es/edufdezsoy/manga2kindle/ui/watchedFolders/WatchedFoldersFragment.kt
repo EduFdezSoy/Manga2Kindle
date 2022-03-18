@@ -7,21 +7,21 @@ import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.FolderAdapter
 import es.edufdezsoy.manga2kindle.adapter.FolderCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.Folder
-import es.edufdezsoy.manga2kindle.service.ExampleJobService
+import es.edufdezsoy.manga2kindle.databinding.FragmentWatchedFoldersBinding
 import es.edufdezsoy.manga2kindle.service.ExampleService
-import kotlinx.android.synthetic.main.fragment_watched_folders.view.*
+import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
+import es.edufdezsoy.manga2kindle.utils.Log
 import kotlinx.coroutines.launch
 
 
@@ -35,29 +35,29 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_watched_folders, container, false)
+        val binding = FragmentWatchedFoldersBinding.inflate(inflater, container, false)
 
-        view.folderList_recycler.layoutManager = LinearLayoutManager(context)
-        view.folderList_recycler.setHasFixedSize(true)
+        binding.folderListRecycler.layoutManager = LinearLayoutManager(context)
+        binding.folderListRecycler.setHasFixedSize(true)
 
         val adapter = FolderAdapter()
-        view.folderList_recycler.adapter = adapter
+        binding.folderListRecycler.adapter = adapter
 
-        folderViewModel = ViewModelProvider(this).get(FolderViewModel::class.java)
+        folderViewModel = ViewModelProvider(this)[FolderViewModel::class.java]
         lifecycleScope.launch {
             folderViewModel.getAllFolders().observe(viewLifecycleOwner) {
                 adapter.submitList(it)
 
                 // show/hide background pun/help
                 if (it.isNotEmpty()) {
-                    val v = view.watched_folders_background
+                    val v = binding.watchedFoldersBackground
                     v.visibility = View.GONE
                     // the following translation does not show as the view is gone, but is needed to animate the return
                     v.translationY = v.height.toFloat()
                 } else {
-                    val v = view.watched_folders_background
+                    val v = binding.watchedFoldersBackground
                     v.animate().translationY(0F).withStartAction {
                         v.visibility = View.VISIBLE
                     }
@@ -68,10 +68,20 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         // set listeners
         adapter.setOnItemClickListener(this)
         adapter.setOnItemLongClickListener(this)
-        view.floatingActionButton.setOnClickListener { performFileSearch() }
-        view.watched_folders_background_help_text_layout.setOnClickListener { openHelpDialog() }
+        binding.floatingActionButton.setOnClickListener { performFileSearch() }
+        binding.watchedFoldersBackgroundHelpTextLayout.setOnClickListener { openHelpDialog() }
 
-        return view
+        binding.buttonLaunchService.setOnClickListener {
+            // launchScanService()
+            startScheduledService()
+            Toast.makeText(
+                context,
+                "ya voooy... no pulses el boton en un rato que igual rompes otra cosa",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        return binding.root
     }
 
     private fun openHelpDialog() {
@@ -125,7 +135,12 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         folderCard.show()
     }
 
-    // TODO: service shit that needs to be removed
+    // TODO: service shit that may be removed
+
+    private fun launchScanService() {
+        val serviceIntent = Intent(context, ScanFoldersForMangaJobService::class.java)
+        activity?.startService(serviceIntent)
+    }
 
     private fun startService() {
         // textView.text = "service started"
@@ -146,12 +161,13 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
     private fun startScheduledService() {
         // textView.text = "scheduled service started"
 
-        val cn = ComponentName(requireContext(), ExampleJobService::class.java)
+        val executionTimer: Long = 15 * 60 * 1000 // 15 mins, the lower valid value
+        val cn = ComponentName(requireContext(), ScanFoldersForMangaJobService::class.java)
         val ji = JobInfo.Builder(123, cn)
             .setRequiresCharging(false)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
             .setPersisted(true)
-            .setPeriodic(15 * 60 * 1000) // 15 mins, the lower valid value
+            .setPeriodic(executionTimer)
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             // ji.setImportantWhileForeground(true) // this wont be needed for this job but may be usefull for the upload job

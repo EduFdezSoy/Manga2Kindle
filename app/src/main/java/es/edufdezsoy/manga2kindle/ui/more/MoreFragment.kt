@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
-import kotlinx.android.synthetic.main.fragment_more.*
-import kotlinx.android.synthetic.main.fragment_more.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentMoreBinding
 
 class MoreFragment : Fragment() {
     override fun onCreateView(
@@ -17,83 +16,83 @@ class MoreFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_more, container, false)
+        val binding = FragmentMoreBinding.inflate(inflater, container, false)
 
-        setButtonsClickActions(view)
-        setSettings(view)
+        setButtonsClickActions(binding)
+        setSettings(binding)
 
-        return view
+        return binding.root
     }
 
     //region private functions
 
-    private fun setButtonsClickActions(view: View) {
-        view.layout_email_constraintLayout.setOnClickListener {
+    private fun setButtonsClickActions(binding: FragmentMoreBinding) {
+        binding.layoutEmailConstraintLayout.setOnClickListener {
             val dialog = KindleEmailDialog(
                 requireContext(),
                 viewLifecycleOwner,
                 requireActivity().supportFragmentManager
             )
             dialog.onDismiss {
-                setSettings(view)
+                setSettings(binding)
             }
             dialog.show()
         }
 
-        view.layout_wifi_constraintLayout.setOnClickListener {
-            wifi_switch.toggle()
-            SharedPreferencesHandler(requireContext()).uploadOnlyOnWifi = wifi_switch.isChecked
+        binding.layoutWifiConstraintLayout.setOnClickListener {
+            binding.wifiSwitch.toggle()
+            SharedPreferencesHandler(requireContext()).uploadOnlyOnWifi = binding.wifiSwitch.isChecked
         }
 
-        view.layout_autoDelete_constraintLayout.setOnClickListener {
-            delete_switch.toggle()
-            SharedPreferencesHandler(requireContext()).deleteAfterUpload = delete_switch.isChecked
+        binding.layoutAutoDeleteConstraintLayout.setOnClickListener {
+            binding.deleteSwitch.toggle()
+            SharedPreferencesHandler(requireContext()).deleteAfterUpload = binding.deleteSwitch.isChecked
         }
 
-        view.layout_hidden_linearLayout.setOnClickListener {
+        binding.layoutHiddenLinearLayout.setOnClickListener {
             // TODO: open the hidden chapters view
         }
         // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_hidden_linearLayout, false)
+        setViewAndChildrenEnabled(binding.layoutHiddenLinearLayout, false)
 
-        view.layout_settings_constraintLayout.setOnClickListener {
+        binding.layoutSettingsConstraintLayout.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
 
-        view.layout_about_constraintLayout.setOnClickListener {
+        binding.layoutAboutConstraintLayout.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
         }
 
-        view.layout_help_constraintLayout.setOnClickListener {
+        binding.layoutHelpConstraintLayout.setOnClickListener {
             // TODO: open the help (link to the web?)
         }
         // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_help_constraintLayout, false)
+        setViewAndChildrenEnabled(binding.layoutHelpConstraintLayout, false)
 
         // Switch buttons
-        view.wifi_switch.setOnClickListener {
-            SharedPreferencesHandler(requireContext()).uploadOnlyOnWifi = wifi_switch.isChecked
+        binding.wifiSwitch.setOnClickListener {
+            SharedPreferencesHandler(requireContext()).uploadOnlyOnWifi = binding.wifiSwitch.isChecked
         }
         // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_wifi_constraintLayout, false)
+        setViewAndChildrenEnabled(binding.layoutWifiConstraintLayout, false)
 
-        view.delete_switch.setOnClickListener {
-            SharedPreferencesHandler(requireContext()).deleteAfterUpload = delete_switch.isChecked
+        binding.deleteSwitch.setOnClickListener {
+            SharedPreferencesHandler(requireContext()).deleteAfterUpload = binding.deleteSwitch.isChecked
         }
         // since this is on TO DO, lets disable this
-        setViewAndChildrenEnabled(view.layout_autoDelete_constraintLayout, false)
+        setViewAndChildrenEnabled(binding.layoutAutoDeleteConstraintLayout, false)
     }
 
-    private fun setSettings(view: View) {
+    private fun setSettings(binding: FragmentMoreBinding) {
         val pref = SharedPreferencesHandler(requireContext())
 
-        view.description_email_textView.text = pref.kindleEmail
+        binding.descriptionEmailTextView.text = pref.kindleEmail
 
-        view.wifi_switch.isChecked = pref.uploadOnlyOnWifi
-        view.delete_switch.isChecked = pref.deleteAfterUpload
+        binding.wifiSwitch.isChecked = pref.uploadOnlyOnWifi
+        binding.deleteSwitch.isChecked = pref.deleteAfterUpload
 
         if (pref.hideHiddenList) {
-            view.layout_hidden_linearLayout.visibility = View.GONE
+            binding.layoutHiddenLinearLayout.visibility = View.GONE
         }
     }
 

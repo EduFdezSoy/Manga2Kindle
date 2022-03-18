@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_watched_folders_help_dialog_02.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentWatchedFoldersHelpDialog02Binding
 
 class WatchedFoldersHelpDialog02Fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val v = inflater.inflate(R.layout.fragment_watched_folders_help_dialog_02, container, false)
+        val binding = FragmentWatchedFoldersHelpDialog02Binding.inflate(inflater, container, false)
         // sets the <a> link in that field clickable
-        v.tvText2.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvText2.movementMethod = LinkMovementMethod.getInstance()
 
-        return v
+        return binding.root
     }
 }

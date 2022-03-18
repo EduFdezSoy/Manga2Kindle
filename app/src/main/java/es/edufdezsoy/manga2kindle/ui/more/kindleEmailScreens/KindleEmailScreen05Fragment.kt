@@ -5,24 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_kindle_email_screen05.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentKindleEmailScreen05Binding
 
 class KindleEmailScreen05Fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_kindle_email_screen05, container, false)
+        val binding = FragmentKindleEmailScreen05Binding.inflate(inflater, container, false)
 
-        view.dot1_imageView.isEnabled = false
-        view.dot2_imageView.isEnabled = false
-        view.dot3_imageView.isEnabled = false
-        view.dot4_imageView.isEnabled = false
-        view.dot5_imageView.isEnabled = true
+        binding.dot1ImageView.isEnabled = false
+        binding.dot2ImageView.isEnabled = false
+        binding.dot3ImageView.isEnabled = false
+        binding.dot4ImageView.isEnabled = false
+        binding.dot5ImageView.isEnabled = true
 
-        return view
+        return binding.root
     }
 }

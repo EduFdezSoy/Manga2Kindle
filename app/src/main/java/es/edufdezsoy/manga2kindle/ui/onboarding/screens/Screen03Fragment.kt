@@ -8,30 +8,30 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
-import kotlinx.android.synthetic.main.fragment_screen03.*
-import kotlinx.android.synthetic.main.fragment_screen03.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentScreen03Binding
 
 class Screen03Fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_screen03, container, false)
+        val binding = FragmentScreen03Binding.inflate(inflater, container, false)
 
-        view.nextBtn.setOnClickListener {
+        binding.nextBtn.setOnClickListener {
             findNavController().navigate(R.id.action_onBoardingFragment_to_mainFragment)
-            onBoardingFinished()
+            onBoardingFinished(binding)
         }
 
-        return view
+        return binding.root
     }
 
-    private fun onBoardingFinished() {
+    private fun onBoardingFinished(binding: FragmentScreen03Binding) {
         val pref = SharedPreferencesHandler(requireContext())
         pref.onBoarding = true
-        pref.kindleEmail = autoCompleteTextView.text.toString() // TODO: may check if this is an email
+        pref.kindleEmail =
+            binding.autoCompleteTextView.text.toString() // TODO: may check if this is an email
         view?.clearFocus()
     }
 }

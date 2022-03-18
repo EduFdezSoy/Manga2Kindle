@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.more
 
 import android.content.Context
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
@@ -9,13 +8,12 @@ import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.customview.customView
-import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ViewPagerAdapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
+import es.edufdezsoy.manga2kindle.databinding.ViewKindleEmailDialogBinding
 import es.edufdezsoy.manga2kindle.ui.more.kindleEmailScreens.*
-import kotlinx.android.synthetic.main.view_kindle_email_dialog.view.*
 
 class KindleEmailDialog(
     private val context: Context,
@@ -25,7 +23,7 @@ class KindleEmailDialog(
     //region vars and vals
 
     private val dialog = MaterialDialog(context)
-    private val view: View
+    private val binding: ViewKindleEmailDialogBinding
 
     //endregion
     //region constructor
@@ -33,11 +31,13 @@ class KindleEmailDialog(
     init {
         dialog
             .lifecycleOwner(owner)
-            .customView(R.layout.view_kindle_email_dialog)
             .title(R.string.kindle_email_dialog_title)
 
-        view = dialog.getCustomView()
-        viewHolder(view)
+        binding = ViewKindleEmailDialogBinding.inflate(dialog.layoutInflater)
+
+        dialog.customView(view = binding.root)
+
+        viewHolder(binding)
     }
 
     //endregion
@@ -54,7 +54,7 @@ class KindleEmailDialog(
     //endregion
     //region private functions
 
-    private fun viewHolder(view: View) {
+    private fun viewHolder(binding: ViewKindleEmailDialogBinding) {
         val fragmentList = arrayListOf<Fragment>(
             KindleEmailScreen01Fragment(),
             KindleEmailScreen02Fragment(),
@@ -69,18 +69,18 @@ class KindleEmailDialog(
             owner.lifecycle
         )
 
-        view.kindle_email_viewPager.adapter = viewPagerAdapter
-        view.kindle_email_textInputLayout.editText?.setText(SharedPreferencesHandler(context).kindleEmail)
+        binding.kindleEmailViewPager.adapter = viewPagerAdapter
+        binding.kindleEmailTextInputLayout.editText?.setText(SharedPreferencesHandler(context).kindleEmail)
 
         // set buttons actions
-        view.cancel_button.setOnClickListener { dialog.cancel() }
-        view.save_button.setOnClickListener {
-            val email = view.kindle_email_textInputLayout.editText?.text.toString()
+        binding.cancelButton.setOnClickListener { dialog.cancel() }
+        binding.saveButton.setOnClickListener {
+            val email = binding.kindleEmailTextInputLayout.editText?.text.toString()
             if (isEmailValid(email)) {
                 SharedPreferencesHandler(context).kindleEmail = email
                 dialog.cancel()
             } else {
-                view.kindle_email_textInputLayout.error =
+                binding.kindleEmailTextInputLayout.error =
                     context.getString(R.string.kindle_email_dialog_error_msg)
             }
         }

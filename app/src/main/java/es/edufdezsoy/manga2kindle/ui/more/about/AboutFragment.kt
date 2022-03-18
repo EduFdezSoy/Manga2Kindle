@@ -13,28 +13,29 @@ import androidx.navigation.fragment.findNavController
 import com.mikepenz.aboutlibraries.LibsBuilder
 import es.edufdezsoy.manga2kindle.BuildConfig
 import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_about.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentAboutBinding
 
 
 class AboutFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.fragment_about, container, false)
+    ): View {
+
+        val binding = FragmentAboutBinding.inflate(inflater, container, false)
 
         @SuppressLint("SetTextI18n") // absolutely no reason to put this in a resource
-        v.description_version_textView.text =
+        binding.descriptionVersionTextView.text =
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
-        clickListeners(v)
+        clickListeners(binding)
 
-        return v
+        return binding.root
     }
 
-    private fun clickListeners(v: View) {
+    private fun clickListeners(binding: FragmentAboutBinding) {
         // Whats new
-        v.layout_whats_new_constraintLayout.setOnClickListener {
+        binding.layoutWhatsNewConstraintLayout.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -43,7 +44,7 @@ class AboutFragment : Fragment() {
         }
 
         // Webpage
-        v.layout_webpage_constraintLayout.setOnClickListener {
+        binding.layoutWebpageConstraintLayout.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -51,8 +52,8 @@ class AboutFragment : Fragment() {
             startActivity(intent)
         }
 
-        // Enail
-        v.layout_email_constraintLayout.setOnClickListener {
+        // Email
+        binding.layoutEmailConstraintLayout.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -61,7 +62,7 @@ class AboutFragment : Fragment() {
         }
 
         // Github
-        v.layout_github_constraintLayout.setOnClickListener {
+        binding.layoutGithubConstraintLayout.setOnClickListener {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -70,7 +71,7 @@ class AboutFragment : Fragment() {
         }
 
         // About Libraries (licenses)
-        v.layout_licenses_constraintLayout.setOnClickListener {
+        binding.layoutLicensesConstraintLayout.setOnClickListener {
             val abLibs = LibsBuilder()
                 .withAboutIconShown(false)
                 .withAboutVersionShown(false)

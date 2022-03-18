@@ -7,23 +7,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import es.edufdezsoy.manga2kindle.R
-import kotlinx.android.synthetic.main.fragment_screen01.view.*
+import es.edufdezsoy.manga2kindle.databinding.FragmentScreen01Binding
 
 class Screen01Fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_screen01, container, false)
+        val binding = FragmentScreen01Binding.inflate(inflater, container, false)
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
 
-        view.nextBtn.setOnClickListener {
+        binding.nextBtn.setOnClickListener {
             viewPager?.currentItem = 1
         }
 
-        return view
+        return binding.root
     }
 }

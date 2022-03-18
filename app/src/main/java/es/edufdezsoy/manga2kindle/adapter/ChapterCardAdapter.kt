@@ -1,25 +1,22 @@
 package es.edufdezsoy.manga2kindle.adapter
 
 import android.content.Context
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
-import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import es.edufdezsoy.manga2kindle.databinding.ViewChapterBinding
 import es.edufdezsoy.manga2kindle.ui.newChapters.ChapterViewModel
-import kotlinx.android.synthetic.main.view_chapter.view.*
 
 class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region vars and vals
 
     private val dialog = MaterialDialog(context, BottomSheet(LayoutMode.MATCH_PARENT))
-    private val view: View
+    private val binding: ViewChapterBinding
     private lateinit var chapter: ChapterWithManga
     private lateinit var chapterViewModel: ChapterViewModel
     private var uploadItemListener: OnUploadItemListener? = null
@@ -35,9 +32,11 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
         dialog
             .lifecycleOwner(owner)
             .cornerRadius(16f)
-            .customView(R.layout.view_chapter)
 
-        view = dialog.getCustomView()
+        binding = ViewChapterBinding.inflate(dialog.layoutInflater)
+
+        dialog.customView(view = binding.root)
+
     }
 
     //endregion
@@ -63,19 +62,19 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region private functions
 
     private fun setChapter() {
-        view.series_textInputLayoutLayout.editText?.setText(chapter.manga.manga.title)
-        view.author_textInputLayout.editText?.setText(chapter.manga.authorsToString())
-        view.title_textInputLayout.editText?.setText(chapter.chapter.title)
-        view.chapter_textInputLayout.editText?.setText(chapter.chapter.chapterToString())
-        view.volume_textInputLayout.editText?.setText(chapter.chapter.volume?.toString())
+        binding.seriesTextInputLayoutLayout.editText?.setText(chapter.manga.manga.title)
+        binding.authorTextInputLayout.editText?.setText(chapter.manga.authorsToString())
+        binding.titleTextInputLayout.editText?.setText(chapter.chapter.title)
+        binding.chapterTextInputLayout.editText?.setText(chapter.chapter.chapterToString())
+        binding.volumeTextInputLayout.editText?.setText(chapter.chapter.volume?.toString())
     }
 
     private fun setListeners() {
-        view.cancel_button.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             saveChapter()
             dialog.cancel()
         }
-        view.upload_button.setOnClickListener {
+        binding.uploadButton.setOnClickListener {
             saveChapter()
             uploadItemListener?.onUploadItem(chapter)
             dialog.cancel()
@@ -83,12 +82,13 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     }
 
     private fun saveChapter() {
-        chapter.manga.manga.title = view.series_textInputLayoutLayout.editText?.text.toString()
-        chapter.chapter.title = view.title_textInputLayout.editText?.text.toString()
-        chapter.chapter.chapter = view.chapter_textInputLayout.editText?.text.toString().toFloat()
-        chapter.chapter.volume = view.volume_textInputLayout.editText?.text.toString().toIntOrNull()
+        chapter.manga.manga.title = binding.seriesTextInputLayoutLayout.editText?.text.toString()
+        chapter.chapter.title = binding.titleTextInputLayout.editText?.text.toString()
+        chapter.chapter.chapter = binding.chapterTextInputLayout.editText?.text.toString().toFloat()
+        chapter.chapter.volume =
+            binding.volumeTextInputLayout.editText?.text.toString().toIntOrNull()
 
-        val authorsStr = view.author_textInputLayout.editText?.text.toString().split(",")
+        val authorsStr = binding.authorTextInputLayout.editText?.text.toString().split(",")
         val authors = ArrayList<Author>()
         authorsStr.forEach {
             authors.add(Author(it.trim()))

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_outline_search"
+        android:title="Search"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_baseline_sort_by_alpha"
+        android:title="Sort"
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/action_sort_by_title"
+                android:icon="@drawable/ic_baseline_text_rotation_down"
+                android:title="By Title"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/action_sort_by_chapter"
+                android:icon="@drawable/ic_baseline_text_rotation_down"
+                android:title="By chapter"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>

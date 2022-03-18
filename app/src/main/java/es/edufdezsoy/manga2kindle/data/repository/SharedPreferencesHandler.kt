@@ -43,4 +43,15 @@ class SharedPreferencesHandler(context: Context) {
     var theme: Int
         get() = pref.getInt("app_theme", 0)
         set(value) = pref.edit { putInt("app_theme", value) }
+
+    /**
+     * Order:
+     * 0 - Manga title, then chapter number ASC
+     * 1 - Manga title, then chapter number DESC
+     * 2 - Chapter number ASC
+     * 3 - Chapter number DESC
+     */
+    var order: Int
+        get() = pref.getInt("chapter_order", 0)
+        set(value) = pref.edit { putInt("chapter_order", value) }
 }

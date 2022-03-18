@@ -7,6 +7,8 @@ import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
+import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
+import es.edufdezsoy.manga2kindle.utils.ChapterWithMangaComparator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ class ChapterViewModel(application: Application) : AndroidViewModel(application)
     private val chapterRepository = ChapterRepository(application)
     private val mangaRepository = MangaRepository(application)
     private lateinit var chapters: Flow<List<ChapterWithManga>>
+    private val pref = SharedPreferencesHandler(application)
 
     init {
         viewModelScope.launch {
@@ -22,6 +25,27 @@ class ChapterViewModel(application: Application) : AndroidViewModel(application)
                 val list = ArrayList<ChapterWithManga>()
                 it.forEach {
                     list.add(ChapterWithManga(it, mangaRepository.get(it.mangaId)))
+                }
+
+                // 0 - Manga title, then chapter number ASC
+                // 1 - Manga title, then chapter number DESC
+                // 2 - Chapter number ASC
+                // 3 - Chapter number DESC
+                when (pref.order) {
+                    0 -> {
+                        list.sortWith(ChapterWithMangaComparator.DefaultComparator())
+                    }
+                    1 -> {
+                        list.sortWith(ChapterWithMangaComparator.DefaultComparator())
+                        list.reverse()
+                    }
+                    2 -> {
+                        list.sortWith(ChapterWithMangaComparator.ChapterComparator())
+                    }
+                    3 -> {
+                        list.sortWith(ChapterWithMangaComparator.ChapterComparator())
+                        list.reverse()
+                    }
                 }
 
                 return@map list

@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.service.UploadChapterService
 
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     //endregion
     //region public methods
 
-    fun uploadChapter(chapter: UploadChapter) {
+    fun uploadChapter(chapter: ChapterWithManga) {
         if (!serviceBound) {
             val intent = Intent(applicationContext, UploadChapterService::class.java)
             intent.putExtra(UploadChapterService.UPLOAD_CHAPTER_INTENT_KEY, chapter)
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun uploadChapter(list: ArrayList<UploadChapter>) {
+    fun uploadChapter(list: ArrayList<ChapterWithManga>) {
         list.forEach { uploadChapter(it) }
     }
 

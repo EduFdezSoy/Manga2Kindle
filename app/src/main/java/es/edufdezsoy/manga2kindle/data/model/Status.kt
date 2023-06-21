@@ -1,19 +1,19 @@
 package es.edufdezsoy.manga2kindle.data.model
 
 data class Status(
-    var id: Int,
-    var status: Int
+    var id: String,
+    var status: String,
+    var percentage: Int,
 ) {
     companion object {
-        const val LOCAL_QUEUE = 1
-        const val REGISTERED = 10
-        const val UPLOADING = 20
-        const val UPLOADED = 30
-        const val ENQUEUED = 40
-        const val PROCESSING = 50
-        const val CONVERTING = 60
-        const val SENDING = 70
-        const val DONE = 80
-        const val ERROR = 90
+        const val REGISTERED = "registered"
+        const val UPLOADING = "uploading"
+        const val AWAITING = "awaiting"
+        const val PROCESSING = "processing"
+        const val CONVERTING = "converting"
+        const val SENDING = "sending"
+        const val SENT = "sent"
+        const val DONE = "done"
+        const val ERROR = "error"
     }
 }

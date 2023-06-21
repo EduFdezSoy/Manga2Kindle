@@ -1,8 +1,8 @@
 package es.edufdezsoy.manga2kindle.data.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Chapter(
@@ -11,12 +11,11 @@ data class Chapter(
     var volume: Int?,
     var path: String,
     val mangaId: Int,
-) {
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "rowid")
-    var id: Int = 0
-    var remoteId: Int? = null
-    var status: Int = 0
+    var rowid = 0
+    var id: String? = null
+    var status: String = ""
 
     fun chapterToString(): String {
         return if (chapter % 1.0 != 0.0)
@@ -24,5 +23,4 @@ data class Chapter(
         else
             String.format("%.0f", chapter)
     }
-
 }

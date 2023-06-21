@@ -1,30 +1,29 @@
 package es.edufdezsoy.manga2kindle.data.model
 
+import com.squareup.moshi.Json
 import java.io.Serializable
 
 data class UploadChapter(
-    var id: Int?,
-    var manga: UploadManga,
+    var id: String?,
+    var mangaId: String?,
     var title: String?,
     var chapter: Float,
     var volume: Int?,
-    var pages: Int?,
     var email: String?,
+    @Json(name = "read_mode")
     var readMode: String?,
-    var splitType: Int?,
-    var path: String?
+    @Json(name = "split_mode")
+    var splitType: String?,
 ) : Serializable {
-    constructor(chapterWithManga: ChapterWithManga) : this(chapterWithManga, null, null)
-    constructor(chapterWithManga: ChapterWithManga, readMode: String?, splitType: Int?) : this(
+    constructor(chapterWithManga: ChapterWithManga) : this(chapterWithManga, null, null, null)
+    constructor(chapterWithManga: ChapterWithManga, email: String?, readMode: String?, splitType: String?) : this(
         chapterWithManga.chapter.id,
-        UploadManga(chapterWithManga.manga),
+        chapterWithManga.manga.uuid,
         chapterWithManga.chapter.title,
         chapterWithManga.chapter.chapter,
         chapterWithManga.chapter.volume,
-        null,
-        null,
+        email,
         readMode,
-        splitType,
-        chapterWithManga.chapter.path
+        splitType
     )
 }

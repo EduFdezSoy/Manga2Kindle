@@ -2,13 +2,14 @@ package es.edufdezsoy.manga2kindle.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
+import android.content.Intent
 import android.net.Uri
-import es.edufdezsoy.manga2kindle.utils.Log
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.data.model.Chapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.FolderRepository
 import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
+import es.edufdezsoy.manga2kindle.utils.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,25 +24,36 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
     private var jobCancelled = false
     private val chapterRegex = arrayOf(
         // General Regex, usually works with all apps (Ch.NNN)
+        // Mangadex: scanlator_Vol.N Ch.N
         Pattern.compile(".*Ch.\\d+.*"),
         Pattern.compile(".*Ch. \\d+.*"),
         // Oneshot chapters usually dont have Vol or Ch
+        // Danbooru, Pixiv
         Pattern.compile(".*Oneshot.*"),
-        // Manga Plus chapter numeration: #NNN (looks like manga plus never add Vol. to their chapters)
-        // Guya, scanlator_N - Title
+        // Manga Plus: #NNN (looks like manga plus never add Vol. to their chapters)
+        // Guya: scanlator_N - Title
         Pattern.compile(".*[_#]\\d+.*"),
-        // Manga Rock, this one uses Chapter NNN, what a nightmare
+        // Bato.to: Chapter NN
+        // Manga Rock: Chapter NNN
         Pattern.compile(".*Chapter \\d+.*"),
-        // LectorManga, uses Capítulo N.NN
+        // Read Kaguya-sama Manga Online: Chapter N - title
+        Pattern.compile("Chapter \\d+.*"),
+        // LectorManga: scanlator_Capítulo N.NN
         // TuMangaOnline, same
+        Pattern.compile(".*[_]Capítulo \\d+.*"),
+        // Ninemanga: Capítulo NN
         Pattern.compile(".*Capítulo \\d+.*"),
-        // NHentai, it only says Chapter
+        // NHentai: scanlator_Chapter (no number)
+        Pattern.compile(".*[_]Chapter"),
+        // NHentai (unoriginal): Chapter (no number)
         Pattern.compile("Chapter"),
-        // HeavenManga, Chap NN
+        // HeavenManga: Chap NN
         Pattern.compile(".*Chap \\d+.*"),
+        // Webtoons.com: EP NN_ title
+        Pattern.compile(".*EP \\d+.*"),
         // Others starting with NN
         Pattern.compile("\\d+.*"),
-        // MangaLife, something N+
+        // MangaLife: something N+
         Pattern.compile(".*\\d+"),
         // Unknown, no volume nor chapter numbers, only a title (keep always as the last one)
         Pattern.compile(".*[_].*"),
@@ -113,7 +125,15 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                             val manga = mangaRepository.searchOrCreate(mangaName)
                             val chapters = getChapters(it)
 
+                            // TODO: we may also want to call the MangaDex API to fill the author
+
                             chapters.forEach {
+                                // get read persistable permissions
+//                                applicationContext.contentResolver.takePersistableUriPermission(
+//                                    it.uri,
+//                                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                                )
+
                                 val chName = formatName(it.name)
                                 var chTitle: String? = getChapterTitle(chName)
                                 val chNum = pickChapter(chName)
@@ -122,7 +142,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                                 if (chTitle.isNullOrBlank())
                                     chTitle = null
 
-                                val chExists = chapterRepository.search(manga.manga.mangaId, chNum)
+                                val chExists = chapterRepository.search(manga.mangaId, chNum)
 
                                 if (chExists == null) {
                                     chapterRepository.insert(
@@ -131,7 +151,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                                             chNum,
                                             chVol,
                                             it.uri.toString(),
-                                            manga.manga.mangaId
+                                            manga.mangaId
                                         )
                                     )
                                 } else {
@@ -199,9 +219,12 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
         // it first goes all in and finds the chapters
         tree.forEach {
-            if (it.isFile && it.name != ".nomedia")
-                if (it.parentFile!!.name != ".thumb")
-                    chapters.add(it.parentFile!!)
+            if (it.name == "backup")
+                return@forEach
+
+            if (it.isFile && it.name != ".nomedia" && it.name != "backup")
+                if (it.parentFile!!.name != ".thumb" && it.parentFile!!.parentFile!!.name != "backup")
+                    chapters.add(it)
         }
 
         // then it pics their parents
@@ -225,52 +248,47 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         val chapters = ArrayList<DocumentFile>()
         val tmpChapterRegex = arrayOf(".*_tmp", ".*_temp")
 
-        manga.listFiles().forEach {
-            // it first check if it is a chapter, a folder with files inside (no more folders)
-            if (it.isDirectory) {
-                var hasFolders = false
-
-                it.listFiles().forEach {
-                    if (it.isDirectory && it.name != ".thumb")
-                        hasFolders = true
-                }
-
-                if (hasFolders) {
-                    it.listFiles().forEach {
-                        chapters.addAll(getChapters(it))
-                    }
-                } else {
-                    // return if it is empty
-                    if (it.listFiles().isEmpty())
-                        return@forEach
-                    // return if it is only .nomedia
-                    if (it.listFiles().size == 1)
-                        if (it.listFiles()[0].name == ".nomedia")
-                            return@forEach
-                    // return if it is .thumb
-                    if (it.name == ".thumb")
+        manga.listFiles().forEach { file ->
+            // may be top level or direct folders (Example: Tachiyomi > Downloads > Mangadex)
+            if (file.isDirectory) {
+                // return if it is empty
+                if (file.listFiles().isEmpty())
+                    return@forEach
+                // return if it is only .nomedia
+                if (file.listFiles().size == 1)
+                    if (file.listFiles()[0].name == ".nomedia")
                         return@forEach
 
-                    // then it finds the chapter name and that craps
-                    chapterRegex.forEach(fun(regex: Pattern) {
-                        if (regex.matcher(it.name!!).matches()) {
-                            var temporal = false
-                            tmpChapterRegex.forEach(fun(regex: String) {
-                                if (Pattern.compile(regex).matcher(it.name!!).matches()) {
-                                    temporal = true
-                                    return
-                                }
-                            })
-                            if (!temporal) {
-                                chapters.add(it)
-                            } else {
-                                Log.d(TAG, "This chapter is not downloaded yet (" + it.name + ")")
-                            }
+                // return if it is .thumb
+                if (file.name == ".thumb")
+                    return@forEach
+
+                // return if its backups
+                if (file.name == "backup")
+                    return@forEach
+
+                // a recursion to navigate all the folder tree
+                chapters.addAll(getChapters(file))
+            }
+
+            // find cbz files
+            chapterRegex.forEach(fun(regex: Pattern) {
+                if (regex.matcher(file.name!!).matches()) {
+                    var temp = false
+                    tmpChapterRegex.forEach(fun(regex: String) {
+                        if (Pattern.compile(regex).matcher(file.name!!).matches()) {
+                            temp = true
                             return
                         }
                     })
+                    if (!temp)
+                        chapters.add(file)
+                    else
+                        Log.d(TAG, "This chapter is not downloaded yet (" + file.name + ")")
+
+                    return
                 }
-            }
+            })
         }
 
         return chapters
@@ -278,7 +296,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
 
 
     /**
-     * Pick the chapter number from the folder name pased
+     * Pick the chapter number from the folder name passed
      * (this fun is public in order to perform tests)
      *
      * @param name a folder name from a chapter
@@ -318,7 +336,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
      * Pick the volume number from the folder name passed
      * (this fun is public in order to perform tests)
      *
-     * @param name a folder name from a chapter
+     * @param name chapter name or full filename
      * @param chNum the chapter number, can be null
      * @return the volume number or null if none
      */
@@ -426,9 +444,10 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
                 }
             }
             if (chapterTitle.isNotBlank())
-                chapterTitle =
-                    chapterTitle.substring(0, chapterTitle.length - 2)
+                chapterTitle = chapterTitle.substring(0, chapterTitle.length - 2)
         }
+
+        chapterTitle = chapterTitle.removeSuffix(".cbz")
 
         return chapterTitle
     }

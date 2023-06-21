@@ -1,16 +1,11 @@
 package es.edufdezsoy.manga2kindle.ui.watchedFolders
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
-import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,9 +14,6 @@ import es.edufdezsoy.manga2kindle.adapter.FolderAdapter
 import es.edufdezsoy.manga2kindle.adapter.FolderCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.Folder
 import es.edufdezsoy.manga2kindle.databinding.FragmentWatchedFoldersBinding
-import es.edufdezsoy.manga2kindle.service.ExampleService
-import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
-import es.edufdezsoy.manga2kindle.utils.Log
 import kotlinx.coroutines.launch
 
 
@@ -71,16 +63,6 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         binding.floatingActionButton.setOnClickListener { performFileSearch() }
         binding.watchedFoldersBackgroundHelpTextLayout.setOnClickListener { openHelpDialog() }
 
-        binding.buttonLaunchService.setOnClickListener {
-            // launchScanService()
-            startScheduledService()
-            Toast.makeText(
-                context,
-                "ya voooy... no pulses el boton en un rato que igual rompes otra cosa",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
         return binding.root
     }
 
@@ -117,10 +99,6 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
                 data.data!!,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
-            requireContext().contentResolver.takePersistableUriPermission(
-                data.data!!,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
         }
     }
 
@@ -133,60 +111,5 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         val folderCard = FolderCardAdapter(requireContext(), viewLifecycleOwner)
         folderCard.setFolder(folder, folderViewModel)
         folderCard.show()
-    }
-
-    // TODO: service shit that may be removed
-
-    private fun launchScanService() {
-        val serviceIntent = Intent(context, ScanFoldersForMangaJobService::class.java)
-        activity?.startService(serviceIntent)
-    }
-
-    private fun startService() {
-        // textView.text = "service started"
-
-        val serviceIntent = Intent(context, ExampleService::class.java)
-        serviceIntent.putExtra("inputExtra", "example input")
-
-        activity?.startService(serviceIntent)
-    }
-
-    private fun stopService() {
-        // textView.text = "service stopped"
-
-        val serviceIntent = Intent(context, ExampleService::class.java)
-        activity?.stopService(serviceIntent)
-    }
-
-    private fun startScheduledService() {
-        // textView.text = "scheduled service started"
-
-        val executionTimer: Long = 15 * 60 * 1000 // 15 mins, the lower valid value
-        val cn = ComponentName(requireContext(), ScanFoldersForMangaJobService::class.java)
-        val ji = JobInfo.Builder(123, cn)
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-            .setPersisted(true)
-            .setPeriodic(executionTimer)
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            // ji.setImportantWhileForeground(true) // this wont be needed for this job but may be usefull for the upload job
-        }
-
-        // check: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html
-
-        val scheduler = activity?.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-        val resultCode = scheduler.schedule(ji.build())
-        if (resultCode == JobScheduler.RESULT_SUCCESS)
-            Log.d(TAG, "startScheduledService: Job Scheduled")
-        else
-            Log.d(TAG, "startScheduledService: Job Scheduling failed")
-    }
-
-    private fun stopScheduledService() {
-        // textView.text = "scheduled service stoped"
-        val scheduler = activity?.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-        scheduler.cancel(123)
-        Log.d(TAG, "stopScheduledService: Job Canceled")
     }
 }

@@ -2,6 +2,7 @@ package es.edufdezsoy.manga2kindle.network
 
 import android.content.Context
 import com.squareup.moshi.Moshi
+import es.edufdezsoy.manga2kindle.network.adapters.StandardResponseMoshiAdapter
 import es.edufdezsoy.manga2kindle.utils.SingletonHolder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,11 +13,11 @@ object ApiService : SingletonHolder<Manga2KindleService, Context?>({
     val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     val client = OkHttpClient.Builder()
-//        .addInterceptor(interceptor)
+        .addInterceptor(interceptor) // TODO: interceptor enabled (disable before pushing)
         .build()
 
     val moshi = Moshi.Builder()
-        .add(AuthorArrayListMoshiAdapter())
+//        .add(StandardResponseMoshiAdapter())
         .build()
 
     val retrofit = Retrofit.Builder()

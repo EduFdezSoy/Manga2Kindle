@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import es.edufdezsoy.manga2kindle.data.model.Status
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
 import es.edufdezsoy.manga2kindle.data.repository.StatusRemoteDataSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -16,16 +17,18 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     init {
         viewModelScope.launch {
             statusRemoteDataSource.statuses.collect {
-                it.forEach {
-                    val chapter = chapterRepository.getByRemoteId(it.id)
-                    if (chapter!!.status != it.status) {
-                        chapter.status = it.status
-                        chapterRepository.update(chapter)
-
-                        // this will clear the remote id in the db and the api
-                        if (it.status >= Status.DONE) {
-                            statusRemoteDataSource.freeChapterStatus(it.id)
-                        }
+                it.forEach { uploadChapter ->
+                    launch(Dispatchers.IO) {
+                        val chapter = chapterRepository.getByRemoteId(uploadChapter.id!!)
+//                    if (chapter!!.status != uploadChapter.status) {
+//                        chapter.status = uploadChapter.status
+//                        chapterRepository.update(chapter)
+//
+//                        // this will clear the remote id in the db and the api
+//                        if (it.status >= Status.DONE) {
+//                            statusRemoteDataSource.freeChapterStatus(uploadChapter.id!!)
+//                        }
+//                    }
                     }
                 }
             }

@@ -1,12 +1,14 @@
 package es.edufdezsoy.manga2kindle.data.repository
 
 import android.app.Application
+import android.util.Log
 import es.edufdezsoy.manga2kindle.data.M2KDatabase
 import es.edufdezsoy.manga2kindle.data.dao.MangaDao
 import es.edufdezsoy.manga2kindle.data.model.Manga
-import es.edufdezsoy.manga2kindle.data.model.MangaWithAuthors
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.network.Manga2KindleService
+import es.edufdezsoy.manga2kindle.network.adapters.PrepareQueryParamsAdapter
+import kotlin.reflect.typeOf
 
 class MangaRepository(application: Application) {
     private val mangaDao: MangaDao
@@ -18,28 +20,28 @@ class MangaRepository(application: Application) {
         apiService = ApiService.getInstance(application.applicationContext)
     }
 
-    suspend fun insert(manga: Manga): MangaWithAuthors {
+    fun insert(manga: Manga): Manga {
         val id = mangaDao.insert(manga)
         return mangaDao.get(id)
     }
 
-    suspend fun update(manga: Manga) {
+    fun update(manga: Manga) {
         mangaDao.update(manga)
     }
 
-    suspend fun delete(manga: Manga) {
+    fun delete(manga: Manga) {
         mangaDao.delete(manga)
     }
 
-    suspend fun get(id: Int): MangaWithAuthors {
+    fun get(id: Int): Manga {
         return mangaDao.get(id.toLong())
     }
 
-    suspend fun search(title: String): MangaWithAuthors? {
+    fun search(title: String): Manga? {
         return mangaDao.search(title)
     }
 
-    suspend fun searchOrCreate(title: String): MangaWithAuthors {
+    suspend fun searchOrCreate(title: String): Manga {
         // search local
         val manga = mangaDao.search(title)
         if (manga != null) {
@@ -47,9 +49,10 @@ class MangaRepository(application: Application) {
         }
 
         // search online (and insert in local if exists)
-        val mangas = apiService.searchManga(title)
-        if (!mangas.isNullOrEmpty() && mangas[0] != null) {
-            return insert(mangas[0]!!)
+        val mangas = apiService.searchManga(PrepareQueryParamsAdapter("title", title).toString())
+        if (mangas.items.isNotEmpty()) {
+            Log.d("MangaRepository", "searchOrCreate: ${mangas.javaClass.name}")
+            return insert(mangas.items[0])
         }
 
         // create local

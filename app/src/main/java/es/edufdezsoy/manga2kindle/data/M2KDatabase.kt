@@ -15,10 +15,9 @@ import es.edufdezsoy.manga2kindle.utils.SingletonHolder
         Manga::class,
         Author::class,
         Chapter::class,
-        Folder::class,
-        MangaAuthorCrossRef::class
+        Folder::class
     ],
-    version = 2
+    version = 6
 )
 abstract class M2KDatabase : RoomDatabase() {
 
@@ -33,7 +32,7 @@ abstract class M2KDatabase : RoomDatabase() {
             "manga2kindle_database"
         )
             .addMigrations()
-            .fallbackToDestructiveMigrationFrom(1)
+            .fallbackToDestructiveMigrationFrom(5, 4, 3, 2, 1)
             .fallbackToDestructiveMigrationOnDowngrade()
             .build()
     })

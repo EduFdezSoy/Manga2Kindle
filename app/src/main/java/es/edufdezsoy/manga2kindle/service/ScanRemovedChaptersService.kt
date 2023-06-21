@@ -1,9 +1,14 @@
 package es.edufdezsoy.manga2kindle.service
 
+import android.Manifest
+import android.app.Notification
 import android.app.Service
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.IBinder
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
@@ -45,8 +50,23 @@ class ScanRemovedChaptersService : Service(), CoroutineScope {
             val chRepo = ChapterRepository(application)
             val folderRepo = FolderRepository(application)
             val chapters = chRepo.getStaticAllChapters()
-            val folders = folderRepo.getStaticActiveFolders()
+            val folders = folderRepo.getStaticActiveFolders().value
             val PROGRESS_MAX = chapters.size
+
+            if (ActivityCompat.checkSelfPermission(
+                    baseContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.e("TODO", "POST_NOTIFICATIONS not granted")
+            }
 
             notificationManager.notify(1, notification.build())
 
@@ -61,16 +81,6 @@ class ScanRemovedChaptersService : Service(), CoroutineScope {
 
                 if (docFile == null || !docFile.exists()) {
                     chRepo.delete(chapter)
-                } else {
-                    var contains = false
-                    folders.forEach { folder: Folder ->
-                        if (chapter.path.contains(folder.path)) {
-                            contains = true
-                        }
-                    }
-                    if (!contains) {
-                        chRepo.delete(chapter)
-                    }
                 }
             }
 

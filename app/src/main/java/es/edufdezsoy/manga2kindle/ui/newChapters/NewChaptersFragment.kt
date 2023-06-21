@@ -1,12 +1,25 @@
 package es.edufdezsoy.manga2kindle.ui.newChapters
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.utils.MDUtil.ifNotZero
 import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
@@ -16,13 +29,27 @@ import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import es.edufdezsoy.manga2kindle.databinding.FragmentNewChaptersBinding
-import kotlinx.coroutines.flow.collect
+import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
+import es.edufdezsoy.manga2kindle.utils.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 
 class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
-    ChapterBaseAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener {
+    ChapterBaseAdapter.OnItemLongClickListener, ChapterCardAdapter.OnUploadItemListener,
+    CoroutineScope, MenuProvider {
+    private val TAG = this::class.java.simpleName
     private lateinit var chapterViewModel: ChapterViewModel
+    private var scanning: Boolean = false
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +57,8 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
     ): View {
         val binding = FragmentNewChaptersBinding.inflate(inflater, container, false)
 
-        setHasOptionsMenu(true)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         binding.newChapterRecycler.layoutManager = LinearLayoutManager(context)
         binding.newChapterRecycler.setHasFixedSize(true)
@@ -40,11 +68,12 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
 
         chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
         lifecycleScope.launch {
-            chapterViewModel.getNotUploadedChapters().collect {
+            chapterViewModel.getNotUploadedChapters().collectLatest {
                 adapter.submitList(it)
 
+                // TODO: this fails. It is only being done the first time the flow... flows
                 // show/hide background pun/help
-                if (it.isNotEmpty()) {
+                if (adapter.itemCount > 0) {
                     val v = binding.newChapterBackground
                     v.visibility = View.GONE
                     // the following translation does not show as the view is gone, but is needed to animate the return
@@ -61,6 +90,37 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
         adapter.setOnItemClickListener(this)
         adapter.setOnItemLongClickListener(this)
 
+        // set sync button bindings
+        binding.ScanfloatingActionButton.setOnClickListener {
+            binding.ScanfloatingActionButton.animate()
+                .rotation(binding.ScanfloatingActionButton.rotation + 10 * 360f)
+                .setDuration(10 * 1000).start()
+            binding.ScanfloatingActionButton.isClickable = false
+            startScheduledService()
+
+            Toast.makeText(
+                context,
+                "Scanning, it may take a while (NOTE: the animation is not in sync with the scan)",
+                Toast.LENGTH_LONG
+            ).show()
+
+            launch {
+                delay(10 * 1000)
+                binding.ScanfloatingActionButton.isClickable = true
+
+            }
+        }
+
+        // move the button on start (as we always scan the lib when the app opens)
+        lifecycleScope.launch {
+            binding.ScanfloatingActionButton.animate().rotation(10 * 360f).setDuration(10 * 1000)
+                .start()
+            binding.ScanfloatingActionButton.isClickable = false
+
+            delay(10 * 1000)
+            binding.ScanfloatingActionButton.isClickable = true
+        }
+
         return binding.root
     }
 
@@ -74,6 +134,7 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
     // 3 - Chapter number DESC
      */
     private fun setOrderOption(by: Int): Int {
+        // TODO: set icon position based on pref
         val pref = SharedPreferencesHandler(requireContext())
         when (pref.order) {
             0 -> {
@@ -108,12 +169,11 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
 //#endregion
 //#region override functions
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.new_chapters_top_nav_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_search -> {
                 Toast.makeText(context, "search!", Toast.LENGTH_SHORT).show()
@@ -128,6 +188,7 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
                 }
                 true
             }
+
             R.id.action_sort_by_chapter
             -> {
                 if (setOrderOption(1) == 2) {
@@ -137,7 +198,8 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
                 }
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+
+            else -> false
         }
     }
 
@@ -154,10 +216,35 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
     }
 
     override fun onUploadItem(chapter: ChapterWithManga) {
-        val uploadChapter = UploadChapter(chapter)
-        uploadChapter.email = SharedPreferencesHandler(requireContext()).kindleEmail
-        (activity as MainActivity).uploadChapter(uploadChapter)
+        (activity as MainActivity).uploadChapter(chapter)
     }
 
+    //#endregion
+//#region private functions
+    private fun startScheduledService() {
+        // textView.text = "scheduled service started"
+
+        val executionTimer: Long = 15 * 60 * 1000 // 15 mins, the lower valid value
+        val cn = ComponentName(requireContext(), ScanFoldersForMangaJobService::class.java)
+        val ji = JobInfo.Builder(123, cn)
+            .setRequiresCharging(false)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+            .setPersisted(true)
+            .setPeriodic(executionTimer)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            // ji.setImportantWhileForeground(true) // this wont be needed for this job but may be usefull for the upload job
+        }
+
+        // check: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html
+
+        val scheduler = activity?.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val resultCode = scheduler.schedule(ji.build())
+        if (resultCode == JobScheduler.RESULT_SUCCESS) {
+            Log.d(TAG, "startScheduledService: Job Scheduled")
+        } else {
+            Log.d(TAG, "startScheduledService: Job Scheduling failed")
+        }
+    }
 //#endregion
 }

@@ -1,25 +1,30 @@
 package es.edufdezsoy.manga2kindle.service
 
+import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import es.edufdezsoy.manga2kindle.utils.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.Application
 import es.edufdezsoy.manga2kindle.R
+import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
+import es.edufdezsoy.manga2kindle.data.model.Manga
 import es.edufdezsoy.manga2kindle.data.model.Status
 import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.data.repository.ChapterRepository
+import es.edufdezsoy.manga2kindle.data.repository.MangaRepository
+import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import es.edufdezsoy.manga2kindle.network.ApiService
 import es.edufdezsoy.manga2kindle.network.Manga2KindleService
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.default
+import es.edufdezsoy.manga2kindle.network.adapters.PrepareQueryParamsAdapter
+import es.edufdezsoy.manga2kindle.utils.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,21 +47,21 @@ import kotlin.coroutines.CoroutineContext
  *
  * By doing it one by one we can also stop the process at any time and keep track of the % completed
  *
- * We will want the images already compressed and scaled
  */
 class UploadChapterService : Service(), CoroutineScope {
     //region vars and vals
     private val TAG = this::class.java.simpleName
     private val binder = UploadChapterBinder()
-    private val chapList = ArrayList<UploadChapter>()
+    private val chapList = ArrayList<ChapterWithManga>()
     private lateinit var apiService: Manga2KindleService
     private lateinit var chapterRepository: ChapterRepository
+    private lateinit var mangaRepository: MangaRepository
     private var listSize = 0
     private var iteration = 0
     private lateinit var notificationManager: NotificationManagerCompat
 
     @Volatile
-    private var atomicBoolean = false
+    private var atomicBooleanJobDone = false
 
     inner class UploadChapterBinder : Binder() {
         fun getService(): UploadChapterService = this@UploadChapterService
@@ -75,17 +80,15 @@ class UploadChapterService : Service(), CoroutineScope {
         get() = job + Dispatchers.IO
 
     override fun onBind(intent: Intent?): IBinder {
-        val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
+        val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as ChapterWithManga?
         if (element != null) {
             chapList.add(element)
             listSize++
 
             // set the chapter as locally enqueued
             launch {
-                chapterRepository = ChapterRepository(application)
-                val chapter = chapterRepository.getById(element.id!!)!!
-                chapter.status = Status.LOCAL_QUEUE
-                chapterRepository.update(chapter)
+                element.chapter.status = Status.REGISTERED
+                chapterRepository.update(element.chapter)
             }
         }
 
@@ -94,25 +97,26 @@ class UploadChapterService : Service(), CoroutineScope {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         chapterRepository = ChapterRepository(application)
+        mangaRepository = MangaRepository(application)
 
-        val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as UploadChapter?
-        if (element?.email != null) {
+        // TODO: work with ChapterWithManga, use only UploadChapter and UploadManga here to put a manga and link with the chapter
+        val element = intent?.extras?.get(UPLOAD_CHAPTER_INTENT_KEY) as ChapterWithManga?
+        if (element != null) {
             chapList.add(element)
             listSize++
 
             // set the chapter as locally enqueued
             launch {
-                val chapter = chapterRepository.getById(element.id!!)!!
-                chapter.status = Status.LOCAL_QUEUE
-                chapterRepository.update(chapter)
+                element.chapter.status = Status.REGISTERED
+                chapterRepository.update(element.chapter)
             }
         }
 
-        if (atomicBoolean) {
+        if (atomicBooleanJobDone) {
             return START_REDELIVER_INTENT
         }
 
-        atomicBoolean = true
+        atomicBooleanJobDone = true
 
         apiService = ApiService.getInstance(applicationContext)
         notificationManager = NotificationManagerCompat.from(this)
@@ -128,77 +132,149 @@ class UploadChapterService : Service(), CoroutineScope {
 
         launch {
             while (chapList.size > 0) {
-                val uploadChapter = chapList[0]
+                val chapterWithManga = chapList[0]
                 var progress = 0
-                var progressMax = 0
+                val progressMax = 0
 
                 notification.setContentText("${++iteration} of $listSize") // TODO: move to a resource and translate
                 notification.setProgress(progressMax, progress, false)
-                notificationManager.notify(2, notification.build())
 
-                // get number of pages
-                val fileList =
-                    getFileList(
-                        Uri.parse(uploadChapter.path),
-                        applicationContext
-                    )
-                uploadChapter.pages = fileList.size
-                uploadChapter.readMode = "manga" // TODO: Move to preferences
-                uploadChapter.splitType = 0 // TODO: Move to preferences
-                progressMax = fileList.size * 2
-
-                // TODO: create chapter, upload chapter metadata
-                val uploadChapterCopy = uploadChapter.copy()
-                uploadChapterCopy.path = null
-                uploadChapterCopy.id = null
-                val status = apiService.getNewChapterStatus(uploadChapterCopy)
-                val chapter = chapterRepository.getById(uploadChapter.id!!)
-                chapter!!.remoteId = status.id
-                chapter.status = status.status
-                chapterRepository.update(chapter)
-
-                var page = 0
-                fileList.forEach {
-                    notification.setContentText("$iteration of $listSize") // TODO: move to a resource and translate
-                    notification.setProgress(progressMax, ++progress, false)
-                    notificationManager.notify(2, notification.build())
-
-                    // optimize images and convert to jpg
-                    val pageImage =
-                        Compressor.compress(
+                try {
+                    if (ActivityCompat.checkSelfPermission(
                             applicationContext,
-                            File(getDocReadableFilePath(it, applicationContext))
-                        ) {
-                            default(format = Bitmap.CompressFormat.JPEG)
-                        }
-
-                    notification.setProgress(progressMax, ++progress, false)
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        val filler = "filler"
+                    }
                     notificationManager.notify(2, notification.build())
-
-                    // upload image
-                    apiService.putChapterPage(
-                        status.id,
-                        ++page,
-                        MultipartBody.Part.createFormData(
-                            "file",
-                            "$page.jpg",
-                            RequestBody.create(MediaType.parse("jpg"), pageImage)
-                        )
+                } catch (_: Exception) {
+                    android.util.Log.e(
+                        TAG,
+                        "UploadChapterService:151 -> Cant show notification :(",
                     )
-
-                    // TODO: we don't handle any errors here now, we may implement something to know
-                    //  what pages are uploaded and continue from that point.
-                    //  Maybe an API call can reply if the page exists, that looks easy to implement.
                 }
+
+                // VVVVVV -- GOOD CODE HERE -- VVVVVV
+
+                // update chapter status
+                chapterWithManga.chapter.status = Status.UPLOADING
+                chapterRepository.update(chapterWithManga.chapter)
+
+                // search and/or upload manga if not present
+                if (chapterWithManga.manga.uuid.isNullOrBlank()) {
+                    // search in server
+                    val mangaListRes = apiService.searchManga(PrepareQueryParamsAdapter("title", chapterWithManga.manga.title).toString())
+                    if (mangaListRes.items.isEmpty()) {
+                        // register to server
+                        val mangaRes = apiService.putManga(chapterWithManga.manga)
+
+                        // update repo
+                        mangaRes.mangaId = chapterWithManga.manga.mangaId
+                        mangaRepository.update(mangaRes)
+
+                        // update local
+                        chapterWithManga.manga.uuid = mangaRes.uuid
+                    } else {
+                        // update repo
+                        mangaListRes.items[0].mangaId = chapterWithManga.manga.mangaId
+                        mangaRepository.update(mangaListRes.items[0])
+
+                        // update local
+                        chapterWithManga.manga = mangaListRes.items[0]
+                    }
+                }
+
+                // create uploadChapter
+                val uploadChapter = UploadChapter(
+                    chapterWithManga,
+                    SharedPreferencesHandler(applicationContext).kindleEmail,
+                    SharedPreferencesHandler(applicationContext).readMode,
+                    SharedPreferencesHandler(applicationContext).splitType
+                )
+
+                // put new chapter to server
+                var uploadChapterRes = apiService.putChapter(uploadChapter)
+
+                // update local chapter id
+                chapterWithManga.chapter.id = uploadChapterRes.id
+                chapterRepository.update(chapterWithManga.chapter)
+
+                // get perms to file
+                val res = getDocReadableFilePath(
+                    DocumentFile.fromSingleUri(
+                        applicationContext,
+                        Uri.parse(chapterWithManga.chapter.path)
+                    ), applicationContext
+                )
+                android.util.Log.d(TAG, "onStartCommand: $res")
+
+                // create multipart body
+                val mpBody = MultipartBody.Part.createFormData(
+                    "file",
+                    "${uploadChapterRes.id}.cbz",
+                    RequestBody.create(
+                        MediaType.parse("zip"),
+                        File(chapterWithManga.chapter.path)
+                    )
+                )
+
+                // upload chapter file
+                uploadChapterRes = apiService.putChapterFile(uploadChapterRes.id!!, mpBody)
+
+                // update chapter status
+                chapterWithManga.chapter.status = Status.AWAITING
+                chapterRepository.update(chapterWithManga.chapter)
+
+//
+//                // TODO: create chapter, upload chapter metadata
+//                val uploadChapterCopy = uploadChapter.copy()
+//                uploadChapterCopy.path = null
+//                uploadChapterCopy.id = null
+//                val status = apiService.getNewChapterStatus(uploadChapterCopy)
+//                val chapter = chapterRepository.getById(uploadChapter.rowid)
+//
+//                chapter!!.id = status.id
+//                chapter.status = status.id!!
+//                chapterRepository.update(chapter)
+//
+//                val fileName = status.id
+
+                notification.setContentText("$iteration of $listSize") // TODO: move to a resource and translate
+                notification.setProgress(progressMax, ++progress, false)
+
+//                // upload image
+//                apiService.putChapterFile(
+//                    status.id!!,
+//                    MultipartBody.Part.createFormData(
+//                        "file",
+//                        "$fileName.cbz",
+//                        RequestBody.create(
+//                            MediaType.parse("zip"),
+//                            File(chapter.path)
+//                        )
+//                    )
+//                )
+
+                // TODO: we don't handle any errors here now, we may implement something to know
+                //  what pages are uploaded and continue from that point.
+                //  Maybe an API call can reply if the page exists, that looks easy to implement.
 
                 notification.setProgress(progressMax, progress, false)
                 notificationManager.notify(2, notification.build())
 
                 // remove from list when done
-                chapList.remove(uploadChapter)
+                chapList.remove(chapterWithManga)
             }
 
-            atomicBoolean = false
+            atomicBooleanJobDone = false
             stopSelf()
         }
 
@@ -207,7 +283,7 @@ class UploadChapterService : Service(), CoroutineScope {
 
     override fun onDestroy() {
         notificationManager.cancel(2)
-        atomicBoolean = false
+        atomicBooleanJobDone = false
         super.onDestroy()
     }
 
@@ -237,11 +313,13 @@ class UploadChapterService : Service(), CoroutineScope {
 
     /**
      * Get a list of files inside a folder
+     * @deprecated use {@link #getDocumentFile()} instead.
      *
      * @param uri folder to be searched
      * @param context the context
      * @return a list of files inside the given uri, can be empty
      */
+    @Deprecated("We don't use List<DocumentFile> anymore.", ReplaceWith("getDocumentFile()"))
     private fun getFileList(uri: Uri, context: Context): List<DocumentFile> {
         val docFileList = ArrayList<DocumentFile>()
 
@@ -293,7 +371,7 @@ class UploadChapterService : Service(), CoroutineScope {
     //endregion
     //region public methods
 
-    fun addUploadChapter(chapter: UploadChapter) {
+    fun addUploadChapter(chapter: ChapterWithManga) {
         chapList.add(chapter)
         listSize++
     }

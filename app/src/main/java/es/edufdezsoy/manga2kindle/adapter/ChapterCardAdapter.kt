@@ -7,13 +7,21 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import es.edufdezsoy.manga2kindle.data.model.Author
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
 import es.edufdezsoy.manga2kindle.databinding.ViewChapterBinding
 import es.edufdezsoy.manga2kindle.ui.newChapters.ChapterViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
+class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) : CoroutineScope {
     //region vars and vals
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     private val dialog = MaterialDialog(context, BottomSheet(LayoutMode.MATCH_PARENT))
     private val binding: ViewChapterBinding
@@ -62,8 +70,8 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     //region private functions
 
     private fun setChapter() {
-        binding.seriesTextInputLayoutLayout.editText?.setText(chapter.manga.manga.title)
-        binding.authorTextInputLayout.editText?.setText(chapter.manga.authorsToString())
+        binding.seriesTextInputLayoutLayout.editText?.setText(chapter.manga.title)
+        binding.authorTextInputLayout.editText?.setText(chapter.manga.author)
         binding.titleTextInputLayout.editText?.setText(chapter.chapter.title)
         binding.chapterTextInputLayout.editText?.setText(chapter.chapter.chapterToString())
         binding.volumeTextInputLayout.editText?.setText(chapter.chapter.volume?.toString())
@@ -82,21 +90,15 @@ class ChapterCardAdapter(val context: Context, owner: LifecycleOwner) {
     }
 
     private fun saveChapter() {
-        chapter.manga.manga.title = binding.seriesTextInputLayoutLayout.editText?.text.toString()
+        chapter.manga.title = binding.seriesTextInputLayoutLayout.editText?.text.toString()
         chapter.chapter.title = binding.titleTextInputLayout.editText?.text.toString()
         chapter.chapter.chapter = binding.chapterTextInputLayout.editText?.text.toString().toFloat()
         chapter.chapter.volume =
             binding.volumeTextInputLayout.editText?.text.toString().toIntOrNull()
-
-        val authorsStr = binding.authorTextInputLayout.editText?.text.toString().split(",")
-        val authors = ArrayList<Author>()
-        authorsStr.forEach {
-            authors.add(Author(it.trim()))
-        }
-        chapter.manga.authors = authors
+        chapter.manga.author = binding.authorTextInputLayout.editText?.text.toString()
 
         // TODO: add manga and author view models and save all
-        chapterViewModel.update(chapter.chapter)
+        launch(Dispatchers.IO) { chapterViewModel.update(chapter.chapter) }
     }
 
     private fun resetChapter() {

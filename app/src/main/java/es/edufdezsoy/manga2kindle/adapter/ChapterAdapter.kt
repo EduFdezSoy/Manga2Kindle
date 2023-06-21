@@ -25,7 +25,7 @@ class ChapterAdapter : ChapterBaseAdapter() {
             holder.manga.isSelected = true
             holder.chapterTitle.isSelected = true
 
-            holder.manga.text = chapter.manga.manga.title
+            holder.manga.text = chapter.manga.title
             holder.chapterTitle.text = chapter.chapter.title
             holder.chapter.text = "Ch." + chapter.chapter.chapterToString()
             holder.chapter2.text = chapter.chapter.chapterToString().replace(".", "-")
@@ -49,14 +49,14 @@ class ChapterAdapter : ChapterBaseAdapter() {
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    itemClickListener?.onItemClick(getItem(adapterPosition))
+                if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+                    itemClickListener?.onItemClick(getItem(absoluteAdapterPosition))
                 }
             }
             itemView.setOnLongClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
+                if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                     val returnValue =
-                        itemLongClickListener?.onItemLongClick(getItem(adapterPosition))
+                        itemLongClickListener?.onItemLongClick(getItem(absoluteAdapterPosition))
                     if (returnValue != null) {
                         return@setOnLongClickListener returnValue
                     }

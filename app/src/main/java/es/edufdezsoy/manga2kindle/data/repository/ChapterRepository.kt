@@ -17,19 +17,19 @@ class ChapterRepository(application: Application) {
         allChapters = chapterDao.getAllChapters()
     }
 
-    suspend fun insert(chapter: Chapter) {
+    fun insert(chapter: Chapter) {
         chapterDao.insert(chapter)
     }
 
-    suspend fun update(chapter: Chapter) {
+    fun update(chapter: Chapter) {
         chapterDao.update(chapter)
     }
 
-    suspend fun delete(chapter: Chapter) {
+    fun delete(chapter: Chapter) {
         chapterDao.delete(chapter)
     }
 
-    suspend fun deleteAllChapters() {
+    fun deleteAllChapters() {
         chapterDao.deleteAllChapters()
     }
 
@@ -37,7 +37,7 @@ class ChapterRepository(application: Application) {
         return allChapters
     }
 
-    suspend fun getStaticAllChapters(): List<Chapter> {
+    fun getStaticAllChapters(): List<Chapter> {
         return chapterDao.getStaticAllChapters()
     }
 
@@ -45,11 +45,11 @@ class ChapterRepository(application: Application) {
         return chapterDao.search(mangaId, chapterNum)
     }
 
-    suspend fun getById(chapterId: Int): Chapter? {
+    fun getById(chapterId: Int): Chapter? {
         return chapterDao.getById(chapterId)
     }
 
-    suspend fun getByRemoteId(chapterRemoteId: Int): Chapter? {
+    fun getByRemoteId(chapterRemoteId: String): Chapter? {
         return chapterDao.getByRemoteId(chapterRemoteId)
     }
 }

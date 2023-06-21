@@ -1,6 +1,8 @@
 package es.edufdezsoy.manga2kindle.data.model
 
+import java.io.Serializable
+
 data class ChapterWithManga(
-    val chapter: Chapter,
-    val manga: MangaWithAuthors
-)
+    var chapter: Chapter,
+    var manga: Manga
+) : Serializable

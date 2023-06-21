@@ -9,13 +9,17 @@ class ChapterWithMangaComparator {
         private val natSort = CaseInsensitiveSimpleNaturalComparator.getInstance<String>()
 
         override fun compare(o1: ChapterWithManga, o2: ChapterWithManga): Int {
-            var i = natSort.compare(o1.manga.manga.title, o2.manga.manga.title)
+            var i = natSort.compare(o1.manga.title, o2.manga.title)
             if (i != 0) return i
 
             i = o1.chapter.chapter.compareTo(o2.chapter.chapter)
             if (i != 0) return i
 
-            return natSort.compare(o1.chapter.title, o2.chapter.title)
+            if (o1.chapter.title != null && o2.chapter.title != null)
+                return natSort.compare(o1.chapter.title, o2.chapter.title)
+
+            // last resort
+            return 0
         }
     }
 
@@ -26,7 +30,7 @@ class ChapterWithMangaComparator {
             val i = o1.chapter.chapter.compareTo(o2.chapter.chapter)
             if (i != 0) return i
 
-            return natSort.compare(o1.manga.manga.title, o2.manga.manga.title)
+            return natSort.compare(o1.manga.title, o2.manga.title)
         }
     }
 }

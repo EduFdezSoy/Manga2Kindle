@@ -1,5 +1,6 @@
 package es.edufdezsoy.manga2kindle.adapter
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -42,7 +43,7 @@ abstract class ChapterBaseAdapter :
                 oldItem: ChapterWithManga,
                 newItem: ChapterWithManga
             ): Boolean {
-                return oldItem.chapter.id == newItem.chapter.id
+                return oldItem.chapter.rowid == newItem.chapter.rowid
             }
 
             override fun areContentsTheSame(
@@ -50,11 +51,11 @@ abstract class ChapterBaseAdapter :
                 newItem: ChapterWithManga
             ): Boolean {
                 return oldItem.chapter == newItem.chapter &&
+                        oldItem.chapter.id == newItem.chapter.id &&
                         oldItem.chapter.status == newItem.chapter.status &&
                         oldItem.chapter.chapter == newItem.chapter.chapter &&
                         oldItem.chapter.mangaId == newItem.chapter.mangaId &&
                         oldItem.chapter.path == newItem.chapter.path &&
-                        oldItem.chapter.remoteId == newItem.chapter.remoteId &&
                         oldItem.chapter.volume == newItem.chapter.volume
             }
         }

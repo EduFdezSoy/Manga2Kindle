@@ -3,15 +3,13 @@ package es.edufdezsoy.manga2kindle.data.model
 import java.io.Serializable
 
 data class UploadManga(
-    var id: Int?,
     var title: String,
-    var uuid: String?,
-    var author: ArrayList<Author>
+    var author: String?,
+    var id: Int
 ) : Serializable {
-    constructor(manga: MangaWithAuthors) : this(
-        manga.manga.remoteId,
-        manga.manga.title,
-        manga.manga.uuid,
-        manga.authors as ArrayList<Author>
+    constructor(manga: Manga) : this(
+        manga.title,
+        manga.author,
+        manga.mangaId
     )
 }

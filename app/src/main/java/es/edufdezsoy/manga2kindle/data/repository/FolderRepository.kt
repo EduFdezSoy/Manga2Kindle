@@ -17,15 +17,15 @@ class FolderRepository(application: Application) {
         allFolders = folderDao.getAllFolders()
     }
 
-    suspend fun insert(folder: Folder) {
+    fun insert(folder: Folder) {
         folderDao.insert(folder)
     }
 
-    suspend fun update(folder: Folder) {
+    fun update(folder: Folder) {
         folderDao.update(folder)
     }
 
-    suspend fun delete(folder: Folder) {
+    fun delete(folder: Folder) {
         folderDao.delete(folder)
     }
 
@@ -34,10 +34,10 @@ class FolderRepository(application: Application) {
     }
 
     suspend fun getStaticFolderList(): List<Folder> {
-        return folderDao.getStaticFolderList()
+        return folderDao.getStaticAllFolders()
     }
 
-    suspend fun getStaticActiveFolders(): List<Folder> {
+    fun getStaticActiveFolders(): LiveData<List<Folder>> {
         return folderDao.getStaticActiveFolders()
     }
 }

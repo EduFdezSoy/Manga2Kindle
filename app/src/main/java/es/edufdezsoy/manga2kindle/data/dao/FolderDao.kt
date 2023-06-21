@@ -7,20 +7,21 @@ import es.edufdezsoy.manga2kindle.data.model.Folder
 @Dao
 interface FolderDao {
     @Insert
-    suspend fun insert(folder: Folder)
+    fun insert(folder: Folder)
 
     @Update
-    suspend fun update(folder: Folder)
+    fun update(folder: Folder)
 
     @Delete
-    suspend fun delete(folder: Folder)
+    fun delete(folder: Folder)
 
     @Query("SELECT * FROM Folder")
     fun getAllFolders(): LiveData<List<Folder>>
 
     @Query("SELECT * FROM Folder")
-    suspend fun getStaticFolderList(): List<Folder>
-
+    suspend fun getStaticAllFolders(): List<Folder>
     @Query("SELECT * FROM Folder WHERE active = 1")
-    suspend fun getStaticActiveFolders(): List<Folder>
+    fun getStaticActiveFolders(): LiveData<List<Folder>>
 }
+
+// TODO-WAS DOING: suspend no longer valid here, move the crap to LiveData.

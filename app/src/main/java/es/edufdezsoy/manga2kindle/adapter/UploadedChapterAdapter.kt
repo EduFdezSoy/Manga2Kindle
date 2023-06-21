@@ -29,7 +29,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
             holder.manga.isSelected = true
             holder.chapterTitle.isSelected = true
 
-            holder.manga.text = chapter.manga.manga.title
+            holder.manga.text = chapter.manga.title
             holder.chapterTitle.text = chapter.chapter.title
             holder.chapter.text = "Ch." + chapter.chapter.chapterToString()
             holder.chapter2.text = chapter.chapter.chapterToString().replace(".", "-")
@@ -44,10 +44,14 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
 
             when (chapter.chapter.status) {
                 Status.DONE -> holder.done()
+                Status.SENT -> holder.done()
                 Status.ERROR -> holder.error()
-                Status.LOCAL_QUEUE -> holder.localEnqueued()
-                in Status.UPLOADED..Status.SENDING -> holder.processing()
-                in Status.REGISTERED..Status.UPLOADING -> holder.uploading()
+                Status.REGISTERED -> holder.enqueued()
+                Status.AWAITING -> holder.enqueued()
+                Status.UPLOADING -> holder.uploading()
+                Status.PROCESSING -> holder.processing()
+                Status.CONVERTING -> holder.processing()
+                Status.SENDING -> holder.processing()
             }
         }
     }
@@ -60,7 +64,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
         val volume: TextView = itemView.findViewById(R.id.volume_textview)
 
         private val status_bar: ProgressBar = itemView.findViewById(R.id.chapter_progress)
-        private val status_local_queued: ImageView = itemView.findViewById(R.id.chapter_progress_local_queued)
+        private val status_local_queued: ImageView = itemView.findViewById(R.id.chapter_progress_queued)
         private val status_upload: ImageView = itemView.findViewById(R.id.chapter_progress_uploading)
         private val status_done: ImageView = itemView.findViewById(R.id.chapter_progress_done)
         private val status_error: ImageView = itemView.findViewById(R.id.chapter_progress_error)
@@ -93,7 +97,7 @@ class UploadedChapterAdapter : ChapterBaseAdapter() {
             status_error.visibility = View.INVISIBLE
         }
 
-        fun localEnqueued() {
+        fun enqueued() {
             setAllIconsInvisible()
             status_local_queued.visibility = View.VISIBLE
         }

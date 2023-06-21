@@ -7,29 +7,29 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChapterDao {
     @Insert
-    suspend fun insert(chapter: Chapter)
+    fun insert(chapter: Chapter)
 
     @Update
-    suspend fun update(chapter: Chapter)
+    fun update(chapter: Chapter)
 
     @Delete
-    suspend fun delete(chapter: Chapter)
+    fun delete(chapter: Chapter)
 
     @Query("DELETE FROM Chapter")
-    suspend fun deleteAllChapters()
+    fun deleteAllChapters()
 
     @Query("SELECT * FROM Chapter ORDER BY mangaId DESC, chapter")
     fun getAllChapters(): Flow<List<Chapter>>
 
     @Query("SELECT * FROM Chapter")
-    suspend fun getStaticAllChapters(): List<Chapter>
+    fun getStaticAllChapters(): List<Chapter>
 
     @Query("SELECT * FROM Chapter WHERE mangaId = :mangaId AND chapter = :chapterNum")
-    suspend fun search(mangaId: Int, chapterNum: Float): Chapter?
+    fun search(mangaId: Int, chapterNum: Float): Chapter?
 
     @Query("SELECT * FROM Chapter WHERE rowid = :id")
-    suspend fun getById(id: Int): Chapter?
+    fun getById(id: Int): Chapter?
 
-    @Query("SELECT * FROM Chapter WHERE remoteId = :id")
-    suspend fun getByRemoteId(id: Int): Chapter?
+    @Query("SELECT * FROM Chapter WHERE id = :id")
+    fun getByRemoteId(id: String): Chapter?
 }

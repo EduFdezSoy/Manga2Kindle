@@ -54,4 +54,41 @@ class SharedPreferencesHandler(context: Context) {
     var order: Int
         get() = pref.getInt("chapter_order", 0)
         set(value) = pref.edit { putInt("chapter_order", value) }
+
+    /**
+     * On convert how do we read it? Like a manga or like a comic?
+     * manga: RTL (japan style)
+     * comic: LTR (western style)
+     *
+     * Valid values are: manga, comic
+     */
+    var readMode: String
+        get() = pref.getString("chapter_read_mode", "manga")!!
+        set(value) = pref.edit {
+            when (value) {
+                "manga",
+                "comic" -> pref.edit { putString("chapter_read_mode", value) }
+
+                else -> throw IllegalArgumentException("Valid values are: \"manga\" and \"comic\"")
+            }
+        }
+
+    /**
+     * How do we show double pages?
+     *
+     * split -> cut the page in two pages
+     * rotate -> shows the page in landscape
+     * split and rotate -> rotate first then shows both sides (3 pages total)
+     */
+    var splitType: String
+        get() = pref.getString("chapter_split_type", "split and rotate")!!
+        set(value) {
+            when (value) {
+                "split",
+                "rotate",
+                "split and rotate" -> pref.edit { putString("chapter_split_type", value) }
+
+                else -> throw IllegalArgumentException("Valid values are: \"split\", \"rotate\" and \"split and rotate\"")
+            }
+        }
 }

@@ -18,6 +18,7 @@ import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import es.edufdezsoy.manga2kindle.databinding.FragmentUploadedChaptersBinding
 import es.edufdezsoy.manga2kindle.ui.newChapters.ChapterViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -40,10 +41,10 @@ class UploadedChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListe
         val adapter = UploadedChapterAdapter()
         binding.uploadedChapterRecycler.adapter = adapter
 
-        chapterViewModel = ViewModelProvider(this).get(ChapterViewModel::class.java)
-        statusViewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
+        chapterViewModel = ViewModelProvider(this)[ChapterViewModel::class.java]
+        statusViewModel = ViewModelProvider(this)[StatusViewModel::class.java]
         lifecycleScope.launch {
-            chapterViewModel.getUploadedChapters().collect {
+            chapterViewModel.getUploadedChapters().collectLatest {
                 adapter.submitList(it)
             }
         }
@@ -59,7 +60,7 @@ class UploadedChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListe
     }
 
     override fun onItemLongClick(chapter: ChapterWithManga): Boolean {
-        Toast.makeText(context, "long click " + chapter.chapter.remoteId, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "long click " + chapter.chapter.id, Toast.LENGTH_SHORT).show()
         return true
     }
 

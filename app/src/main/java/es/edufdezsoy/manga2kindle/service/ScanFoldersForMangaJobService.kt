@@ -401,6 +401,9 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         // remove _ at start
         outName = outName.replace(Regex("^[_]"), "")
 
+        // Match: Chapter Name_, chapter something -to-make-> Chapter Name!, chapter something
+        outName = outName.replace(Regex("_,\\s"), "!, ")
+
         return outName
     }
 

@@ -361,7 +361,9 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         }
 
         // we are picking chapters as volumes in MangaLife, this solves that
-        if (volume.isNotBlank() && ((parts.size == 1 && chNum == volume.toInt().toFloat()) || volume.length > 2))
+        if (volume.isNotBlank() && ((parts.size == 1 && chNum == volume.toInt()
+                .toFloat()) || volume.length > 2)
+        )
             volume = ""
 
         return if (volume.isBlank())

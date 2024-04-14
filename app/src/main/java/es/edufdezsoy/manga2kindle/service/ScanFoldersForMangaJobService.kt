@@ -348,14 +348,14 @@ class ScanFoldersForMangaJobService : JobService() {
             chapterTitle = chapterTitle.substring(0, chapterTitle.length - 3)
 
         if (chapterTitle.isBlank()) {
-            val str = chapterName.split(": ")
+            val chNameSplit = chapterName.split(": ")
 
             // chapterName
-            if (str.size == 2) {
-                chapterTitle = str.last() + ": "
-            } else if (str.size > 2) {
+            if (chNameSplit.size == 2) {
+                chapterTitle = chNameSplit.last() + ": "
+            } else if (chNameSplit.size > 2) {
                 var first = true
-                str.forEach {
+                chNameSplit.forEach {
                     if (!first) {
                         chapterTitle += "$it: "
                     } else {

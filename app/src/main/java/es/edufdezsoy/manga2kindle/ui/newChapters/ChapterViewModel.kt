@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class ChapterViewModel(application: Application) : AndroidViewModel(application) {
     private val chapterRepository = ChapterRepository(application)

@@ -19,14 +19,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.afollestad.materialdialogs.utils.MDUtil.ifNotZero
 import es.edufdezsoy.manga2kindle.MainActivity
 import es.edufdezsoy.manga2kindle.R
 import es.edufdezsoy.manga2kindle.adapter.ChapterAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterBaseAdapter
 import es.edufdezsoy.manga2kindle.adapter.ChapterCardAdapter
 import es.edufdezsoy.manga2kindle.data.model.ChapterWithManga
-import es.edufdezsoy.manga2kindle.data.model.UploadChapter
 import es.edufdezsoy.manga2kindle.data.repository.SharedPreferencesHandler
 import es.edufdezsoy.manga2kindle.databinding.FragmentNewChaptersBinding
 import es.edufdezsoy.manga2kindle.service.ScanFoldersForMangaJobService
@@ -45,7 +43,6 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
     CoroutineScope, MenuProvider {
     private val TAG = this::class.java.simpleName
     private lateinit var chapterViewModel: ChapterViewModel
-    private var scanning: Boolean = false
 
     private val job = Job()
     override val coroutineContext: CoroutineContext

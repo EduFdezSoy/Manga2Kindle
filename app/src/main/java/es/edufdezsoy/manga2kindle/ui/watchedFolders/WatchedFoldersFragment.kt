@@ -1,7 +1,6 @@
 package es.edufdezsoy.manga2kindle.ui.watchedFolders
 
 import android.app.Activity
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -85,6 +84,7 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
         startActivityForResult(intent, PICK_FOLDER_REQUEST_CODE)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

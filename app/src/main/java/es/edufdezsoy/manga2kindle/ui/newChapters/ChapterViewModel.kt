@@ -57,25 +57,26 @@ class ChapterViewModel(application: Application) : AndroidViewModel(application)
                     // 1 - Manga title, then chapter number DESC
                     // 2 - Chapter number ASC
                     // 3 - Chapter number DESC
-                    when (pref.order) {
-                        0 -> {
-                            list.sortWith(ChapterWithMangaComparator.DefaultComparator())
-                        }
 
-                        1 -> {
-                            list.sortWith(ChapterWithMangaComparator.DefaultComparator())
-                            list.reverse()
-                        }
-
-                        2 -> {
-                            list.sortWith(ChapterWithMangaComparator.ChapterComparator())
-                        }
-
-                        3 -> {
-                            list.sortWith(ChapterWithMangaComparator.ChapterComparator())
-                            list.reverse()
-                        }
-                    }
+//                    when (pref.order) {
+//                        0 -> {
+//                            list.sortWith(ChapterWithMangaComparator.DefaultComparator())
+//                        }
+//
+//                        1 -> {
+//                            list.sortWith(ChapterWithMangaComparator.DefaultComparator())
+//                            list.reverse()
+//                        }
+//
+//                        2 -> {
+//                            list.sortWith(ChapterWithMangaComparator.ChapterComparator())
+//                        }
+//
+//                        3 -> {
+//                            list.sortWith(ChapterWithMangaComparator.ChapterComparator())
+//                            list.reverse()
+//                        }
+//                    }
                 }
             }
 

@@ -1,5 +1,7 @@
 package es.edufdezsoy.manga2kindle.ui.watchedFolders
 
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -86,7 +88,7 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_FOLDER_REQUEST_CODE && data != null) {
+        if (requestCode == PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val path = data.data.toString()
             val readablePath = Uri.parse(path).path!!
             var name = readablePath.substring(readablePath.lastIndexOf('/') + 1)
@@ -97,7 +99,7 @@ class WatchedFoldersFragment : Fragment(), FolderAdapter.OnItemClickListener,
             // get permissions on sub-folders and files (read and write)
             requireContext().contentResolver.takePersistableUriPermission(
                 data.data!!,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
     }

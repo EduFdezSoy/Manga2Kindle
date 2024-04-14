@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/action_search"
+        android:enabled="false"
         android:icon="@drawable/ic_outline_search"
         android:title="Search"
         app:showAsAction="ifRoom" />

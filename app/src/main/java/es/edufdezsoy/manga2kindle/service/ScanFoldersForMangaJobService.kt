@@ -304,7 +304,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
      */
     fun pickChapter(name: String): Float {
         val chapterRegex = Pattern.compile("[+-]?\\d+(?:\\.\\d+)?")
-        var chapter: String = ""
+        var chapter = ""
 
         // the chapter name can have numbers, we dont want that numbers so we split it
         val part = name.split(" - ")[0]
@@ -342,7 +342,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
      */
     fun pickVolume(name: String, chNum: Float?): Int? {
         val volumeRegex = Pattern.compile("[V-v][O-o][L-l].[+-]?\\d+(?:\\.\\d+)?")
-        var volume: String = ""
+        var volume = ""
 
         // the chapter name can have numbers, we dont want that numbers so we split it
         val parts = name.split(" - ")

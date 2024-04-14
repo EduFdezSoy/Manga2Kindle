@@ -457,5 +457,16 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
         return chapterTitle
     }
 
+    /**
+     * A f workaround to get the parent uri of a file cause DocumentFile is broken
+     * Google, fix your shit.
+     */
+    private fun getParentName(file: DocumentFile): String {
+        val pathSegments = file.uri.pathSegments
+        val splitPath = pathSegments.last().split("/")
+
+        return splitPath[splitPath.size - 2]
+    }
+
     //endregion
 }

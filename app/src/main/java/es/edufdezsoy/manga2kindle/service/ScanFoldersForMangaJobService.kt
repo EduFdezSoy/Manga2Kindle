@@ -2,7 +2,7 @@ package es.edufdezsoy.manga2kindle.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.content.Intent
+import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import es.edufdezsoy.manga2kindle.data.model.Chapter
@@ -14,11 +14,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
-import kotlin.coroutines.CoroutineContext
 
-class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
+class ScanFoldersForMangaJobService : JobService() {
     //region vars and vals
     private val TAG = this::class.java.simpleName
     private var jobCancelled = false
@@ -63,8 +61,7 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
     //region override methods
 
     private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.IO
+    private val coroutuneScope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onStartJob(params: JobParameters?): Boolean {
         Log.d(TAG, "onStartJob: job started")
@@ -84,216 +81,134 @@ class ScanFoldersForMangaJobService : JobService(), CoroutineScope {
     //region private methods
 
     private fun doBackgroundWork(params: JobParameters?) {
-        var wantsReschedule = false
+        val wantsReschedule = false
 
-        launch Service@{
-            try {
-                Log.i(TAG, "performing manga scan")
+        coroutuneScope.launch Service@{
+            Log.i(TAG, "doBackgroundWork: perform the manga scan")
 
-                val finishedCounter = AtomicInteger()
-                val chapterRepository = ChapterRepository(application)
-                val mangaRepository = MangaRepository(application)
-                val folderRepository = FolderRepository(application)
+            //region repositories
+            val chapterRepository = ChapterRepository(application)
+            val mangaRepository = MangaRepository(application)
+            val folderRepository = FolderRepository(application)
+            //endregion
 
-                val folders = folderRepository.getStaticFolderList()
-                if (folders.isEmpty()) {
-                    Log.i(TAG, "No folders to scan")
-                    return@Service
+            val folders = folderRepository.getStaticFolderList()
+            if (folders.isEmpty()) {
+                Log.i(TAG, "No folders to scan")
+                return@Service
+            }
+
+            folders.forEach { folder ->
+                if (!folder.active)
+                    return@forEach
+
+                if (folder.path.isBlank())
+                    return@forEach
+
+                val folderUri = Uri.parse(folder.path)
+                val cbzList = findCbzFiles(baseContext, folderUri.toString())
+
+                cbzList.forEach FileLoop@{ cbz ->
+                    val mangaFile = DocumentFile.fromSingleUri(baseContext, cbz)
+                    //#region parse manga info
+                    if (mangaFile!!.name.isNullOrBlank())
+                        return@FileLoop
+
+                    // get manga title (the folder)
+                    val mangaSeries = getParentName(mangaFile)
+                    Log.d(TAG, "Manga: $mangaSeries")
+
+                    val mangaName = formatName(mangaFile.name)
+
+                    var mangaChapterTitle: String? = formatName(getChapterTitle(mangaName))
+                    val mangaChapter = pickChapter(mangaName)
+                    val mangaVolume = pickVolume(mangaName, mangaChapter)
+
+                    if (mangaChapterTitle.isNullOrBlank())
+                        mangaChapterTitle = null
+
+                    //#endregion
+                    //#region get extra data from MangaDex API
+                    // TODO: we want to call the MangaDex API to fill the author and maybe the cover
+                    //#endregion
+                    //#region add manga to database
+                    // first add manga series
+                    val mangaOb = mangaRepository.searchOrCreate(mangaSeries)
+                    // then check if manga chapter exists
+                    val chapterOb = chapterRepository.search(mangaOb.mangaId, mangaChapter)
+                    if (chapterOb != null && chapterOb.path == cbz.toString()) {
+                        return@FileLoop
+                    } else {
+                        chapterRepository.insert(
+                            Chapter(
+                                mangaChapterTitle,
+                                mangaChapter,
+                                mangaVolume,
+                                mangaFile.toString(),
+                                mangaOb.mangaId
+                            )
+                        )
+                    }
+                    //#endregion
+
+                    Log.i(
+                        TAG,
+                        "Manga: $mangaSeries - Vol.$mangaVolume Ch.$mangaChapter - $mangaChapterTitle"
+                    )
                 }
+            }
 
-                folders.forEach {
-                    launch Folder@{
-                        if (!it.active)
-                            return@Folder
+            jobFinished(params, wantsReschedule)
+        }
+    }
 
-                        if (it.path.isBlank())
-                            return@Folder
+    /**
+     * Find all the cbz files in the folder passed down to 3 levels deep
+     * @param context the context
+     * @param folderUri the folder uri
+     * @return a list of cbz file uris
+     *
+     * Why is it like this? Cause some weird shit happens with the f*king DocumentFiles
+     * and when making it recursive it just loops the same folder forever
+     */
+    private fun findCbzFiles(context: Context, folderUri: String): List<Uri> {
+        val cbzFiles = mutableListOf<Uri>()
 
-                        val uri = Uri.parse(it.path)
-                        val docFile = DocumentFile.fromTreeUri(applicationContext, uri)
+        val parentFolder = DocumentFile.fromTreeUri(context, Uri.parse(folderUri))
 
-                        if (!docFile!!.canRead()) {
-                            Log.e(TAG, "Cant read the folder \n" + it.name + " (" + it.path + ")")
-                            return@Folder
-                        }
+        Log.d(TAG, "File: ${parentFolder?.uri}")
 
-                        val list = getListOfFoldersAndFiles(docFile)
-                        val mangaList = searchForMangas(list)
-
-                        mangaList.forEach {
-                            val mangaName = formatName(it.name)
-                            val manga = mangaRepository.searchOrCreate(mangaName)
-                            val chapters = getChapters(it)
-
-                            // TODO: we may also want to call the MangaDex API to fill the author
-
-                            chapters.forEach {
-                                // get read persistable permissions
-//                                applicationContext.contentResolver.takePersistableUriPermission(
-//                                    it.uri,
-//                                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                                )
-
-                                val chName = formatName(it.name)
-                                var chTitle: String? = getChapterTitle(chName)
-                                val chNum = pickChapter(chName)
-                                val chVol = pickVolume(chName, chNum)
-
-                                if (chTitle.isNullOrBlank())
-                                    chTitle = null
-
-                                val chExists = chapterRepository.search(manga.mangaId, chNum)
-
-                                if (chExists == null) {
-                                    chapterRepository.insert(
-                                        Chapter(
-                                            chTitle,
-                                            chNum,
-                                            chVol,
-                                            it.uri.toString(),
-                                            manga.mangaId
-                                        )
-                                    )
-                                } else {
-                                    // TODO: check when a chapter already exists
+        // I f*king hate this.
+        parentFolder?.listFiles()?.forEach {
+            if (it.name?.endsWith(".cbz") == true) {
+                cbzFiles.add(it.uri)
+            } else if (it.isDirectory) {
+                it.listFiles().forEach { file ->
+                    if (file.name?.endsWith(".cbz") == true) {
+                        cbzFiles.add(file.uri)
+                    } else if (file.isDirectory) {
+                        file.listFiles().forEach { file2 ->
+                            if (file2.name?.endsWith(".cbz") == true) {
+                                cbzFiles.add(file2.uri)
+                            } else if (file2.isDirectory) {
+                                file2.listFiles().forEach { file3 ->
+                                    if (file3.name?.endsWith(".cbz") == true) {
+                                        cbzFiles.add(file3.uri)
+                                    }
                                 }
-
                             }
-
-                            Log.v(TAG, mangaName)
-
-                            if (jobCancelled)
-                                throw InterruptedException("Service was interrupted by the system")
-                        }
-
-                        if (finishedCounter.incrementAndGet() == folders.size) {
-                            Log.i(TAG, "Done scanning manga folders")
-                            Log.d(TAG, "doBackgroundWork: Job Finished")
-
-                            jobFinished(params, wantsReschedule)
                         }
                     }
                 }
-            } catch (e: InterruptedException) {
-                Log.e(TAG, "Error: " + e.message)
-                return@Service
-            } catch (e: Exception) {
-                wantsReschedule = true
-                Log.e(TAG, "Error: " + e.message)
-            }
-        }
-    }
-
-    /**
-     *  Digs in the DocumentFile to read all the folder structure
-     *
-     * @param doc must be a folder
-     * @return an ordered list of folders and files
-     */
-    private fun getListOfFoldersAndFiles(doc: DocumentFile): List<DocumentFile> {
-        val tree = ArrayList<DocumentFile>()
-
-        doc.listFiles().forEach {
-            if (it.isDirectory) {
-                val supTree = getListOfFoldersAndFiles(it)
-
-                tree.add(it)
-                tree.addAll(supTree)
-            } else {
-                tree.add(it)
             }
         }
 
-        return tree
-    }
-
-    /**
-     * Searches mangas in an ordered list of folders and files
-     *
-     * @param tree an ordered list of folders and files, like the one getListOfFoldersNFiles() does
-     * @return a list of mangas (those folders may have chapters or may not)
-     */
-    private fun searchForMangas(tree: List<DocumentFile>): List<DocumentFile> {
-        val mangas = ArrayList<DocumentFile>()
-        val chapters = ArrayList<DocumentFile>()
-
-        // it first goes all in and finds the chapters
-        tree.forEach {
-            if (it.name == "backup")
-                return@forEach
-
-            if (it.isFile && it.name != ".nomedia" && it.name != "backup")
-                if (it.parentFile!!.name != ".thumb" && it.parentFile!!.parentFile!!.name != "backup")
-                    chapters.add(it)
+        cbzFiles.forEach {
+            Log.d(TAG, "File: $it")
         }
 
-        // then it pics their parents
-        chapters.distinct().forEach {
-            mangas.add(it.parentFile!!)
-        }
-
-        // and returns the unique ones (distinct removes duplicates)
-        return mangas.distinct()
+        return cbzFiles
     }
-
-    /**
-     * Get the chapters from a manga folder
-     * This method ignores temporally folders
-     *
-     * @param manga a manga folder
-     * @return a list of chapters (in folders) for the given manga
-     */
-    private fun getChapters(manga: DocumentFile): List<DocumentFile> {
-        val chapterRegex = chapterRegex
-        val chapters = ArrayList<DocumentFile>()
-        val tmpChapterRegex = arrayOf(".*_tmp", ".*_temp")
-
-        manga.listFiles().forEach { file ->
-            // may be top level or direct folders (Example: Tachiyomi > Downloads > Mangadex)
-            if (file.isDirectory) {
-                // return if it is empty
-                if (file.listFiles().isEmpty())
-                    return@forEach
-                // return if it is only .nomedia
-                if (file.listFiles().size == 1)
-                    if (file.listFiles()[0].name == ".nomedia")
-                        return@forEach
-
-                // return if it is .thumb
-                if (file.name == ".thumb")
-                    return@forEach
-
-                // return if its backups
-                if (file.name == "backup")
-                    return@forEach
-
-                // a recursion to navigate all the folder tree
-                chapters.addAll(getChapters(file))
-            }
-
-            // find cbz files
-            chapterRegex.forEach(fun(regex: Pattern) {
-                if (regex.matcher(file.name!!).matches()) {
-                    var temp = false
-                    tmpChapterRegex.forEach(fun(regex: String) {
-                        if (Pattern.compile(regex).matcher(file.name!!).matches()) {
-                            temp = true
-                            return
-                        }
-                    })
-                    if (!temp)
-                        chapters.add(file)
-                    else
-                        Log.d(TAG, "This chapter is not downloaded yet (" + file.name + ")")
-
-                    return
-                }
-            })
-        }
-
-        return chapters
-    }
-
 
     /**
      * Pick the chapter number from the folder name passed

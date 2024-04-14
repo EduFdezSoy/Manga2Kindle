@@ -100,7 +100,7 @@ class NewChaptersFragment : Fragment(), ChapterBaseAdapter.OnItemClickListener,
 
             Toast.makeText(
                 context,
-                "Scanning, it may take a while (NOTE: the animation is not in sync with the scan)",
+                "Scanning. Please wait...",
                 Toast.LENGTH_LONG
             ).show()
 

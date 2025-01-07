@@ -673,7 +673,7 @@ fun getMangaChapterTitle(fileName: String): String {
 fun getMangaChapter(fileName: String): String {
 //    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)")
 //    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)|Chapter\\s(\\d+)")
-    val regex = Regex("(Ch\\.|Chapter|Capitulo|Capítulo)\\s?(\\d+(?:\\.\\d+)?)")
+    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)|(Ch\\.|Chapter|Capitulo|Capítulo)\\s?(\\d+(?:\\.\\d+)?)")
     val matchResult = regex.find(fileName)
     val chapter = matchResult?.groups?.get(1)?.value ?: matchResult?.groups?.get(2)?.value ?: ""
 

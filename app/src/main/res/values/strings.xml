@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Manga2Kindle v3</string>
+    <string name="chapter_amount">%d chapters</string>
+    <string name="folder">Folder</string>
+    <string name="no_chapters">No chapters found</string>
+    <string name="upload">Upload</string>
 </resources>

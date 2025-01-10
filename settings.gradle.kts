@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Manga2Kindle v3"
 include(":app")
- 
+include(":presentation")
+include(":domain")
+include(":data")
+include(":di")

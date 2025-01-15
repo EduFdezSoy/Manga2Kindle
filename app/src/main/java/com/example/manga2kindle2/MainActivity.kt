@@ -635,6 +635,9 @@ fun getFileName(uri: Uri, contentResolver: ContentResolver): String {
         // replace " _ " with " - " if any
         fileNameWOExtension = fileNameWOExtension.replace(" _ ", " - ")
 
+        // replace "_ " with ": " if any
+        fileNameWOExtension = fileNameWOExtension.replace("_ ", ": ")
+
         // replace last _ with ? if any
         if (fileNameWOExtension.lastIndexOf('_') == fileNameWOExtension.length - 1) {
             fileNameWOExtension = fileNameWOExtension.replaceRange(
@@ -661,7 +664,7 @@ fun getMangaFileTitle(uri: Uri, contentResolver: ContentResolver): String {
 }
 
 fun getMangaChapterTitle(fileName: String): String {
-    val regex = Regex("(?:Vol\\.?\\s?\\d+\\s)?(?:Ch\\.|Chapter)\\s?\\d+(\\.\\d+)?\\s?-\\s(.*)")
+    val regex = Regex("(?:Vol\\.?\\s?\\d+\\s)?(?:Ch|Ch\\.|Chapter|Capitulo|Capítulo)\\s?\\d+(\\.\\d+)?\\s?-\\s(.*)")
     val matchResult = regex.find(fileName)
     val title = matchResult?.groups?.get(2)?.value ?: ""
 
@@ -670,10 +673,10 @@ fun getMangaChapterTitle(fileName: String): String {
     return title
 }
 
-fun getMangaChapter(fileName: String): String {
+fun getMangaChapter(fileName: String): String { // TODO: I used to have an Unit test to test this crap...
 //    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)")
 //    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)|Chapter\\s(\\d+)")
-    val regex = Regex("Ch\\.\\s?(\\d+(?:\\.\\d+)?)|(Ch\\.|Chapter|Capitulo|Capítulo)\\s?(\\d+(?:\\.\\d+)?)")
+    val regex = Regex("(?:Ch(?:\\.|apter)?|Capitulo|Capítulo)\\s*(\\d+(?:\\.\\d+)?)")
     val matchResult = regex.find(fileName)
     val chapter = matchResult?.groups?.get(1)?.value ?: matchResult?.groups?.get(2)?.value ?: ""
 
